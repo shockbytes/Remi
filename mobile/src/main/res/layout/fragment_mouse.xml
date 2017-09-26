@@ -1,0 +1,16 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="at.shockbytes.remote.fragment.MouseFragment">
+
+    <View
+        android:id="@+id/fragment_mouse_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:background="@drawable/background_mouse_area"
+        app:elevation="4dp" />
+
+</android.support.design.widget.CoordinatorLayout>
