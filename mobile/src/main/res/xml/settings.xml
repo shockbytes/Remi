@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/prefs_cat_mouse" >
+
+        <at.shockbytes.util.view.SliderPreference
+            android:defaultValue="5"
+            android:key="@string/prefs_key_simple_mouse"
+            android:max="9"
+            android:text=""
+            android:title="@string/prefs_title_simple_mouse" />
+
+        <at.shockbytes.util.view.SliderPreference
+            android:defaultValue="2"
+            android:key="@string/prefs_key_scrolling"
+            android:max="9"
+            android:text=""
+            android:title="@string/prefs_title_scrolling"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/prefs_cat_about" >
+
+        <Preference
+            android:summary="@string/prefs_summary_developer"
+            android:title="@string/prefs_title_developer" />
+
+        <Preference
+            android:summary="@string/prefs_summary_icons"
+            android:title="@string/prefs_title_icons"/>
+
+        <Preference
+            android:summary="@string/app_version"
+            android:title="@string/prefs_title_version" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

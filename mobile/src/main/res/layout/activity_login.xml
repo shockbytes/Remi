@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/login_content"
+    android:fitsSystemWindows="true"
     tools:context="at.shockbytes.remote.core.LoginActivity">
 
 </android.support.constraint.ConstraintLayout>
