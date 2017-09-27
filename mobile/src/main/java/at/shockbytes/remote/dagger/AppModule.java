@@ -1,8 +1,15 @@
 package at.shockbytes.remote.dagger;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
+import dagger.Provides;
 
 /**
  * @author Martin Macheiner
@@ -16,6 +23,18 @@ public class AppModule {
 
     public AppModule(Application app) {
         this.app = app;
+    }
+
+    @Provides
+    @Singleton
+    public Vibrator provideVibrator() {
+        return (Vibrator) app.getSystemService(Context.VIBRATOR_SERVICE);
+    }
+
+    @Provides
+    @Singleton
+    public SharedPreferences providedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(app);
     }
 
 }

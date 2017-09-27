@@ -6,24 +6,30 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import javax.inject.Inject;
 
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.fragment.AppsFragment;
 import at.shockbytes.remote.fragment.FilesFragment;
 import at.shockbytes.remote.fragment.MouseFragment;
 import at.shockbytes.remote.fragment.PresentationFragment;
+import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.util.AppParams;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import icepick.Icepick;
 import icepick.State;
+import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
@@ -46,6 +52,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     @BindView(R.id.main_fab_edit)
     protected FloatingActionButton fabKeyboard;
 
+    @Inject
+    protected RemiClient client;
+
     private Unbinder unbinder;
 
     @Override
@@ -60,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         Icepick.restoreInstanceState(this, savedInstanceState);
 
         initializeViews();
+        startActivity(LoginActivity.newIntent(this));
     }
 
     @Override
@@ -69,25 +79,41 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        setTitle(client.getDesktopOS());
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
-    }
-
-    private void initializeViews() {
-
-        tabLayout.addOnTabSelectedListener(this);
-        TabLayout.Tab initialTab = tabLayout.getTabAt(tabPosition);
-        if (initialTab != null) {
-            initialTab.select();
-        }
-
-        fabKeyboard.setOnClickListener(new View.OnClickListener() {
+        client.disconnect().subscribe(new Action1<Void>() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Show Keyboard", Toast.LENGTH_SHORT).show();
+            public void call(Void aVoid) {
+                Toast.makeText(getApplicationContext(), "Disconnected", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.menu_main_logout:
+
+                supportFinishAfterTransition();
+                break;
+
+            case R.id.menu_main_settings:
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
+                startActivity(SettingsActivity.newIntent(this), options.toBundle());
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -139,4 +165,21 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
+
+    private void initializeViews() {
+
+        tabLayout.addOnTabSelectedListener(this);
+        TabLayout.Tab initialTab = tabLayout.getTabAt(tabPosition);
+        if (initialTab != null) {
+            initialTab.select();
+        }
+
+        fabKeyboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Show Keyboard", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
