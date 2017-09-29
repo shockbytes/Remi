@@ -15,13 +15,13 @@ public interface RemiClient {
 
     enum ClientEvent {
         MOUSE_MOVE, MOUSE_CLICK_LEFT, MOUSE_CLICK_RIGHT, SCROLL,
-        REQ_DIR, WRITE_TEXT, REQ_FILE_TRANSFER,
+        REQ_BASE_DIR, REQ_DIR, WRITE_TEXT, REQ_FILE_TRANSFER,
         REQ_APPS, ADD_APP, REMOVE_APP, START_APP,
         REQ_SLIDES
     }
 
     enum ServerEvent {
-        RESP_DIR, RESP_FILE_TRANSFER, RESP_SLIDES
+        RESP_DIR, RESP_FILE_TRANSFER, RESP_SLIDES, RESP_APPS, DESKTOP_OS
     }
 
     //------------------------------- Basic operations -------------------------------
@@ -29,6 +29,8 @@ public interface RemiClient {
     Observable<Void> connect(String serverUrl);
 
     Observable<Void> disconnect();
+
+    Observable<Void> listenForConnectionLoss();
 
     void close();
 

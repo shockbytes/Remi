@@ -6,7 +6,9 @@ import javax.inject.Singleton;
 
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.network.SocketIoRemiClient;
+import at.shockbytes.remote.network.message.JsonMessageDeserializer;
 import at.shockbytes.remote.network.message.JsonMessageSerializer;
+import at.shockbytes.remote.network.message.MessageDeserializer;
 import at.shockbytes.remote.network.message.MessageSerializer;
 import dagger.Module;
 import dagger.Provides;
@@ -43,14 +45,22 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    public RemiClient provideRemiClient(OkHttpClient okHttpClient, MessageSerializer serializer) {
-        return new SocketIoRemiClient(okHttpClient, serializer);
+    public RemiClient provideRemiClient(OkHttpClient okHttpClient,
+                                        MessageSerializer serializer,
+                                        MessageDeserializer msgDeserializer) {
+        return new SocketIoRemiClient(okHttpClient, serializer, msgDeserializer);
     }
 
     @Provides
     @Singleton
     public MessageSerializer provideMessageSerializer() {
         return new JsonMessageSerializer();
+    }
+
+    @Provides
+    @Singleton
+    public MessageDeserializer provideMessageDeserializer() {
+        return new JsonMessageDeserializer();
     }
 
 }

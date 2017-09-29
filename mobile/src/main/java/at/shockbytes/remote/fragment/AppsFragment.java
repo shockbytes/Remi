@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +25,14 @@ import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.util.adapter.BaseAdapter;
 import butterknife.BindView;
+import rx.Subscriber;
 import rx.functions.Action1;
+import rx.observers.SafeSubscriber;
 
 
-public class AppsFragment extends BaseFragment implements BaseAdapter.OnItemClickListener<String> {
+public class AppsFragment extends BaseFragment
+        implements BaseAdapter.OnItemClickListener<String>,
+        AppsAdapter.OnOverflowMenuItemClickListener<String> {
 
     public static AppsFragment newInstance() {
         AppsFragment fragment = new AppsFragment();
@@ -47,6 +52,25 @@ public class AppsFragment extends BaseFragment implements BaseAdapter.OnItemClic
 
     private AppsAdapter adapter;
 
+    private SafeSubscriber<List<String>> subscriber = new SafeSubscriber<>(new Subscriber<List<String>>() {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            e.printStackTrace();
+            Snackbar.make(getView(), "Cannot request apps", Snackbar.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onNext(List<String> apps) {
+            txtEmpty.setAlpha(apps.size() == 0 ? 1 : 0);
+            adapter.setData(apps);
+        }
+    });
+
     public AppsFragment() { }
 
     @Override
@@ -64,13 +88,22 @@ public class AppsFragment extends BaseFragment implements BaseAdapter.OnItemClic
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.wtf("Remi", getClass().toString() + " onViewCreated");
         setupViews();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        loadData();
+        client.requestApps().subscribe(subscriber);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (!subscriber.isUnsubscribed()) {
+            subscriber.unsubscribe();
+        }
     }
 
     @Override
@@ -79,20 +112,17 @@ public class AppsFragment extends BaseFragment implements BaseAdapter.OnItemClic
         Snackbar.make(getView(), "Starte " + app, Snackbar.LENGTH_LONG).show();
     }
 
-    private void loadData() {
-        client.requestApps().subscribe(new Action1<List<String>>() {
-            @Override
-            public void call(List<String> apps) {
+    @Override
+    public void onOverflowMenuItemClicked(int itemId, final String content) {
 
-                txtEmpty.setAlpha(apps.size() == 0 ? 1 : 0);
-                adapter.setData(apps);
-            }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                Snackbar.make(getView(), "Cannot request apps", Snackbar.LENGTH_LONG).show();
-            }
-        });
+        if (itemId == R.id.popup_apps_item_remove) {
+            client.removeApp(content).subscribe(new Action1<Void>() {
+                @Override
+                public void call(Void aVoid) {
+                    adapter.deleteEntity(content);
+                }
+            });
+        }
     }
 
     private void setupViews() {
@@ -100,6 +130,7 @@ public class AppsFragment extends BaseFragment implements BaseAdapter.OnItemClic
         recyclerView.setLayoutManager(getLayoutManager());
         adapter = new AppsAdapter(getContext(), new ArrayList<String>());
         adapter.setOnItemClickListener(this);
+        adapter.setOnOverflowMenuItemClickListener(this);
         recyclerView.setAdapter(adapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(),
