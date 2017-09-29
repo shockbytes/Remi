@@ -24,8 +24,13 @@ public class DebugRemiClient implements RemiClient {
     }
 
     @Override
-    public void close() {
+    public Observable<Void> listenForConnectionLoss() {
+        return Observable.empty();
+    }
 
+    @Override
+    public void close() {
+        // Do nothing
     }
 
     public String getDesktopOS() {

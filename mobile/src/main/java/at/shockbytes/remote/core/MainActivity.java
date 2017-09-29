@@ -2,6 +2,7 @@ package at.shockbytes.remote.core;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,8 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,11 +32,13 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import icepick.Icepick;
 import icepick.State;
+import rx.Subscriber;
 import rx.functions.Action1;
+import rx.observers.SafeSubscriber;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
-    public static Intent newIntent(Context context) {
+    public static Intent newIntent(Context context, boolean isDebug) {
         return new Intent(context, MainActivity.class);
     }
 
@@ -57,9 +62,31 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     private Unbinder unbinder;
 
+    private SafeSubscriber<Void> disconnectSubscriber = new SafeSubscriber<>(new Subscriber<Void>() {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onNext(Void aVoid) {
+            Toast.makeText(getApplicationContext(), "Desktop disconnected", Toast.LENGTH_SHORT).show();
+            supportFinishAfterTransition();
+        }
+    });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setEnterTransition(new Explode());
+            getWindow().setExitTransition(new Fade());
+        }
         setContentView(R.layout.activity_main);
         ((RemiApp)getApplication()).getAppComponent().inject(this);
         unbinder = ButterKnife.bind(this);
@@ -68,8 +95,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         tabPosition = AppParams.POSITION_MOUSE;
         Icepick.restoreInstanceState(this, savedInstanceState);
 
+        client.listenForConnectionLoss().subscribe(disconnectSubscriber);
+
         initializeViews();
-        startActivity(LoginActivity.newIntent(this));
     }
 
     @Override
@@ -88,10 +116,22 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+
+        if (!disconnectSubscriber.isUnsubscribed()) {
+            disconnectSubscriber.unsubscribe();
+        }
+
         client.disconnect().subscribe(new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
+                client.close();
                 Toast.makeText(getApplicationContext(), "Disconnected", Toast.LENGTH_SHORT).show();
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                throwable.printStackTrace();
+                Toast.makeText(getApplicationContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

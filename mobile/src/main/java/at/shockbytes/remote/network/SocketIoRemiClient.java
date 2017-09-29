@@ -1,8 +1,12 @@
 package at.shockbytes.remote.network;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import java.net.URISyntaxException;
 import java.util.List;
 
+import at.shockbytes.remote.network.message.MessageDeserializer;
 import at.shockbytes.remote.network.message.MessageSerializer;
 import at.shockbytes.remote.network.model.FileTransferResponse;
 import at.shockbytes.remote.network.model.RemoteFile;
@@ -21,6 +25,10 @@ import rx.subjects.PublishSubject;
  *         Date: 26.09.2017.
  */
 
+/*
+ * TODO byte[] b = Base64.decode(data,Base64.DEFAULT);
+ */
+
 public class SocketIoRemiClient implements RemiClient {
 
     private String desktopOS;
@@ -28,16 +36,22 @@ public class SocketIoRemiClient implements RemiClient {
     private Socket socket;
     private OkHttpClient okHttpClient;
     private MessageSerializer msgSerializer;
+    private MessageDeserializer msgDeserializer;
 
+    // TODO Read about hot and cold observables
     private PublishSubject<Void> connectedSubject;
     private PublishSubject<Void> disconnectedSubject;
+    private PublishSubject<List<String>> requestAppsSubject;
 
-    public SocketIoRemiClient(OkHttpClient okHttpClient, MessageSerializer msgSerializer) {
+    public SocketIoRemiClient(OkHttpClient okHttpClient,
+                              MessageSerializer msgSerializer, MessageDeserializer msgDeserializer) {
         this.okHttpClient = okHttpClient;
         this.msgSerializer = msgSerializer;
+        this.msgDeserializer = msgDeserializer;
 
         connectedSubject = PublishSubject.create();
         disconnectedSubject = PublishSubject.create();
+        requestAppsSubject = PublishSubject.create();
     }
 
     @Override
@@ -55,7 +69,9 @@ public class SocketIoRemiClient implements RemiClient {
                     return Observable.error(e);
                 }
 
-                return connectedSubject;
+                return connectedSubject
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io());
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
@@ -66,14 +82,21 @@ public class SocketIoRemiClient implements RemiClient {
             @Override
             public Observable<Void> call() {
                 socket.disconnect();
-                return disconnectedSubject;
+                return Observable.empty();
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
     @Override
+    public Observable<Void> listenForConnectionLoss() {
+        return disconnectedSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
+
+    @Override
     public void close() {
-        // TODO
+        socket.close();
     }
 
     public String getDesktopOS() {
@@ -82,15 +105,24 @@ public class SocketIoRemiClient implements RemiClient {
 
     @Override
     public Observable<List<String>> requestApps() {
-        // TODO
-        return Observable.empty();
-                //.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+        return Observable.defer(new Func0<Observable<List<String>>>() {
+            @Override
+            public Observable<List<String>> call() {
+                socket.emit(ClientEvent.REQ_APPS.name().toLowerCase());
+                return requestAppsSubject;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
     @Override
-    public Observable<Void> removeApp(String app) {
-        // TODO
-        return Observable.empty();
+    public Observable<Void> removeApp(final String app) {
+        return Observable.defer(new Func0<Observable<Void>>() {
+            @Override
+            public Observable<Void> call() {
+                socket.emit(ClientEvent.REMOVE_APP.name().toLowerCase(), app);
+                return Observable.empty();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -105,9 +137,14 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> sendAddAppRequest(String pathToApp) {
-        // TODO
-        return null;
+    public Observable<Void> sendAddAppRequest(final String pathToApp) {
+        return Observable.defer(new Func0<Observable<Void>>() {
+            @Override
+            public Observable<Void> call() {
+                socket.emit(ClientEvent.ADD_APP.name().toLowerCase(), pathToApp);
+                return Observable.empty();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -201,14 +238,31 @@ public class SocketIoRemiClient implements RemiClient {
             public void call(Object... args) {
                 disconnectedSubject.onNext(null);
             }
-        }).on("desktop_os", new Emitter.Listener() {
+        }).on(eventName(ServerEvent.DESKTOP_OS), new Emitter.Listener() {
 
             @Override
             public void call(Object... args) {
                 desktopOS = (String) args[0];
             }
+        }).on(eventName(ServerEvent.RESP_APPS), new Emitter.Listener(){
 
+            @Override
+            public void call(Object... args) {
+                Log.wtf("Remi", (String)args[0]);
+                String data = (String)args[0];
+                requestAppsSubject.onNext(msgDeserializer.requestAppsMessage(data));
+            }
         });
+    }
+
+    @NonNull
+    private String eventName(ClientEvent event) {
+        return event.name().toLowerCase();
+    }
+
+    @NonNull
+    private String eventName(ServerEvent event) {
+        return event.name().toLowerCase();
     }
 
 }
