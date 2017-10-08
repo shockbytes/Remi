@@ -22,6 +22,7 @@ public abstract class BaseFragment extends Fragment {
         if (unbinder == null) {
             unbinder = ButterKnife.bind(this, view);
         }
+        setupViews();
     }
 
     @Override
@@ -30,5 +31,7 @@ public abstract class BaseFragment extends Fragment {
         unbinder.unbind();
         unbinder = null;
     }
+
+    protected abstract void setupViews();
 
 }

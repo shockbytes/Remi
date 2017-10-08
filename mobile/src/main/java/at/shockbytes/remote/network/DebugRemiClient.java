@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import at.shockbytes.remote.network.model.FileTransferResponse;
-import at.shockbytes.remote.network.model.RemoteFile;
+import at.shockbytes.remote.network.model.RemiFile;
 import rx.Observable;
 
 /**
@@ -78,17 +78,17 @@ public class DebugRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<List<RemoteFile>> requestBaseDirectories() {
+    public Observable<List<RemiFile>> requestBaseDirectories() {
         return Observable.empty();
     }
 
     @Override
-    public Observable<List<RemoteFile>> requestDirectory(String dir) {
+    public Observable<List<RemiFile>> requestDirectory(String dir) {
         return Observable.empty();
     }
 
     @Override
-    public Observable<FileTransferResponse> transferFile(String filepath, String filename) {
+    public Observable<FileTransferResponse> transferFile(String filepath) {
         return Observable.empty();
     }
 

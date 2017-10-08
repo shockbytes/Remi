@@ -3,7 +3,7 @@ package at.shockbytes.remote.network;
 import java.util.List;
 
 import at.shockbytes.remote.network.model.FileTransferResponse;
-import at.shockbytes.remote.network.model.RemoteFile;
+import at.shockbytes.remote.network.model.RemiFile;
 import rx.Observable;
 
 /**
@@ -65,11 +65,11 @@ public interface RemiClient {
 
     //--------------------------- File and text operations ---------------------------
 
-    Observable<List<RemoteFile>> requestBaseDirectories();
+    Observable<List<RemiFile>> requestBaseDirectories();
 
-    Observable<List<RemoteFile>> requestDirectory(String dir);
+    Observable<List<RemiFile>> requestDirectory(String dir);
 
-    Observable<FileTransferResponse> transferFile(String filepath, String filename);
+    Observable<FileTransferResponse> transferFile(String filepath);
 
     Observable<Void> writeText(int keyCode, boolean upperCase);
 

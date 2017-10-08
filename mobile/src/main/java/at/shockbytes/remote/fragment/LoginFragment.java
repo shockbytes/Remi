@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +22,7 @@ import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.network.model.DesktopApp;
 import at.shockbytes.remote.util.AppParams;
-import at.shockbytes.remote.util.NetworkUtils;
+import at.shockbytes.remote.util.RemiUtils;
 import at.shockbytes.util.adapter.BaseAdapter;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -36,7 +35,7 @@ public class LoginFragment extends BaseFragment
 
     public interface OnConnectionResponseListener {
 
-        void onConnected();
+        void onConnected(boolean isDebug);
 
         void onConnectionFailed(Throwable throwable);
     }
@@ -90,14 +89,13 @@ public class LoginFragment extends BaseFragment
 
     @Override
     public void onItemClick(DesktopApp app, View view) {
-        connectToDevice(NetworkUtils.createUrlFromIp(app.getIp(), AppParams.STD_PORT, false));
+        connectToDevice(RemiUtils.createUrlFromIp(app.getIp(), AppParams.STD_PORT, false));
     }
 
     @OnLongClick(R.id.fragment_login_imgview_icon)
     protected boolean onClickDebugEntryIcon() {
 
-        // TODO
-        Toast.makeText(getContext(), "Developer access", Toast.LENGTH_SHORT).show();
+       listener.onConnected(true);
         return true;
     }
 
@@ -106,7 +104,8 @@ public class LoginFragment extends BaseFragment
         searchForDevices();
     }
 
-    private void setupViews() {
+    @Override
+    protected void setupViews() {
 
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -131,7 +130,7 @@ public class LoginFragment extends BaseFragment
         client.connect(url).subscribe(new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
-                listener.onConnected();
+                listener.onConnected(false);
             }
         }, new Action1<Throwable>() {
             @Override

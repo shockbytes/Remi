@@ -125,7 +125,8 @@ public class AppsFragment extends BaseFragment
         }
     }
 
-    private void setupViews() {
+    @Override
+    protected void setupViews() {
 
         recyclerView.setLayoutManager(getLayoutManager());
         adapter = new AppsAdapter(getContext(), new ArrayList<String>());

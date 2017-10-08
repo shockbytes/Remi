@@ -47,7 +47,9 @@ public class MouseFragment extends BaseFragment
     private float scrollDensity;
     private GestureDetectorCompat detector;
 
-    public MouseFragment() { }
+    public MouseFragment() {
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,10 +68,13 @@ public class MouseFragment extends BaseFragment
         super.onStart();
 
         oldMouseX = oldMouseY = 0;
-        detector = new GestureDetectorCompat(getActivity().getApplicationContext(), this);
         mouseDensity = prefs.getInt(getString(R.string.prefs_key_simple_mouse), 2);
         scrollDensity = prefs.getInt(getString(R.string.prefs_key_scrolling), 3) / 10f;
+    }
 
+    @Override
+    protected void setupViews() {
+        detector = new GestureDetectorCompat(getActivity().getApplicationContext(), this);
         mouseView.setOnTouchListener(this);
     }
 

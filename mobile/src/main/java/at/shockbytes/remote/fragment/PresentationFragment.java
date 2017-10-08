@@ -31,4 +31,9 @@ public class PresentationFragment extends BaseFragment {
         return inflater.inflate(R.layout.fragment_presentation, container, false);
     }
 
+    @Override
+    protected void setupViews() {
+
+    }
+
 }

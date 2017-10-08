@@ -14,6 +14,8 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import at.shockbytes.remote.R;
+import at.shockbytes.remote.network.model.RemiFile;
+import at.shockbytes.remote.util.RemiUtils;
 import at.shockbytes.util.adapter.BaseAdapter;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -23,7 +25,7 @@ import butterknife.OnClick;
  *         Date: 26.09.2017.
  */
 
-public class AppsAdapter extends BaseAdapter<String> {
+public class FilesAdapter extends BaseAdapter<RemiFile> {
 
     public interface OnOverflowMenuItemClickListener<T> {
 
@@ -31,22 +33,22 @@ public class AppsAdapter extends BaseAdapter<String> {
 
     }
 
-    private OnOverflowMenuItemClickListener<String> listener;
+    private OnOverflowMenuItemClickListener<RemiFile> listener;
 
-    public AppsAdapter(Context cxt, List<String> data) {
+    public FilesAdapter(Context cxt, List<RemiFile> data) {
         super(cxt, data);
     }
 
-    public void setOnOverflowMenuItemClickListener(OnOverflowMenuItemClickListener<String> listener) {
+    public void setOnOverflowMenuItemClickListener(OnOverflowMenuItemClickListener<RemiFile> listener) {
         this.listener = listener;
     }
 
     @Override
-    public BaseAdapter<String>.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseAdapter<RemiFile>.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(layoutInflater.inflate(R.layout.item_app_and_file, parent, false));
     }
 
-    class ViewHolder extends BaseAdapter<String>.ViewHolder
+    class ViewHolder extends BaseAdapter<RemiFile>.ViewHolder
             implements PopupMenu.OnMenuItemClickListener {
 
         @BindView(R.id.item_app_and_file_txt_name)
@@ -61,16 +63,18 @@ public class AppsAdapter extends BaseAdapter<String> {
             super(itemView);
 
             popupMenu = new PopupMenu(context, imgBtnOverflow);
-            popupMenu.getMenuInflater().inflate(R.menu.popup_apps_item, popupMenu.getMenu());
+            popupMenu.getMenuInflater().inflate(R.menu.popup_files_item, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(this);
             tryShowIconsInPopupMenu(popupMenu);
         }
 
         @Override
-        public void bind(String s) {
-            content = s;
-            txtApp.setText(s);
-            txtApp.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_app, 0, 0, 0);
+        public void bind(RemiFile file) {
+            content = file;
+
+            txtApp.setText(file.getName());
+            txtApp.setCompoundDrawablesWithIntrinsicBounds(
+                    RemiUtils.getDrawableResourceForFiletype(file), 0, 0, 0);
         }
 
         @OnClick(R.id.item_app_and_file_imgbtn_overflow)

@@ -9,7 +9,7 @@ import java.util.List;
 import at.shockbytes.remote.network.message.MessageDeserializer;
 import at.shockbytes.remote.network.message.MessageSerializer;
 import at.shockbytes.remote.network.model.FileTransferResponse;
-import at.shockbytes.remote.network.model.RemoteFile;
+import at.shockbytes.remote.network.model.RemiFile;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -193,19 +193,19 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<List<RemoteFile>> requestBaseDirectories() {
+    public Observable<List<RemiFile>> requestBaseDirectories() {
         // TODO
         return Observable.empty();
     }
 
     @Override
-    public Observable<List<RemoteFile>> requestDirectory(String dir) {
+    public Observable<List<RemiFile>> requestDirectory(String dir) {
         // TODO
         return Observable.empty();
     }
 
     @Override
-    public Observable<FileTransferResponse> transferFile(String filepath, String filename) {
+    public Observable<FileTransferResponse> transferFile(String filepath) {
         // TODO
         return Observable.empty();
     }
