@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.util.adapter.BaseAdapter;
 import butterknife.BindView;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.ResourceObserver;
 
 public class AppsFragment extends BaseFragment
@@ -88,7 +86,6 @@ public class AppsFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.wtf("Remi", getClass().toString() + " onViewCreated");
         setupViews();
     }
 
@@ -109,19 +106,15 @@ public class AppsFragment extends BaseFragment
     @Override
     public void onItemClick(String app, View view) {
         client.sendAppExecutionRequest(app).subscribe();
-        Snackbar.make(getView(), "Starte " + app, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(getView(), "Start " + app, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
     public void onOverflowMenuItemClicked(int itemId, final String content) {
 
         if (itemId == R.id.popup_apps_item_remove) {
-            client.removeApp(content).subscribe(new Consumer<Object>() {
-                @Override
-                public void accept(Object object) {
-                    adapter.deleteEntity(content);
-                }
-            });
+            adapter.deleteEntity(content);
+            client.removeApp(content).subscribe();
         }
     }
 

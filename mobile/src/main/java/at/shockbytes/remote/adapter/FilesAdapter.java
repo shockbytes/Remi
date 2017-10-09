@@ -71,15 +71,32 @@ public class FilesAdapter extends BaseAdapter<RemiFile> {
         @Override
         public void bind(RemiFile file) {
             content = file;
+            hidePopupIconsIfNecessary();
 
             txtApp.setText(file.getName());
             txtApp.setCompoundDrawablesWithIntrinsicBounds(
-                    RemiUtils.getDrawableResourceForFiletype(file), 0, 0, 0);
+                    RemiUtils.getDrawableResourceForFileType(file), 0, 0, 0);
         }
 
         @OnClick(R.id.item_app_and_file_imgbtn_overflow)
         void onClickOverflow() {
             popupMenu.show();
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            if (listener != null) {
+                listener.onOverflowMenuItemClicked(item.getItemId(), content);
+                return true;
+            }
+            return false;
+        }
+
+        private void hidePopupIconsIfNecessary() {
+            // Only non directory files can be transferred to the phone
+            imgBtnOverflow.setVisibility(content.isDirectory() ? View.GONE : View.VISIBLE);
+            // Only executables can be added to apps
+            popupMenu.getMenu().getItem(0).setVisible(content.isExecutable());
         }
 
         private void tryShowIconsInPopupMenu(PopupMenu menu) {
@@ -92,15 +109,6 @@ public class FilesAdapter extends BaseAdapter<RemiFile> {
             } catch (Exception e) {
                 Log.d("Remi", "Cannot force to show icons in PopupMenu");
             }
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            if (listener != null) {
-                listener.onOverflowMenuItemClicked(item.getItemId(), content);
-                return true;
-            }
-            return false;
         }
     }
 }
