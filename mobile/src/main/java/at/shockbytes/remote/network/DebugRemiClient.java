@@ -5,7 +5,7 @@ import java.util.List;
 
 import at.shockbytes.remote.network.model.FileTransferResponse;
 import at.shockbytes.remote.network.model.RemiFile;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * @author Martin Macheiner
@@ -13,18 +13,19 @@ import rx.Observable;
  */
 
 public class DebugRemiClient implements RemiClient {
+
     @Override
-    public Observable<Void> connect(String serverUrl) {
+    public Observable<Object> connect(String serverUrl) {
         return Observable.empty();
     }
 
     @Override
-    public Observable<Void> disconnect() {
+    public Observable<Object> disconnect() {
         return Observable.empty();
     }
 
     @Override
-    public Observable<Void> listenForConnectionLoss() {
+    public Observable<Object> listenForConnectionLoss() {
         return Observable.empty();
     }
 
@@ -43,37 +44,37 @@ public class DebugRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> removeApp(String app) {
+    public Observable<Object> removeApp(String app) {
         return Observable.empty();
     }
 
     @Override
-    public Observable<Void> sendAppExecutionRequest(String app) {
+    public Observable<Object> sendAppExecutionRequest(String app) {
         return Observable.empty();
     }
 
     @Override
-    public Observable<Void> sendAddAppRequest(String pathToApp) {
+    public Observable<Object> sendAddAppRequest(String pathToApp) {
         return Observable.empty();
     }
 
     @Override
-    public Observable<Void> sendLeftClick() {
+    public Observable<Object> sendLeftClick() {
         return Observable.empty();
     }
 
     @Override
-    public Observable<Void> sendRightClick() {
+    public Observable<Object> sendRightClick() {
         return Observable.empty();
     }
 
     @Override
-    public Observable<Void> sendMouseMove(int deltaX, int deltaY) {
+    public Observable<Object> sendMouseMove(int deltaX, int deltaY) {
         return Observable.empty();
     }
 
     @Override
-    public Observable<Void> sendScroll(int amount) {
+    public Observable<Object> sendScroll(int amount) {
         return Observable.empty();
     }
 
@@ -93,7 +94,7 @@ public class DebugRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> writeText(int keyCode, boolean upperCase) {
+    public Observable<Object> writeText(int keyCode, boolean upperCase) {
         return Observable.empty();
     }
 }

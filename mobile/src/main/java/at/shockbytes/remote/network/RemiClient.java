@@ -2,9 +2,10 @@ package at.shockbytes.remote.network;
 
 import java.util.List;
 
+import at.shockbytes.remote.network.model.ConnectionConfig;
 import at.shockbytes.remote.network.model.FileTransferResponse;
 import at.shockbytes.remote.network.model.RemiFile;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * @author Martin Macheiner
@@ -21,20 +22,22 @@ public interface RemiClient {
     }
 
     enum ServerEvent {
-        RESP_DIR, RESP_FILE_TRANSFER, RESP_SLIDES, RESP_APPS, DESKTOP_OS
+        RESP_DIR, RESP_FILE_TRANSFER, RESP_SLIDES, RESP_APPS, WELCOME
     }
 
     //------------------------------- Basic operations -------------------------------
 
-    Observable<Void> connect(String serverUrl);
+    Observable<Object> connect(String serverUrl);
 
-    Observable<Void> disconnect();
+    Observable<Object> disconnect();
 
-    Observable<Void> listenForConnectionLoss();
+    Observable<Object> listenForConnectionLoss();
 
     void close();
 
     String getDesktopOS();
+
+    ConnectionConfig.ConnectionPermissions getConnectionPermissions();
 
     //--------------------------------------------------------------------------------
 
@@ -42,23 +45,23 @@ public interface RemiClient {
 
     Observable<List<String>> requestApps();
 
-    Observable<Void> removeApp(String app);
+    Observable<Object> removeApp(String app);
 
-    Observable<Void> sendAppExecutionRequest(String app);
+    Observable<Object> sendAppExecutionRequest(String app);
 
-    Observable<Void> sendAddAppRequest(String pathToApp);
+    Observable<Object> sendAddAppRequest(String pathToApp);
 
     //--------------------------------------------------------------------------------
 
     //------------------------------- Mouse operations -------------------------------
 
-    Observable<Void> sendLeftClick();
+    Observable<Object> sendLeftClick();
 
-    Observable<Void> sendRightClick();
+    Observable<Object> sendRightClick();
 
-    Observable<Void> sendMouseMove(int deltaX, int deltaY);
+    Observable<Object> sendMouseMove(int deltaX, int deltaY);
 
-    Observable<Void> sendScroll(int amount);
+    Observable<Object> sendScroll(int amount);
 
     //--------------------------------------------------------------------------------
 
@@ -71,7 +74,7 @@ public interface RemiClient {
 
     Observable<FileTransferResponse> transferFile(String filepath);
 
-    Observable<Void> writeText(int keyCode, boolean upperCase);
+    Observable<Object> writeText(int keyCode, boolean upperCase);
 
     //--------------------------------------------------------------------------------
 

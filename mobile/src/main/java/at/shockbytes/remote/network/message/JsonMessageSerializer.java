@@ -21,4 +21,16 @@ public class JsonMessageSerializer implements MessageSerializer {
         }
         return object.toString();
     }
+
+    @Override
+    public String writeTextMessage(int keyCode, boolean isUpperCase) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("keycode", keyCode);
+            object.put("uppercase", isUpperCase);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return object.toString();
+    }
 }

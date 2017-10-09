@@ -1,47 +1,46 @@
 package at.shockbytes.remote.network;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
-
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import at.shockbytes.remote.network.message.MessageDeserializer;
 import at.shockbytes.remote.network.message.MessageSerializer;
+import at.shockbytes.remote.network.model.ConnectionConfig;
 import at.shockbytes.remote.network.model.FileTransferResponse;
 import at.shockbytes.remote.network.model.RemiFile;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import okhttp3.OkHttpClient;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func0;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
+
+import static at.shockbytes.remote.util.RemiUtils.Irrelevant;
+import static at.shockbytes.remote.util.RemiUtils.eventName;
 
 /**
  * @author Martin Macheiner
  *         Date: 26.09.2017.
  */
 
-/*
- * TODO byte[] b = Base64.decode(data,Base64.DEFAULT);
- */
-
 public class SocketIoRemiClient implements RemiClient {
-
-    private String desktopOS;
 
     private Socket socket;
     private OkHttpClient okHttpClient;
+
     private MessageSerializer msgSerializer;
     private MessageDeserializer msgDeserializer;
+    private ConnectionConfig connectionConfig;
 
-    // TODO Read about hot and cold observables
-    private PublishSubject<Void> connectedSubject;
-    private PublishSubject<Void> disconnectedSubject;
+    private PublishSubject<Object> connectedSubject;
+    private PublishSubject<Object> disconnectedSubject;
     private PublishSubject<List<String>> requestAppsSubject;
+    private PublishSubject<List<RemiFile>> requestFilesSubject;
+    private PublishSubject<FileTransferResponse> requestFiletransferSubject;
 
     public SocketIoRemiClient(OkHttpClient okHttpClient,
                               MessageSerializer msgSerializer, MessageDeserializer msgDeserializer) {
@@ -49,18 +48,20 @@ public class SocketIoRemiClient implements RemiClient {
         this.msgSerializer = msgSerializer;
         this.msgDeserializer = msgDeserializer;
 
+        connectionConfig = new ConnectionConfig();
+
         connectedSubject = PublishSubject.create();
         disconnectedSubject = PublishSubject.create();
         requestAppsSubject = PublishSubject.create();
+        requestFilesSubject = PublishSubject.create();
+        requestFiletransferSubject = PublishSubject.create();
     }
 
     @Override
-    public Observable<Void> connect(final String serverUrl) {
-
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<Object> connect(final String serverUrl) {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
             @Override
-            public Observable<Void> call() {
-
+            public ObservableSource<Object> call() throws Exception {
                 try {
                     setupSocket(serverUrl);
                     socket.connect();
@@ -68,7 +69,6 @@ public class SocketIoRemiClient implements RemiClient {
                     e.printStackTrace();
                     return Observable.error(e);
                 }
-
                 return connectedSubject
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io());
@@ -77,10 +77,10 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> disconnect() {
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<Object> disconnect() {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
             @Override
-            public Observable<Void> call() {
+            public ObservableSource<Object> call() {
                 socket.disconnect();
                 return Observable.empty();
             }
@@ -88,7 +88,7 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> listenForConnectionLoss() {
+    public Observable<Object> listenForConnectionLoss() {
         return disconnectedSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
@@ -100,14 +100,19 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     public String getDesktopOS() {
-        return desktopOS;
+        return connectionConfig.getDesktopOS();
+    }
+
+    @Override
+    public ConnectionConfig.ConnectionPermissions getConnectionPermissions() {
+        return connectionConfig.getPermissions();
     }
 
     @Override
     public Observable<List<String>> requestApps() {
-        return Observable.defer(new Func0<Observable<List<String>>>() {
+        return Observable.defer(new Callable<ObservableSource<List<String>>>() {
             @Override
-            public Observable<List<String>> call() {
+            public ObservableSource<List<String>> call() throws Exception {
                 socket.emit(ClientEvent.REQ_APPS.name().toLowerCase());
                 return requestAppsSubject;
             }
@@ -115,10 +120,10 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> removeApp(final String app) {
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<Object> removeApp(final String app) {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
             @Override
-            public Observable<Void> call() {
+            public ObservableSource<Object> call() {
                 socket.emit(ClientEvent.REMOVE_APP.name().toLowerCase(), app);
                 return Observable.empty();
             }
@@ -126,10 +131,10 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> sendAppExecutionRequest(final String app) {
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<Object> sendAppExecutionRequest(final String app) {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
             @Override
-            public Observable<Void> call() {
+            public ObservableSource<Object> call() {
                 socket.emit(ClientEvent.START_APP.name().toLowerCase(), app);
                 return Observable.empty();
             }
@@ -137,10 +142,10 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> sendAddAppRequest(final String pathToApp) {
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<Object> sendAddAppRequest(final String pathToApp) {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
             @Override
-            public Observable<Void> call() {
+            public ObservableSource<Object> call() {
                 socket.emit(ClientEvent.ADD_APP.name().toLowerCase(), pathToApp);
                 return Observable.empty();
             }
@@ -148,10 +153,10 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> sendLeftClick() {
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<Object> sendLeftClick() {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
             @Override
-            public Observable<Void> call() {
+            public ObservableSource<Object> call() {
                 socket.emit(ClientEvent.MOUSE_CLICK_LEFT.name().toLowerCase());
                 return Observable.empty();
             }
@@ -159,10 +164,10 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> sendRightClick() {
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<Object> sendRightClick() {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
             @Override
-            public Observable<Void> call() {
+            public ObservableSource<Object> call() {
                 socket.emit(ClientEvent.MOUSE_CLICK_RIGHT.name().toLowerCase());
                 return Observable.empty();
             }
@@ -170,10 +175,10 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> sendMouseMove(final int deltaX, final int deltaY) {
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<Object> sendMouseMove(final int deltaX, final int deltaY) {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
             @Override
-            public Observable<Void> call() {
+            public ObservableSource<Object> call() {
                 socket.emit(ClientEvent.MOUSE_MOVE.name().toLowerCase(),
                         msgSerializer.mouseMoveMessage(deltaX, deltaY));
                 return Observable.empty();
@@ -182,11 +187,11 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Void> sendScroll(final int amount) {
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<Object> sendScroll(final int amount) {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
             @Override
-            public Observable<Void> call() {
-                socket.emit(ClientEvent.SCROLL.name().toLowerCase(), amount);
+            public ObservableSource<Object> call() {
+                socket.emit(eventName(ClientEvent.SCROLL), amount);
                 return Observable.empty();
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
@@ -194,26 +199,47 @@ public class SocketIoRemiClient implements RemiClient {
 
     @Override
     public Observable<List<RemiFile>> requestBaseDirectories() {
-        // TODO
-        return Observable.empty();
+        return Observable.defer(new Callable<ObservableSource<List<RemiFile>>>() {
+            @Override
+            public ObservableSource<List<RemiFile>> call() throws Exception {
+                socket.emit(eventName(ClientEvent.REQ_BASE_DIR));
+                return requestFilesSubject;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
     @Override
-    public Observable<List<RemiFile>> requestDirectory(String dir) {
-        // TODO
-        return Observable.empty();
+    public Observable<List<RemiFile>> requestDirectory(final String dir) {
+        return Observable.defer(new Callable<ObservableSource<List<RemiFile>>>() {
+            @Override
+            public ObservableSource<List<RemiFile>> call() throws Exception {
+                socket.emit(eventName(ClientEvent.REQ_DIR), dir);
+                return requestFilesSubject;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
     @Override
-    public Observable<FileTransferResponse> transferFile(String filepath) {
-        // TODO
-        return Observable.empty();
+    public Observable<FileTransferResponse> transferFile(final String filepath) {
+        return Observable.defer(new Callable<ObservableSource<FileTransferResponse>>() {
+            @Override
+            public ObservableSource<FileTransferResponse> call() throws Exception {
+                socket.emit(eventName(ClientEvent.REQ_FILE_TRANSFER), filepath);
+                return requestFiletransferSubject;
+            }
+        });
     }
 
     @Override
-    public Observable<Void> writeText(int keyCode, boolean upperCase) {
-        // TODO
-        return Observable.empty();
+    public Observable<Object> writeText(final int keyCode, final boolean upperCase) {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
+            @Override
+            public ObservableSource<Object> call() throws Exception {
+                socket.emit(eventName(ClientEvent.WRITE_TEXT),
+                        msgSerializer.writeTextMessage(keyCode, upperCase));
+                return Observable.empty();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
     private void setupSocket(String serverUrl) throws URISyntaxException {
@@ -226,43 +252,40 @@ public class SocketIoRemiClient implements RemiClient {
         socket = IO.socket(serverUrl, opts);
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-
             @Override
             public void call(Object... args) {
-                connectedSubject.onNext(null);
+                connectedSubject.onNext(Irrelevant.INSTANCE);
             }
 
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-
             @Override
             public void call(Object... args) {
-                disconnectedSubject.onNext(null);
+                disconnectedSubject.onNext(Irrelevant.INSTANCE);
             }
-        }).on(eventName(ServerEvent.DESKTOP_OS), new Emitter.Listener() {
-
+        }).on(eventName(ServerEvent.WELCOME), new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                desktopOS = (String) args[0];
+                connectionConfig = msgDeserializer.welcomeMessage((String) args[0]);
             }
-        }).on(eventName(ServerEvent.RESP_APPS), new Emitter.Listener(){
-
+        }).on(eventName(ServerEvent.RESP_APPS), new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.wtf("Remi", (String)args[0]);
-                String data = (String)args[0];
-                requestAppsSubject.onNext(msgDeserializer.requestAppsMessage(data));
+                requestAppsSubject
+                        .onNext(msgDeserializer.requestAppsMessage((String) args[0]));
+            }
+        }).on(eventName(ServerEvent.RESP_DIR), new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                requestFilesSubject
+                        .onNext(msgDeserializer.requestFilesMessage((String) args[0]));
+            }
+        }).on(eventName(ServerEvent.RESP_FILE_TRANSFER), new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                requestFiletransferSubject
+                        .onNext(msgDeserializer.fileTransferMessage((String) args[0]));
             }
         });
-    }
-
-    @NonNull
-    private String eventName(ClientEvent event) {
-        return event.name().toLowerCase();
-    }
-
-    @NonNull
-    private String eventName(ServerEvent event) {
-        return event.name().toLowerCase();
     }
 
 }

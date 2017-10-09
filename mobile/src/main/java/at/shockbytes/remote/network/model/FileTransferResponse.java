@@ -7,6 +7,34 @@ package at.shockbytes.remote.network.model;
 
 public class FileTransferResponse {
 
-    // TODO
+    private final String filename;
+    private final byte[] content;
+    private final String exception;
+
+    public FileTransferResponse() {
+        this(null, null, null);
+    }
+
+    public FileTransferResponse(String filename, byte[] content, String exception) {
+        this.filename = filename;
+        this.content = content;
+        this.exception = exception;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public byte[] getContent() {
+        return content;
+    }
+
+    public String getException() {
+        return exception;
+    }
+
+    public boolean isEmpty() {
+        return content == null;
+    }
 
 }
