@@ -3,6 +3,7 @@ package at.shockbytes.remote.network;
 import java.util.Arrays;
 import java.util.List;
 
+import at.shockbytes.remote.network.model.ConnectionConfig;
 import at.shockbytes.remote.network.model.FileTransferResponse;
 import at.shockbytes.remote.network.model.RemiFile;
 import io.reactivex.Observable;
@@ -36,6 +37,11 @@ public class DebugRemiClient implements RemiClient {
 
     public String getDesktopOS() {
         return "Debug";
+    }
+
+    @Override
+    public ConnectionConfig.ConnectionPermissions getConnectionPermissions() {
+        return new ConnectionConfig.ConnectionPermissions();
     }
 
     @Override

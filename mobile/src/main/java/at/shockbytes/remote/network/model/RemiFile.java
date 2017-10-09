@@ -34,6 +34,9 @@ public class RemiFile {
     }
 
     public String getExtension() {
+        if (extension == null) {
+            getFileExtensionFromName();
+        }
         return extension;
     }
 

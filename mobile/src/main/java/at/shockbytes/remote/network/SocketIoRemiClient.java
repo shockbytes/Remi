@@ -227,7 +227,7 @@ public class SocketIoRemiClient implements RemiClient {
                 socket.emit(eventName(ClientEvent.REQ_FILE_TRANSFER), filepath);
                 return requestFiletransferSubject;
             }
-        });
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
     @Override

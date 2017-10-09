@@ -94,7 +94,6 @@ public class LoginFragment extends BaseFragment
 
     @OnLongClick(R.id.fragment_login_imgview_icon)
     protected boolean onClickDebugEntryIcon() {
-
         listener.onConnected(true);
         return true;
     }
@@ -118,7 +117,7 @@ public class LoginFragment extends BaseFragment
 
         // TODO Search for devices
         adapter.setData(Arrays.asList(
-                new DesktopApp("PC-Pickachu", "10.59.0.243", DesktopApp.OperatingSystem.WINDOWS),
+                new DesktopApp("PC-Pickachu", "10.59.0.239", DesktopApp.OperatingSystem.WINDOWS),
                 new DesktopApp("Localhost", "10.0.2.2", DesktopApp.OperatingSystem.WINDOWS),
                 new DesktopApp("Liri OS", "192.168.1.89", DesktopApp.OperatingSystem.LINUX),
                 new DesktopApp("Mac Mini", "192.128.0.40", DesktopApp.OperatingSystem.MAC_OS)));

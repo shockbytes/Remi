@@ -1,7 +1,14 @@
 package at.shockbytes.remote.util;
 
+import android.os.Environment;
 import android.support.annotation.NonNull;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +42,7 @@ import static at.shockbytes.remote.util.RemiUtils.FileCategory.WORD;
 
 public class RemiUtils extends ResourceManager {
 
-    public enum Irrelevant { INSTANCE }
+    public enum Irrelevant {INSTANCE}
 
     enum FileCategory {
         FOLDER, TEXT, CODE, PDF, EXE, JAR, APP, APK, IMAGE,
@@ -69,7 +76,7 @@ public class RemiUtils extends ResourceManager {
         return scheme + ip + ":" + port;
     }
 
-    public static int getDrawableResourceForFiletype(RemiFile file) {
+    public static int getDrawableResourceForFileType(RemiFile file) {
         return fileExtensionMap.get(getFileCategory(file));
     }
 
@@ -82,16 +89,74 @@ public class RemiUtils extends ResourceManager {
         FileCategory category;
         switch (file.getExtension()) {
 
-            // TODO Music
+            case "aac":
+            case "aiff":
+            case "flac":
+            case "m4p":
+            case "mp3":
+            case "wav":
+            case "wma":
+                category = MUSIC;
+                break;
 
-            // TODO Video
+            case "webm":
+            case "mkv":
+            case "flv":
+            case "ogg":
+            case "avi":
+            case "wmv":
+            case "mov":
+            case "mp4":
+            case "mpg":
+            case "3gp":
+                category = VIDEO;
+                break;
 
-            // TODO Code
+            case "c":
+            case "cpp":
+            case "cs":
+            case "h":
+            case "m":
+            case "java":
+            case "js":
+            case "groovy":
+            case "html":
+            case "php":
+            case "swift":
+            case "playground":
+            case "py":
+            case "sh":
+            case "rb":
+            case "asm":
+            case "kt":
+            case "gradle":
+            case "json":
+            case "xml":
+                category = CODE;
+                break;
 
-            // TODO Archive
+            case "zip":
+            case "tar":
+            case "iso":
+            case "bz2":
+            case "gz":
+            case "7z":
+            case "s7z":
+            case "dmg":
+            case "rar":
+                category = ARCHIVE;
+                break;
+
+            case "jpg":
+            case "jpeg":
+            case "tiff":
+            case "gif":
+            case "bmp":
+            case "png":
+                category = IMAGE;
+                break;
 
             case "text":
-                // Fall through
             case "txt":
                 category = TEXT;
                 break;
@@ -101,7 +166,6 @@ public class RemiUtils extends ResourceManager {
                 break;
 
             case "bat":
-                // Fall through
             case "exe":
                 category = EXE;
                 break;
@@ -119,21 +183,18 @@ public class RemiUtils extends ResourceManager {
                 break;
 
             case "pptx":
-                // Fall through
             case "ppt":
                 category = POWERPOINT;
                 break;
 
+            case "xlsm":
             case "xlsx":
-                // Fall through
             case "xls":
                 category = EXCEL;
                 break;
 
             case "odt":
-                // Fall through
             case "docx":
-                // Fall through
             case "doc":
                 category = WORD;
                 break;
@@ -144,6 +205,17 @@ public class RemiUtils extends ResourceManager {
 
         }
         return category;
+    }
+
+    public static void copyFileToDownloadsFolder(byte[] content, String filename) throws IOException {
+        File fileOut = new File(Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+        ByteArrayInputStream inStream = new ByteArrayInputStream(content);
+
+        FileOutputStream out = new FileOutputStream(fileOut);
+        IOUtils.copy(inStream, out);
+        IOUtils.closeQuietly(inStream);
+        IOUtils.closeQuietly(out);
     }
 
     @NonNull

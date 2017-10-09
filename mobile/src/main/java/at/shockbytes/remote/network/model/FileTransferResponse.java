@@ -37,4 +37,9 @@ public class FileTransferResponse {
         return content == null;
     }
 
+    @Override
+    public String toString() {
+        int size = content == null ? -1 : content.length;
+        return "Filename: " + filename + "\nException: " + exception + "\nSize: " + size;
+    }
 }
