@@ -25,10 +25,8 @@ import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.util.adapter.BaseAdapter;
 import butterknife.BindView;
-import rx.Subscriber;
-import rx.functions.Action1;
-import rx.observers.SafeSubscriber;
-
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.ResourceObserver;
 
 public class AppsFragment extends BaseFragment
         implements BaseAdapter.OnItemClickListener<String>,
@@ -52,16 +50,18 @@ public class AppsFragment extends BaseFragment
 
     private AppsAdapter adapter;
 
-    private SafeSubscriber<List<String>> subscriber = new SafeSubscriber<>(new Subscriber<List<String>>() {
-        @Override
-        public void onCompleted() {
-
-        }
+    private ResourceObserver<List<String>> subscriber = new ResourceObserver<List<String>>() {
 
         @Override
         public void onError(Throwable e) {
             e.printStackTrace();
             Snackbar.make(getView(), "Cannot request apps", Snackbar.LENGTH_LONG).show();
+            dispose();
+        }
+
+        @Override
+        public void onComplete() {
+            dispose();
         }
 
         @Override
@@ -69,7 +69,7 @@ public class AppsFragment extends BaseFragment
             txtEmpty.setAlpha(apps.size() == 0 ? 1 : 0);
             adapter.setData(apps);
         }
-    });
+    };
 
     public AppsFragment() { }
 
@@ -101,8 +101,8 @@ public class AppsFragment extends BaseFragment
     @Override
     public void onStop() {
         super.onStop();
-        if (!subscriber.isUnsubscribed()) {
-            subscriber.unsubscribe();
+        if (!subscriber.isDisposed()) {
+            subscriber.dispose();
         }
     }
 
@@ -116,9 +116,9 @@ public class AppsFragment extends BaseFragment
     public void onOverflowMenuItemClicked(int itemId, final String content) {
 
         if (itemId == R.id.popup_apps_item_remove) {
-            client.removeApp(content).subscribe(new Action1<Void>() {
+            client.removeApp(content).subscribe(new Consumer<Object>() {
                 @Override
-                public void call(Void aVoid) {
+                public void accept(Object object) {
                     adapter.deleteEntity(content);
                 }
             });

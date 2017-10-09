@@ -2,6 +2,10 @@ package at.shockbytes.remote.network.message;
 
 import java.util.List;
 
+import at.shockbytes.remote.network.model.ConnectionConfig;
+import at.shockbytes.remote.network.model.FileTransferResponse;
+import at.shockbytes.remote.network.model.RemiFile;
+
 /**
  * @author Martin Macheiner
  *         Date: 28.09.2017.
@@ -10,5 +14,11 @@ import java.util.List;
 public interface MessageDeserializer {
 
     List<String> requestAppsMessage(String msg);
+
+    List<RemiFile> requestFilesMessage(String msg);
+
+    ConnectionConfig welcomeMessage(String msg);
+
+    FileTransferResponse fileTransferMessage(String msg);
 
 }

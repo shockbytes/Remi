@@ -31,6 +31,7 @@
         android:weightSum="1">
 
         <TextView
+            android:id="@+id/fragment_files_txt_path"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
@@ -38,11 +39,11 @@
             android:layout_weight="0.75"
             android:fontFamily="sans-serif-light"
             android:gravity="center_vertical"
-            android:text="C:/Program Files/gradle/bin/gradle.bat"
             android:textColor="@android:color/white"
             android:textSize="15sp" />
 
         <ImageButton
+            android:id="@+id/fragment_files_btn_back"
             style="?android:borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"

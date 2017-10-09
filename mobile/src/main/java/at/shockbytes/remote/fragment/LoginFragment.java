@@ -27,8 +27,7 @@ import at.shockbytes.util.adapter.BaseAdapter;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
-import rx.functions.Action1;
-
+import io.reactivex.functions.Consumer;
 
 public class LoginFragment extends BaseFragment
         implements BaseAdapter.OnItemClickListener<DesktopApp> {
@@ -47,7 +46,8 @@ public class LoginFragment extends BaseFragment
         return fragment;
     }
 
-    public LoginFragment() { }
+    public LoginFragment() {
+    }
 
     @Inject
     protected RemiClient client;
@@ -95,7 +95,7 @@ public class LoginFragment extends BaseFragment
     @OnLongClick(R.id.fragment_login_imgview_icon)
     protected boolean onClickDebugEntryIcon() {
 
-       listener.onConnected(true);
+        listener.onConnected(true);
         return true;
     }
 
@@ -119,7 +119,8 @@ public class LoginFragment extends BaseFragment
         // TODO Search for devices
         adapter.setData(Arrays.asList(
                 new DesktopApp("PC-Pickachu", "10.59.0.243", DesktopApp.OperatingSystem.WINDOWS),
-                new DesktopApp("MeschtOnLinux", "192.128.0.23", DesktopApp.OperatingSystem.LINUX),
+                new DesktopApp("Localhost", "10.0.2.2", DesktopApp.OperatingSystem.WINDOWS),
+                new DesktopApp("Liri OS", "192.168.1.89", DesktopApp.OperatingSystem.LINUX),
                 new DesktopApp("Mac Mini", "192.128.0.40", DesktopApp.OperatingSystem.MAC_OS)));
         recyclerView.animate().alpha(1).scaleX(1).scaleY(1)
                 .setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500).start();
@@ -127,14 +128,14 @@ public class LoginFragment extends BaseFragment
 
     private void connectToDevice(String url) {
 
-        client.connect(url).subscribe(new Action1<Void>() {
+        client.connect(url).subscribe(new Consumer<Object>() {
             @Override
-            public void call(Void aVoid) {
+            public void accept(Object o) throws Exception {
                 listener.onConnected(false);
             }
-        }, new Action1<Throwable>() {
+        }, new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void accept(Throwable throwable) {
                 throwable.printStackTrace();
                 listener.onConnectionFailed(throwable);
             }

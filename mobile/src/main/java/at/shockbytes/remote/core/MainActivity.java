@@ -32,9 +32,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import icepick.Icepick;
 import icepick.State;
-import rx.Subscriber;
-import rx.functions.Action1;
-import rx.observers.SafeSubscriber;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.ResourceObserver;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
@@ -62,23 +61,26 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     private Unbinder unbinder;
 
-    private SafeSubscriber<Void> disconnectSubscriber = new SafeSubscriber<>(new Subscriber<Void>() {
+    private ResourceObserver<Object> disconnectSubscriber = new ResourceObserver<Object>() {
         @Override
-        public void onCompleted() {
-
+        public void onComplete() {
+            dispose();
         }
 
         @Override
         public void onError(Throwable e) {
-
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Error while listening for connection loss",
+                    Toast.LENGTH_SHORT).show();
+            dispose();
         }
 
         @Override
-        public void onNext(Void aVoid) {
+        public void onNext(Object obj) {
             Toast.makeText(getApplicationContext(), "Desktop disconnected", Toast.LENGTH_SHORT).show();
             supportFinishAfterTransition();
         }
-    });
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,29 +109,23 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        setTitle(client.getDesktopOS());
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
 
-        if (!disconnectSubscriber.isUnsubscribed()) {
-            disconnectSubscriber.unsubscribe();
+        if (!disconnectSubscriber.isDisposed()) {
+            disconnectSubscriber.dispose();
         }
 
-        client.disconnect().subscribe(new Action1<Void>() {
+        client.disconnect().subscribe(new Consumer<Object>() {
             @Override
-            public void call(Void aVoid) {
+            public void accept(Object object) {
                 client.close();
                 Toast.makeText(getApplicationContext(), "Disconnected", Toast.LENGTH_SHORT).show();
             }
-        }, new Action1<Throwable>() {
+        }, new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void accept(Throwable throwable) {
                 throwable.printStackTrace();
                 Toast.makeText(getApplicationContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
