@@ -1,5 +1,6 @@
 package at.shockbytes.remote.util;
 
+import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 
@@ -205,6 +206,43 @@ public class RemiUtils extends ResourceManager {
 
         }
         return category;
+    }
+
+    public static String getConnectionErrorByResultCode(Context context, int resultCode) {
+
+        String error;
+        if (resultCode == RemiClient.CONNECTION_RESULT_ERROR_ALREADY_CONNECTED) {
+            error = context.getString(R.string.connection_error_already_connected);
+        } else if (resultCode == RemiClient.CONNECTION_RESULT_ERROR_NETWORK) {
+            error = context.getString(R.string.connection_error_network);
+        } else {
+            error = context.getString(R.string.connection_error_unknown);
+        }
+        return error;
+    }
+
+    public static int getOperatingSystemIcon(String os) {
+
+        int icon = 0;
+        switch (os) {
+
+            case "Windows":
+                icon = R.drawable.ic_os_windows;
+                break;
+
+            case "Linux":
+                icon = R.drawable.ic_os_linux;
+                break;
+
+            case "Mac":
+                icon = R.drawable.ic_os_apple;
+                break;
+
+            case "NA":
+                icon = R.drawable.ic_os_na;
+                break;
+        }
+        return icon;
     }
 
     public static void copyFileToDownloadsFolder(byte[] content, String filename) throws IOException {

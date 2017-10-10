@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -27,6 +28,7 @@ import at.shockbytes.remote.fragment.MouseFragment;
 import at.shockbytes.remote.fragment.PresentationFragment;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.util.AppParams;
+import at.shockbytes.remote.util.RemiUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     private Unbinder unbinder;
 
+    private MenuItem itemWear;
+
     private ResourceObserver<Object> disconnectSubscriber = new ResourceObserver<Object>() {
         @Override
         public void onComplete() {
@@ -90,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
             getWindow().setExitTransition(new Fade());
         }
         setContentView(R.layout.activity_main);
-        ((RemiApp)getApplication()).getAppComponent().inject(this);
+        ((RemiApp) getApplication()).getAppComponent().inject(this);
         unbinder = ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
@@ -105,7 +109,22 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        itemWear = menu.findItem(R.id.menu_main_wear);
+
+        String desktopOS = client.getDesktopOS();
+        if (!desktopOS.equals("NA")) {
+            menu.findItem(R.id.menu_main_desktop_os)
+                    .setVisible(true)
+                    .setTitle(client.getDesktopOS())
+                    .setIcon(RemiUtils.getOperatingSystemIcon(client.getDesktopOS()));
+        }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @Override
@@ -136,6 +155,16 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+
+            case R.id.menu_main_wear:
+
+                showSnackbar("Android wear control active");
+                break;
+
+            case R.id.menu_main_desktop_os:
+
+                showSnackbar("Connected to " + client.getDesktopOS());
+                break;
 
             case R.id.menu_main_logout:
 
@@ -171,17 +200,20 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
             case AppParams.POSITION_APPS:
                 fabKeyboard.hide();
-                ft.replace(R.id.main_content, AppsFragment.newInstance());
+                ft.replace(R.id.main_content,
+                        AppsFragment.newInstance(client.getConnectionPermissions().hasAppsPermission()));
                 break;
 
             case AppParams.POSITION_MOUSE:
                 fabKeyboard.show();
-                ft.replace(R.id.main_content, MouseFragment.newInstance());
+                ft.replace(R.id.main_content, MouseFragment
+                        .newInstance(client.getConnectionPermissions().hasMousePermission()));
                 break;
 
             case AppParams.POSITION_FILES:
                 fabKeyboard.hide();
-                ft.replace(R.id.main_content, FilesFragment.newInstance());
+                ft.replace(R.id.main_content, FilesFragment
+                        .newInstance(client.getConnectionPermissions().hasFilesPermission()));
                 break;
 
             case AppParams.POSITION_PRESENTATION:
@@ -194,12 +226,10 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-
     }
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-
     }
 
     private void initializeViews() {
@@ -213,9 +243,19 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         fabKeyboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Show Keyboard", Toast.LENGTH_SHORT).show();
+
+                if (client.getConnectionPermissions().hasMousePermission()) {
+                    Toast.makeText(getApplicationContext(), "Show Keyboard", Toast.LENGTH_SHORT).show();
+                } else {
+                    showSnackbar("No permission for keyboard");
+                }
+
             }
         });
+    }
+
+    private void showSnackbar(String text) {
+        Snackbar.make(findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG).show();
     }
 
 }

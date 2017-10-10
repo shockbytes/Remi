@@ -14,6 +14,10 @@ import io.reactivex.Observable;
 
 public interface RemiClient {
 
+    int CONNECTION_RESULT_OK = 0;
+    int CONNECTION_RESULT_ERROR_ALREADY_CONNECTED = 1;
+    int CONNECTION_RESULT_ERROR_NETWORK = 2;
+
     enum ClientEvent {
         MOUSE_MOVE, MOUSE_CLICK_LEFT, MOUSE_CLICK_RIGHT, SCROLL,
         REQ_BASE_DIR, REQ_DIR, WRITE_TEXT, REQ_FILE_TRANSFER,
@@ -22,12 +26,12 @@ public interface RemiClient {
     }
 
     enum ServerEvent {
-        RESP_DIR, RESP_FILE_TRANSFER, RESP_SLIDES, RESP_APPS, WELCOME
+        RESP_DIR, RESP_FILE_TRANSFER, RESP_SLIDES, RESP_APPS, ALREADY_CONNECTED, WELCOME
     }
 
     //------------------------------- Basic operations -------------------------------
 
-    Observable<Object> connect(String serverUrl);
+    Observable<Integer> connect(String serverUrl);
 
     Observable<Object> disconnect();
 

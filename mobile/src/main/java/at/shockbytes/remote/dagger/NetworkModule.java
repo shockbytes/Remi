@@ -6,6 +6,8 @@ import javax.inject.Singleton;
 
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.network.SocketIoRemiClient;
+import at.shockbytes.remote.network.discovery.JmDnsServiceFinder;
+import at.shockbytes.remote.network.discovery.ServiceFinder;
 import at.shockbytes.remote.network.message.JsonMessageDeserializer;
 import at.shockbytes.remote.network.message.JsonMessageSerializer;
 import at.shockbytes.remote.network.message.MessageDeserializer;
@@ -32,7 +34,7 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient() {
+    OkHttpClient provideOkHttpClient() {
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -45,22 +47,28 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    public RemiClient provideRemiClient(OkHttpClient okHttpClient,
-                                        MessageSerializer serializer,
-                                        MessageDeserializer msgDeserializer) {
+    RemiClient provideRemiClient(OkHttpClient okHttpClient,
+                                 MessageSerializer serializer,
+                                 MessageDeserializer msgDeserializer) {
         return new SocketIoRemiClient(okHttpClient, serializer, msgDeserializer);
     }
 
     @Provides
     @Singleton
-    public MessageSerializer provideMessageSerializer() {
+    MessageSerializer provideMessageSerializer() {
         return new JsonMessageSerializer();
     }
 
     @Provides
     @Singleton
-    public MessageDeserializer provideMessageDeserializer() {
+    MessageDeserializer provideMessageDeserializer() {
         return new JsonMessageDeserializer();
+    }
+
+    @Provides
+    @Singleton
+    ServiceFinder provideServiceFinder() {
+        return new JmDnsServiceFinder(app.getApplicationContext());
     }
 
 }

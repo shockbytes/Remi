@@ -45,7 +45,7 @@ public class ConnectionConfig {
         private boolean hasFileTransferPermission;
 
         public ConnectionPermissions() {
-            this(false, false, false, false);
+            this(true, true, true, true);
         }
 
         public ConnectionPermissions(boolean hasMousePermission, boolean hasAppsPermission,
@@ -60,32 +60,36 @@ public class ConnectionConfig {
             return hasMousePermission;
         }
 
-        public void setHasMousePermission(boolean hasMousePermission) {
+        public ConnectionPermissions setHasMousePermission(boolean hasMousePermission) {
             this.hasMousePermission = hasMousePermission;
+            return this;
         }
 
         public boolean hasAppsPermission() {
             return hasAppsPermission;
         }
 
-        public void setHasAppsPermission(boolean hasAppsPermission) {
+        public ConnectionPermissions setHasAppsPermission(boolean hasAppsPermission) {
             this.hasAppsPermission = hasAppsPermission;
+            return this;
         }
 
         public boolean hasFilesPermission() {
             return hasFilesPermission;
         }
 
-        public void setHasFilesPermission(boolean hasFilesPermission) {
+        public ConnectionPermissions setHasFilesPermission(boolean hasFilesPermission) {
             this.hasFilesPermission = hasFilesPermission;
+            return this;
         }
 
         public boolean hasFileTransferPermission() {
             return hasFileTransferPermission;
         }
 
-        public void setHasFileTransferPermission(boolean hasFileTransferPermission) {
+        public ConnectionPermissions setHasFileTransferPermission(boolean hasFileTransferPermission) {
             this.hasFileTransferPermission = hasFileTransferPermission;
+            return this;
         }
 
     }
