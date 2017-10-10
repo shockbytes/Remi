@@ -43,10 +43,12 @@ public class FilesFragment extends BaseFragment
         FilesAdapter.OnOverflowMenuItemClickListener<RemiFile> {
 
     private static final int REQ_CODE_EXTERNAL_STORAGE = 0x9482;
+    private static final String ARG_PERMISSION = "arg_permission";
 
-    public static FilesFragment newInstance() {
+    public static FilesFragment newInstance(boolean hasPermission) {
         FilesFragment fragment = new FilesFragment();
         Bundle args = new Bundle();
+        args.putBoolean(ARG_PERMISSION, hasPermission);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,6 +66,7 @@ public class FilesFragment extends BaseFragment
     private Stack<String> backStack;
     private RemiFile fileToTransfer;
 
+    private boolean hasPermission;
 
     public FilesFragment() {
     }
@@ -72,6 +75,7 @@ public class FilesFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((RemiApp) getActivity().getApplication()).getAppComponent().inject(this);
+        hasPermission = getArguments().getBoolean(ARG_PERMISSION);
     }
 
     @Override
@@ -83,15 +87,21 @@ public class FilesFragment extends BaseFragment
     @Override
     public void onStart() {
         super.onStart();
-        client.requestBaseDirectories().subscribeWith(new FileObserver());
-        backStack = new Stack<>();
+
+        if (hasPermission) {
+            backStack = new Stack<>();
+            client.requestBaseDirectories().subscribeWith(new FileObserver());
+        } else {
+            Snackbar.make(getView(), "No permission to request files!", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override
     protected void setupViews() {
 
         recyclerView.setLayoutManager(getLayoutManager());
-        adapter = new FilesAdapter(getContext(), new ArrayList<RemiFile>());
+        adapter = new FilesAdapter(getContext(), new ArrayList<RemiFile>(),
+                client.getConnectionPermissions().hasFileTransferPermission());
         adapter.setOnItemClickListener(this);
         adapter.setOnOverflowMenuItemClickListener(this);
         recyclerView.setAdapter(adapter);
@@ -137,8 +147,7 @@ public class FilesFragment extends BaseFragment
 
             case R.id.popup_file_item_to_apps:
 
-                Snackbar.make(getView(), content.getName() + " added to apps",
-                        Snackbar.LENGTH_SHORT).show();
+                showSnackbar(content.getName() + " added to apps");
                 client.sendAddAppRequest(content.getPath()).subscribe();
                 break;
         }
@@ -183,7 +192,7 @@ public class FilesFragment extends BaseFragment
         }
 
         // TODO Post notification for ongoing download
-        Snackbar.make(getView(), "Copying " + fileToTransfer.getName(), Snackbar.LENGTH_SHORT).show();
+        showSnackbar("Copying " + fileToTransfer.getName());
 
         client.transferFile(fileToTransfer.getPath())
                 .subscribe(new Consumer<FileTransferResponse>() {
@@ -200,9 +209,13 @@ public class FilesFragment extends BaseFragment
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         fileToTransfer = null;
-                        Snackbar.make(getView(), throwable.getMessage(), Snackbar.LENGTH_LONG).show();
+                        showSnackbar(throwable.getMessage());
                     }
                 });
+    }
+
+    private void showSnackbar(String text) {
+        Snackbar.make(getView(), text, Snackbar.LENGTH_SHORT).show();
     }
 
     private class FileObserver extends DisposableObserver<List<RemiFile>> {
@@ -219,7 +232,7 @@ public class FilesFragment extends BaseFragment
         @Override
         public void onError(@NonNull Throwable e) {
             e.printStackTrace();
-            Snackbar.make(getView(), "Can't access files", Snackbar.LENGTH_SHORT).show();
+            showSnackbar("Can't access files");
             dispose();
         }
 

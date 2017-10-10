@@ -35,8 +35,11 @@ public class FilesAdapter extends BaseAdapter<RemiFile> {
 
     private OnOverflowMenuItemClickListener<RemiFile> listener;
 
-    public FilesAdapter(Context cxt, List<RemiFile> data) {
+    private boolean isFileTransferPermitted;
+
+    public FilesAdapter(Context cxt, List<RemiFile> data, boolean isFileTransferPermitted) {
         super(cxt, data);
+        this.isFileTransferPermitted = isFileTransferPermitted;
     }
 
     public void setOnOverflowMenuItemClickListener(OnOverflowMenuItemClickListener<RemiFile> listener) {
@@ -97,6 +100,8 @@ public class FilesAdapter extends BaseAdapter<RemiFile> {
             imgBtnOverflow.setVisibility(content.isDirectory() ? View.GONE : View.VISIBLE);
             // Only executables can be added to apps
             popupMenu.getMenu().getItem(0).setVisible(content.isExecutable());
+            // Sending to phone must be permitted by the desktop
+            popupMenu.getMenu().getItem(1).setVisible(isFileTransferPermitted);
         }
 
         private void tryShowIconsInPopupMenu(PopupMenu menu) {

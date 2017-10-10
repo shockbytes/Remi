@@ -3,6 +3,8 @@ package at.shockbytes.remote.network.message;
 import android.util.Base64;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
@@ -30,32 +32,30 @@ public class JsonMessageDeserializer implements MessageDeserializer {
 
     @Override
     public List<String> requestAppsMessage(String msg) {
-        return gson.fromJson(msg, new TypeToken<ArrayList<String>>(){}.getType());
+        return gson.fromJson(msg, new TypeToken<ArrayList<String>>() {
+        }.getType());
     }
 
     @Override
     public List<RemiFile> requestFilesMessage(String msg) {
-        return gson.fromJson(msg, new TypeToken<ArrayList<RemiFile>>(){}.getType());
+        return gson.fromJson(msg, new TypeToken<ArrayList<RemiFile>>() {
+        }.getType());
     }
 
     @Override
     public ConnectionConfig welcomeMessage(String msg) {
 
-        try {
+        JsonObject element = new JsonParser().parse(msg).getAsJsonObject();
 
-            JSONObject object = new JSONObject(msg);
-
-            // TODO Fetch permissions
-            ConnectionConfig.ConnectionPermissions permissions
-                    = new ConnectionConfig.ConnectionPermissions();
-
-            return new ConnectionConfig()
-                    .setDesktopOS(object.getString("operating_system"))
-                    .setPermissions(permissions);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return new ConnectionConfig();
+        JsonObject permissionObject = element.get("permissions").getAsJsonObject();
+        ConnectionConfig.ConnectionPermissions permissions = new ConnectionConfig.ConnectionPermissions()
+                .setHasMousePermission(permissionObject.get("perm_mouse").getAsBoolean())
+                .setHasFilesPermission(permissionObject.get("perm_files").getAsBoolean())
+                .setHasFileTransferPermission(permissionObject.get("perm_file_transfer").getAsBoolean())
+                .setHasAppsPermission(permissionObject.get("perm_apps").getAsBoolean());
+        return new ConnectionConfig()
+                .setDesktopOS(element.get("operating_system").getAsString())
+                .setPermissions(permissions);
     }
 
     @Override

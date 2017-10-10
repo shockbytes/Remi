@@ -41,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/fragment_login_imgview_icon" />
 
     <Button
-        android:id="@+id/fragment_login_btn_search"
+        android:id="@+id/fragment_login_btn_lookup"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
         android:drawableStart="@drawable/ic_search"
         android:fontFamily="sans-serif-light"
         android:padding="16dp"
-        android:text="Search for devices"
+        android:text="Look for devices"
         android:textColor="@android:color/white"
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -74,7 +74,7 @@
         android:alpha="0"
         android:scaleX="0.7"
         android:scaleY="0.7"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_login_btn_search"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_login_btn_lookup"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

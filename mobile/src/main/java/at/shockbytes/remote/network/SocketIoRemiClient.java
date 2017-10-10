@@ -36,7 +36,7 @@ public class SocketIoRemiClient implements RemiClient {
     private MessageDeserializer msgDeserializer;
     private ConnectionConfig connectionConfig;
 
-    private PublishSubject<Object> connectedSubject;
+    private PublishSubject<Integer> connectedSubject;
     private PublishSubject<Object> disconnectedSubject;
     private PublishSubject<List<String>> requestAppsSubject;
     private PublishSubject<List<RemiFile>> requestFilesSubject;
@@ -58,10 +58,10 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Object> connect(final String serverUrl) {
-        return Observable.defer(new Callable<ObservableSource<Object>>() {
+    public Observable<Integer> connect(final String serverUrl) {
+        return Observable.defer(new Callable<ObservableSource<Integer>>() {
             @Override
-            public ObservableSource<Object> call() throws Exception {
+            public ObservableSource<Integer> call() throws Exception {
                 try {
                     setupSocket(serverUrl);
                     socket.connect();
@@ -254,7 +254,7 @@ public class SocketIoRemiClient implements RemiClient {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                connectedSubject.onNext(Irrelevant.INSTANCE);
+                // TODO Do something in here?
             }
 
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
@@ -266,6 +266,12 @@ public class SocketIoRemiClient implements RemiClient {
             @Override
             public void call(Object... args) {
                 connectionConfig = msgDeserializer.welcomeMessage((String) args[0]);
+                connectedSubject.onNext(RemiClient.CONNECTION_RESULT_OK);
+            }
+        }).on(eventName(ServerEvent.ALREADY_CONNECTED), new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                connectedSubject.onNext(RemiClient.CONNECTION_RESULT_ERROR_ALREADY_CONNECTED);
             }
         }).on(eventName(ServerEvent.RESP_APPS), new Emitter.Listener() {
             @Override

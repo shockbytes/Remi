@@ -10,6 +10,11 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/menu_main_desktop_os"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/menu_main_logout"
         android:title="@string/menu_logout"
         app:showAsAction="never" />

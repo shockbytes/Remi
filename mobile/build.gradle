@@ -60,4 +60,8 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
     provided 'frankiesardo:icepick-processor:3.2.0'
     provided 'javax.annotation:jsr250-api:1.0'
+
+    compile "de.mannodermaus.rxjava2:rxbonjour:2.0.0-RC1"
+    compile "de.mannodermaus.rxjava2:rxbonjour-platform-android:2.0.0-RC1"
+    compile "de.mannodermaus.rxjava2:rxbonjour-driver-jmdns:2.0.0-RC1"
 }

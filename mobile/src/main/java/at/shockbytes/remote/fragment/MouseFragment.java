@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GestureDetectorCompat;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -22,9 +23,12 @@ import butterknife.BindView;
 public class MouseFragment extends BaseFragment
         implements GestureDetector.OnGestureListener, View.OnTouchListener {
 
-    public static MouseFragment newInstance() {
+    private static final String ARG_PERMISSION = "arg_permission";
+
+    public static MouseFragment newInstance(boolean hasPermission) {
         MouseFragment fragment = new MouseFragment();
         Bundle args = new Bundle();
+        args.putBoolean(ARG_PERMISSION, hasPermission);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,6 +51,8 @@ public class MouseFragment extends BaseFragment
     private float scrollDensity;
     private GestureDetectorCompat detector;
 
+    private boolean hasPermission;
+
     public MouseFragment() {
     }
 
@@ -55,6 +61,7 @@ public class MouseFragment extends BaseFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((RemiApp) getActivity().getApplication()).getAppComponent().inject(this);
+        hasPermission = getArguments().getBoolean(ARG_PERMISSION);
     }
 
     @Override
@@ -74,8 +81,13 @@ public class MouseFragment extends BaseFragment
 
     @Override
     protected void setupViews() {
-        detector = new GestureDetectorCompat(getActivity().getApplicationContext(), this);
-        mouseView.setOnTouchListener(this);
+
+        if (hasPermission) {
+            detector = new GestureDetectorCompat(getActivity().getApplicationContext(), this);
+            mouseView.setOnTouchListener(this);
+        } else {
+            Snackbar.make(getView(), "No permission for mouse!", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override

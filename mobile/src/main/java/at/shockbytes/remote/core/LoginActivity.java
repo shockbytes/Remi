@@ -12,6 +12,7 @@ import android.transition.Explode;
 
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.fragment.LoginFragment;
+import at.shockbytes.remote.util.RemiUtils;
 
 public class LoginActivity extends AppCompatActivity
         implements LoginFragment.OnConnectionResponseListener{
@@ -44,7 +45,9 @@ public class LoginActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConnectionFailed(Throwable t) {
-        Snackbar.make(findViewById(R.id.login_content), t.getMessage(), Snackbar.LENGTH_SHORT).show();
+    public void onConnectionFailed(int resultCode) {
+
+        String msg = RemiUtils.getConnectionErrorByResultCode(this, resultCode);
+        Snackbar.make(findViewById(R.id.login_content), msg, Snackbar.LENGTH_SHORT).show();
     }
 }

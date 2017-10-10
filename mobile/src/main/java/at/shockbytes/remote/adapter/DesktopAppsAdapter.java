@@ -10,6 +10,7 @@ import java.util.List;
 
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.network.model.DesktopApp;
+import at.shockbytes.remote.util.RemiUtils;
 import at.shockbytes.util.adapter.BaseAdapter;
 import butterknife.BindView;
 
@@ -27,6 +28,15 @@ public class DesktopAppsAdapter extends BaseAdapter<DesktopApp> {
     @Override
     public BaseAdapter<DesktopApp>.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(layoutInflater.inflate(R.layout.item_desktop_app, parent, false));
+    }
+
+    @Override
+    public void addEntityAtFirst(DesktopApp entity) {
+        // Only add entity if it's not already added
+        int location = this.getLocation(this.data, entity);
+        if(location < 0) {
+            super.addEntityAtFirst(entity);
+        }
     }
 
     class ViewHolder extends BaseAdapter<DesktopApp>.ViewHolder {
@@ -48,7 +58,7 @@ public class DesktopAppsAdapter extends BaseAdapter<DesktopApp> {
         public void bind(DesktopApp s) {
             content = s;
 
-            imgViewOs.setImageResource(s.getOperatingSystemIcon());
+            imgViewOs.setImageResource(RemiUtils.getOperatingSystemIcon(s.getOs()));
             txtName.setText(s.getName());
             txtIp.setText(s.getIp());
         }

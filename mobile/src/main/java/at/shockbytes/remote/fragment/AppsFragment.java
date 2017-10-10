@@ -30,9 +30,12 @@ public class AppsFragment extends BaseFragment
         implements BaseAdapter.OnItemClickListener<String>,
         AppsAdapter.OnOverflowMenuItemClickListener<String> {
 
-    public static AppsFragment newInstance() {
+    private static final String ARG_PERMISSION = "arg_permission";
+
+    public static AppsFragment newInstance(boolean hasPermission) {
         AppsFragment fragment = new AppsFragment();
         Bundle args = new Bundle();
+        args.putBoolean(ARG_PERMISSION, hasPermission);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,6 +50,8 @@ public class AppsFragment extends BaseFragment
     protected TextView txtEmpty;
 
     private AppsAdapter adapter;
+
+    private boolean hasPermission;
 
     private ResourceObserver<List<String>> subscriber = new ResourceObserver<List<String>>() {
 
@@ -75,6 +80,7 @@ public class AppsFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((RemiApp) getActivity().getApplication()).getAppComponent().inject(this);
+        hasPermission = getArguments().getBoolean(ARG_PERMISSION);
     }
 
     @Override
@@ -92,7 +98,11 @@ public class AppsFragment extends BaseFragment
     @Override
     public void onStart() {
         super.onStart();
-        client.requestApps().subscribe(subscriber);
+        if (hasPermission) {
+            client.requestApps().subscribe(subscriber);
+        } else {
+            Snackbar.make(getView(), "No permission to request apps!", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override

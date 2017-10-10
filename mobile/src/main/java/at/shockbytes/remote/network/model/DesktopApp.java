@@ -1,7 +1,5 @@
 package at.shockbytes.remote.network.model;
 
-import at.shockbytes.remote.R;
-
 /**
  * @author Martin Macheiner
  *         Date: 27.09.2017.
@@ -9,18 +7,16 @@ import at.shockbytes.remote.R;
 
 public class DesktopApp {
 
-    public enum OperatingSystem {
-        WINDOWS, LINUX, MAC_OS
-    }
-
     private String name;
     private String ip;
-    private OperatingSystem os;
+    private String os;
+    private String signature;
 
-    public DesktopApp(String name, String ip, OperatingSystem os) {
+    public DesktopApp(String name, String ip, String os, String signature) {
         this.name = name;
         this.ip = ip;
         this.os = os;
+        this.signature = signature;
     }
 
     public String getName() {
@@ -31,28 +27,31 @@ public class DesktopApp {
         return ip;
     }
 
-    public OperatingSystem getOperatingSystem() {
+    public String getOs() {
+        if (os == null) {
+            os = "NA";
+        }
         return os;
     }
 
-    public int getOperatingSystemIcon() {
-
-        int icon = 0;
-        switch (os) {
-
-            case WINDOWS:
-                icon = R.drawable.ic_os_windows;
-                break;
-
-            case LINUX:
-                icon = R.drawable.ic_os_linux;
-                break;
-
-            case MAC_OS:
-                icon = R.drawable.ic_os_apple;
-                break;
-        }
-        return icon;
+    public String getSignature() {
+        return signature;
     }
 
+    @Override
+    public String toString() {
+        return "Name: " + name +"\nIP: " + ip +"\nOS: " + os + "\nSignature: " + signature;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj instanceof DesktopApp) {
+            DesktopApp o = (DesktopApp) obj;
+            return name.equals(o.name) && ip.equals(o.ip)
+                    && os.equals(o.os) && signature.equals(o.signature);
+        }
+
+        return false;
+    }
 }

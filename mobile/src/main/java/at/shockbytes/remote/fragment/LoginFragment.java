@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -20,6 +19,7 @@ import at.shockbytes.remote.R;
 import at.shockbytes.remote.adapter.DesktopAppsAdapter;
 import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
+import at.shockbytes.remote.network.discovery.ServiceFinder;
 import at.shockbytes.remote.network.model.DesktopApp;
 import at.shockbytes.remote.util.AppParams;
 import at.shockbytes.remote.util.RemiUtils;
@@ -36,7 +36,7 @@ public class LoginFragment extends BaseFragment
 
         void onConnected(boolean isDebug);
 
-        void onConnectionFailed(Throwable throwable);
+        void onConnectionFailed(int resultCode);
     }
 
     public static LoginFragment newInstance() {
@@ -51,6 +51,9 @@ public class LoginFragment extends BaseFragment
 
     @Inject
     protected RemiClient client;
+
+    @Inject
+    protected ServiceFinder serviceFinder;
 
     @BindView(R.id.fragment_login_rv_desktop_apps)
     protected RecyclerView recyclerView;
@@ -98,9 +101,23 @@ public class LoginFragment extends BaseFragment
         return true;
     }
 
-    @OnClick(R.id.fragment_login_btn_search)
-    protected void onClickBtnSearch() {
-        searchForDevices();
+    @OnClick(R.id.fragment_login_btn_lookup)
+    protected void onClickBtnLookup() {
+
+        serviceFinder.lookForDesktopApps().subscribe(new Consumer<DesktopApp>() {
+            @Override
+            public void accept(DesktopApp desktopApp) throws Exception {
+                adapter.addEntityAtFirst(desktopApp);
+                recyclerView.scrollToPosition(0);
+                animateRecyclerView();
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                throwable.printStackTrace();
+            }
+        });
+
     }
 
     @Override
@@ -113,32 +130,44 @@ public class LoginFragment extends BaseFragment
         recyclerView.setAdapter(adapter);
     }
 
-    private void searchForDevices() {
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (adapter != null) {
+            adapter.setData(new ArrayList<DesktopApp>());
+        }
+    }
 
-        // TODO Search for devices
-        adapter.setData(Arrays.asList(
-                new DesktopApp("PC-Pickachu", "10.59.0.239", DesktopApp.OperatingSystem.WINDOWS),
-                new DesktopApp("Localhost", "10.0.2.2", DesktopApp.OperatingSystem.WINDOWS),
-                new DesktopApp("Liri OS", "192.168.1.89", DesktopApp.OperatingSystem.LINUX),
-                new DesktopApp("Mac Mini", "192.128.0.40", DesktopApp.OperatingSystem.MAC_OS)));
-        recyclerView.animate().alpha(1).scaleX(1).scaleY(1)
-                .setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500).start();
+    @Override
+    public void onPause() {
+        super.onPause();
+        serviceFinder.stopListening();
     }
 
     private void connectToDevice(String url) {
 
-        client.connect(url).subscribe(new Consumer<Object>() {
+        client.connect(url).subscribe(new Consumer<Integer>() {
             @Override
-            public void accept(Object o) throws Exception {
-                listener.onConnected(false);
+            public void accept(Integer resultCode) throws Exception {
+
+                if (resultCode == RemiClient.CONNECTION_RESULT_OK) {
+                    listener.onConnected(false);
+                } else {
+                    listener.onConnectionFailed(resultCode);
+                }
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(Throwable throwable) {
                 throwable.printStackTrace();
-                listener.onConnectionFailed(throwable);
+                listener.onConnectionFailed(RemiClient.CONNECTION_RESULT_ERROR_NETWORK);
             }
         });
+    }
+
+    private void animateRecyclerView() {
+        recyclerView.animate().alpha(1).scaleX(1).scaleY(1)
+                .setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500).start();
     }
 
 }
