@@ -10,12 +10,20 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.network.model.RemiFile;
+import at.shockbytes.remote.network.model.text.BackspaceRemiKeyEvent;
+import at.shockbytes.remote.network.model.text.EnterRemiKeyEvent;
+import at.shockbytes.remote.network.model.text.RemiKeyEvent;
+import at.shockbytes.remote.network.model.text.SpaceRemiKeyEvent;
+import at.shockbytes.remote.network.model.text.StandardRemiKeyEvent;
 import at.shockbytes.util.ResourceManager;
 
 import static at.shockbytes.remote.util.RemiUtils.FileCategory.APK;
@@ -48,6 +56,10 @@ public class RemiUtils extends ResourceManager {
     enum FileCategory {
         FOLDER, TEXT, CODE, PDF, EXE, JAR, APP, APK, IMAGE,
         MUSIC, VIDEO, ARCHIVE, POWERPOINT, WORD, EXCEL, NA
+    }
+
+    public enum ArrowDirection {
+        UP, LEFT, DOWN, RIGHT
     }
 
     private static Map<FileCategory, Integer> fileExtensionMap;
@@ -206,6 +218,92 @@ public class RemiUtils extends ResourceManager {
 
         }
         return category;
+    }
+
+
+    public static List<RemiKeyEvent> getKeyboard() {
+
+        List<RemiKeyEvent> keyboard = new ArrayList<>();
+
+        keyboard.add(new StandardRemiKeyEvent("1", 49));
+        keyboard.add(new StandardRemiKeyEvent("2", 50));
+        keyboard.add(new StandardRemiKeyEvent("3", 51));
+        keyboard.add(new StandardRemiKeyEvent("4", 52));
+        keyboard.add(new StandardRemiKeyEvent("5", 53));
+        keyboard.add(new StandardRemiKeyEvent("6", 54));
+        keyboard.add(new StandardRemiKeyEvent("7", 55));
+        keyboard.add(new StandardRemiKeyEvent("8", 56));
+        keyboard.add(new StandardRemiKeyEvent("9", 57));
+        keyboard.add(new StandardRemiKeyEvent("0", 48));
+
+        keyboard.add(new StandardRemiKeyEvent("q", 81));
+        keyboard.add(new StandardRemiKeyEvent("w", 87));
+        keyboard.add(new StandardRemiKeyEvent("e", 69));
+        keyboard.add(new StandardRemiKeyEvent("r", 82));
+        keyboard.add(new StandardRemiKeyEvent("t", 84));
+        keyboard.add(new StandardRemiKeyEvent("y", 89));
+        keyboard.add(new StandardRemiKeyEvent("u", 85));
+        keyboard.add(new StandardRemiKeyEvent("i", 73));
+        keyboard.add(new StandardRemiKeyEvent("o", 79));
+        keyboard.add(new StandardRemiKeyEvent("p", 80));
+
+        keyboard.add(new StandardRemiKeyEvent("a", 65));
+        keyboard.add(new StandardRemiKeyEvent("s", 83));
+        keyboard.add(new StandardRemiKeyEvent("d", 68));
+        keyboard.add(new StandardRemiKeyEvent("f", 70));
+        keyboard.add(new StandardRemiKeyEvent("g", 71));
+        keyboard.add(new StandardRemiKeyEvent("h", 72));
+        keyboard.add(new StandardRemiKeyEvent("j", 74));
+        keyboard.add(new StandardRemiKeyEvent("k", 75));
+        keyboard.add(new StandardRemiKeyEvent("l", 76));
+        keyboard.add(new StandardRemiKeyEvent("/", 111));
+
+        keyboard.add(new StandardRemiKeyEvent("*", 106));
+        keyboard.add(new StandardRemiKeyEvent("z", 90));
+        keyboard.add(new StandardRemiKeyEvent("x", 88));
+        keyboard.add(new StandardRemiKeyEvent("c", 67));
+        keyboard.add(new StandardRemiKeyEvent("v", 86));
+        keyboard.add(new StandardRemiKeyEvent("b", 66));
+        keyboard.add(new StandardRemiKeyEvent("n", 78));
+        keyboard.add(new StandardRemiKeyEvent("m", 77));
+        keyboard.add(new BackspaceRemiKeyEvent("", 8));
+
+        keyboard.add(new StandardRemiKeyEvent("+", 521));
+        keyboard.add(new StandardRemiKeyEvent(",", 44));
+        keyboard.add(new SpaceRemiKeyEvent("SPACE", 32));
+        keyboard.add(new StandardRemiKeyEvent(".", 46));
+        keyboard.add(new EnterRemiKeyEvent("", 10));
+
+        // On a german keyboard, let's switch Z and Y
+        String language = Locale.getDefault().getLanguage();
+        if (language.equals("de")) {
+            RemiKeyEvent eventZ = keyboard.get(31);
+            keyboard.set(31, keyboard.get(15));
+            keyboard.set(15, eventZ);
+        }
+        return keyboard;
+    }
+
+
+    public static RemiKeyEvent getArrowKeyEvent(ArrowDirection direction) {
+
+        switch (direction) {
+
+            case UP:
+                return new StandardRemiKeyEvent("UP", 38);
+
+            case LEFT:
+                return new StandardRemiKeyEvent("LEFT", 37);
+
+            case DOWN:
+                return new StandardRemiKeyEvent("DOWN", 40);
+
+            case RIGHT:
+                return new StandardRemiKeyEvent("RIGHT", 39);
+
+            default:
+                return new StandardRemiKeyEvent("", -1);
+        }
     }
 
     public static String getConnectionErrorByResultCode(Context context, int resultCode) {

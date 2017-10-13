@@ -78,7 +78,7 @@ public interface RemiClient {
 
     Observable<FileTransferResponse> transferFile(String filepath);
 
-    Observable<Object> writeText(int keyCode, boolean upperCase);
+    Observable<Object> writeText(int keyCode, boolean isCapsLock);
 
     //--------------------------------------------------------------------------------
 

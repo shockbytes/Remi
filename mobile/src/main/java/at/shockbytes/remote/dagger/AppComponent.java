@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import at.shockbytes.remote.core.MainActivity;
 import at.shockbytes.remote.fragment.AppsFragment;
 import at.shockbytes.remote.fragment.FilesFragment;
+import at.shockbytes.remote.fragment.KeyboardFragment;
 import at.shockbytes.remote.fragment.LoginFragment;
 import at.shockbytes.remote.fragment.MouseFragment;
 import at.shockbytes.remote.fragment.PresentationFragment;
@@ -27,6 +28,8 @@ public interface AppComponent {
     void inject(AppsFragment fragment);
 
     void inject(FilesFragment fragment);
+
+    void inject(KeyboardFragment fragment);
 
     void inject(PresentationFragment fragment);
 

@@ -37,10 +37,10 @@ public class LoginActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConnected(boolean isDebug) {
+    public void onConnected() {
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
-        startActivity(MainActivity.newIntent(this, isDebug), options.toBundle());
+        startActivity(MainActivity.newIntent(this), options.toBundle());
         //supportFinishAfterTransition();
     }
 

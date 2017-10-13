@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_keyboard_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/fragment_keyboard_txt_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:textColor="@android:color/primary_text_dark"
+        android:textSize="20sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/colorAccent" />
+
+    <ViewFlipper
+        android:id="@+id/fragment_keyboard_viewflipper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="150dp"
+        android:padding="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_centerInParent="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/fragment_keyboard_imgbtn_up"
+                    style="?android:borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:minHeight="64dp"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_arrow_up"/>
+
+                <LinearLayout
+                    android:layout_below="@+id/fragment_keyboard_imgbtn_up"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="64dp"
+                    android:weightSum="0.9"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/fragment_keyboard_imgbtn_left"
+                        style="?android:borderlessButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.3"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/ic_arrow_left"/>
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/fragment_keyboard_imgbtn_down"
+                        style="?android:borderlessButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.3"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/ic_arrow_down"/>
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/fragment_keyboard_imgbtn_right"
+                        style="?android:borderlessButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.3"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/ic_arrow_right"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_keyboard_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </ViewFlipper>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="1.0">
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/fragment_keyboard_imgbtn_caps"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:fontFamily="sans-serif-light"
+            android:textSize="20sp"
+            app:srcCompat="@drawable/ic_keyboard_capslock" />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/fragment_keyboard_btn_switch_arrows"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4"
+            android:fontFamily="sans-serif-light"
+            app:srcCompat="@drawable/ic_keyboard_arrows" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/fragment_keyboard_btn_switch_text"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4"
+            android:fontFamily="sans-serif-light"
+            android:text="ABC"
+            android:textSize="23sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

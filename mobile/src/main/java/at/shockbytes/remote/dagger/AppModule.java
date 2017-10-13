@@ -27,13 +27,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public Vibrator provideVibrator() {
+    Vibrator provideVibrator() {
         return (Vibrator) app.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     @Provides
     @Singleton
-    public SharedPreferences providedPreferences() {
+    SharedPreferences providedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(app);
     }
 
