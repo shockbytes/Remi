@@ -231,12 +231,12 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Object> writeText(final int keyCode, final boolean upperCase) {
+    public Observable<Object> writeText(final int keyCode, final boolean isCapsLock) {
         return Observable.defer(new Callable<ObservableSource<Object>>() {
             @Override
             public ObservableSource<Object> call() throws Exception {
                 socket.emit(eventName(ClientEvent.WRITE_TEXT),
-                        msgSerializer.writeTextMessage(keyCode, upperCase));
+                        msgSerializer.writeTextMessage(keyCode, isCapsLock));
                 return Observable.empty();
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());

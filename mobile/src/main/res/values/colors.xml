@@ -17,4 +17,11 @@
     <color name="gray">#767676</color>
     <color name="green">#8BC34A</color>
 
+    <color name="keyboard_theme_dark">#424242</color>
+    <color name="keyboard_theme_light">#EEE</color>
+    <color name="keyboard_theme_txt_dark">@android:color/primary_text_dark</color>
+    <color name="keyboard_theme_txt_light">@android:color/secondary_text_light</color>
+    <color name="keyboard_theme_keys_dark">#FFF</color>
+    <color name="keyboard_theme_keys_light">@color/colorAccent</color>
+
 </resources>

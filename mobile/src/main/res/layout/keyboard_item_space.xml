@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.AppCompatButton xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?android:borderlessButtonStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_keyboard_space"
+    android:clickable="true"
+    android:focusable="true"
+    android:fontFamily="sans-serif-light"
+    android:gravity="center"
+    android:padding="2dp"
+    android:text="SPACE"
+    android:textColor="@color/colorAccent"
+    android:textSize="22sp" />

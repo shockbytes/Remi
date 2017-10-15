@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/prefs_cat_mouse" >
+    <PreferenceCategory android:title="@string/prefs_category_mouse_and_keyboard" >
 
         <at.shockbytes.util.view.SliderPreference
             android:defaultValue="5"
@@ -16,6 +16,13 @@
             android:max="9"
             android:text=""
             android:title="@string/prefs_title_scrolling"/>
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/prefs_key_keyboard_theme"
+            android:title="Use dark keyboard theme"
+            android:summaryOn="Dark keyboard"
+            android:summaryOff="Light keyboard"/>
 
     </PreferenceCategory>
 

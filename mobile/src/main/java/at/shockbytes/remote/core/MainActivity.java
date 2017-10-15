@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.fragment.AppsFragment;
 import at.shockbytes.remote.fragment.FilesFragment;
+import at.shockbytes.remote.fragment.KeyboardFragment;
 import at.shockbytes.remote.fragment.MouseFragment;
 import at.shockbytes.remote.fragment.PresentationFragment;
 import at.shockbytes.remote.network.RemiClient;
@@ -39,7 +40,7 @@ import io.reactivex.observers.ResourceObserver;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
-    public static Intent newIntent(Context context, boolean isDebug) {
+    public static Intent newIntent(Context context) {
         return new Intent(context, MainActivity.class);
     }
 
@@ -245,7 +246,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
             public void onClick(View view) {
 
                 if (client.getConnectionPermissions().hasMousePermission()) {
-                    Toast.makeText(getApplicationContext(), "Show Keyboard", Toast.LENGTH_SHORT).show();
+                    KeyboardFragment.newInstance()
+                            .show(getSupportFragmentManager(), "keyboard-fragment");
                 } else {
                     showSnackbar("No permission for keyboard");
                 }
@@ -255,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     }
 
     private void showSnackbar(String text) {
-        Snackbar.make(findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(findViewById(R.id.main_layout), text, Snackbar.LENGTH_LONG).show();
     }
 
 }

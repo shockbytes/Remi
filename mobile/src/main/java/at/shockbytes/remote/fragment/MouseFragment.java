@@ -129,12 +129,6 @@ public class MouseFragment extends BaseFragment
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        /* TODO Remove?
-        At first close keyboard if opened
-        if (mBottomSheetKeyboard.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-            mBottomSheetKeyboard.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            return false;
-        } */
         detector.onTouchEvent(event);
 
         int action = event.getAction();

@@ -34,7 +34,7 @@ public class LoginFragment extends BaseFragment
 
     public interface OnConnectionResponseListener {
 
-        void onConnected(boolean isDebug);
+        void onConnected();
 
         void onConnectionFailed(int resultCode);
     }
@@ -97,7 +97,7 @@ public class LoginFragment extends BaseFragment
 
     @OnLongClick(R.id.fragment_login_imgview_icon)
     protected boolean onClickDebugEntryIcon() {
-        listener.onConnected(true);
+        listener.onConnected();
         return true;
     }
 
@@ -151,7 +151,7 @@ public class LoginFragment extends BaseFragment
             public void accept(Integer resultCode) throws Exception {
 
                 if (resultCode == RemiClient.CONNECTION_RESULT_OK) {
-                    listener.onConnected(false);
+                    listener.onConnected();
                 } else {
                     listener.onConnectionFailed(resultCode);
                 }
