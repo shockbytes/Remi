@@ -8,7 +8,7 @@ import at.shockbytes.remote.fragment.FilesFragment;
 import at.shockbytes.remote.fragment.KeyboardFragment;
 import at.shockbytes.remote.fragment.LoginFragment;
 import at.shockbytes.remote.fragment.MouseFragment;
-import at.shockbytes.remote.fragment.PresentationFragment;
+import at.shockbytes.remote.fragment.SlidesFragment;
 import dagger.Component;
 
 /**
@@ -31,6 +31,6 @@ public interface AppComponent {
 
     void inject(KeyboardFragment fragment);
 
-    void inject(PresentationFragment fragment);
+    void inject(SlidesFragment fragment);
 
 }

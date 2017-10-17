@@ -5,6 +5,7 @@ import java.util.List;
 import at.shockbytes.remote.network.model.ConnectionConfig;
 import at.shockbytes.remote.network.model.FileTransferResponse;
 import at.shockbytes.remote.network.model.RemiFile;
+import at.shockbytes.remote.network.model.SlidesResponse;
 import io.reactivex.Observable;
 
 /**
@@ -22,11 +23,16 @@ public interface RemiClient {
         MOUSE_MOVE, MOUSE_CLICK_LEFT, MOUSE_CLICK_RIGHT, SCROLL,
         REQ_BASE_DIR, REQ_DIR, WRITE_TEXT, REQ_FILE_TRANSFER,
         REQ_APPS, ADD_APP, REMOVE_APP, START_APP,
-        REQ_SLIDES
+        REQ_SLIDES,
+        OPEN_APP_ON_DESKTOP, REQ_SLIDES_FULLSCREEN
     }
 
     enum ServerEvent {
         RESP_DIR, RESP_FILE_TRANSFER, RESP_SLIDES, RESP_APPS, ALREADY_CONNECTED, WELCOME
+    }
+
+    enum SlidesProduct {
+        POWERPOINT, GOOGLE_SLIDES
     }
 
     //------------------------------- Basic operations -------------------------------
@@ -55,6 +61,8 @@ public interface RemiClient {
 
     Observable<Object> sendAddAppRequest(String pathToApp);
 
+    Observable<Object> sendAppOpenRequest(String pathToApp);
+
     //--------------------------------------------------------------------------------
 
     //------------------------------- Mouse operations -------------------------------
@@ -79,6 +87,18 @@ public interface RemiClient {
     Observable<FileTransferResponse> transferFile(String filepath);
 
     Observable<Object> writeText(int keyCode, boolean isCapsLock);
+
+    //--------------------------------------------------------------------------------
+
+    //------------------------------- Slides operations ------------------------------
+
+    Observable<Object> sendSlidesNextCommand();
+
+    Observable<Object> sendSlidesPreviousCommand();
+
+    Observable<Object> sendSlidesFullscreenCommand(SlidesProduct product);
+
+    Observable<SlidesResponse> requestSlides(String filepath);
 
     //--------------------------------------------------------------------------------
 

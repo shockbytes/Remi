@@ -9,6 +9,8 @@ import at.shockbytes.remote.network.message.MessageSerializer;
 import at.shockbytes.remote.network.model.ConnectionConfig;
 import at.shockbytes.remote.network.model.FileTransferResponse;
 import at.shockbytes.remote.network.model.RemiFile;
+import at.shockbytes.remote.network.model.SlidesResponse;
+import at.shockbytes.remote.util.RemiUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,7 +42,8 @@ public class SocketIoRemiClient implements RemiClient {
     private PublishSubject<Object> disconnectedSubject;
     private PublishSubject<List<String>> requestAppsSubject;
     private PublishSubject<List<RemiFile>> requestFilesSubject;
-    private PublishSubject<FileTransferResponse> requestFiletransferSubject;
+    private PublishSubject<FileTransferResponse> requestFileTransferSubject;
+    private PublishSubject<SlidesResponse> requestSlidesSubject;
 
     public SocketIoRemiClient(OkHttpClient okHttpClient,
                               MessageSerializer msgSerializer, MessageDeserializer msgDeserializer) {
@@ -54,7 +57,8 @@ public class SocketIoRemiClient implements RemiClient {
         disconnectedSubject = PublishSubject.create();
         requestAppsSubject = PublishSubject.create();
         requestFilesSubject = PublishSubject.create();
-        requestFiletransferSubject = PublishSubject.create();
+        requestFileTransferSubject = PublishSubject.create();
+        requestSlidesSubject = PublishSubject.create();
     }
 
     @Override
@@ -153,6 +157,17 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
+    public Observable<Object> sendAppOpenRequest(final String pathToApp) {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
+            @Override
+            public ObservableSource<Object> call() {
+                socket.emit(ClientEvent.OPEN_APP_ON_DESKTOP.name().toLowerCase(), pathToApp);
+                return Observable.empty();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+    }
+
+    @Override
     public Observable<Object> sendLeftClick() {
         return Observable.defer(new Callable<ObservableSource<Object>>() {
             @Override
@@ -225,7 +240,7 @@ public class SocketIoRemiClient implements RemiClient {
             @Override
             public ObservableSource<FileTransferResponse> call() throws Exception {
                 socket.emit(eventName(ClientEvent.REQ_FILE_TRANSFER), filepath);
-                return requestFiletransferSubject;
+                return requestFileTransferSubject;
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
@@ -238,6 +253,40 @@ public class SocketIoRemiClient implements RemiClient {
                 socket.emit(eventName(ClientEvent.WRITE_TEXT),
                         msgSerializer.writeTextMessage(keyCode, isCapsLock));
                 return Observable.empty();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<Object> sendSlidesNextCommand() {
+        return writeText(RemiUtils.KEYCODE_NEXT, false);
+    }
+
+    @Override
+    public Observable<Object> sendSlidesPreviousCommand() {
+        return writeText(RemiUtils.KEYCODE_BACK, false);
+    }
+
+    @Override
+    public Observable<Object> sendSlidesFullscreenCommand(final SlidesProduct product) {
+        return Observable.defer(new Callable<ObservableSource<Object>>() {
+            @Override
+            public ObservableSource<Object> call() throws Exception {
+                socket.emit(eventName(ClientEvent.REQ_SLIDES_FULLSCREEN), product.ordinal());
+                return Observable.empty();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<SlidesResponse> requestSlides(final String filepath) {
+        return Observable.defer(new Callable<ObservableSource<SlidesResponse>>() {
+            @Override
+            public ObservableSource<SlidesResponse> call() throws Exception {
+                socket.emit(eventName(ClientEvent.REQ_SLIDES), filepath);
+                return requestSlidesSubject
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io());
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
@@ -256,7 +305,6 @@ public class SocketIoRemiClient implements RemiClient {
             public void call(Object... args) {
                 // TODO Do something in here?
             }
-
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -288,8 +336,14 @@ public class SocketIoRemiClient implements RemiClient {
         }).on(eventName(ServerEvent.RESP_FILE_TRANSFER), new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                requestFiletransferSubject
+                requestFileTransferSubject
                         .onNext(msgDeserializer.fileTransferMessage((String) args[0]));
+            }
+        }).on(eventName(ServerEvent.RESP_SLIDES), new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                requestSlidesSubject
+                        .onNext(msgDeserializer.requestSlides((String) args[0]));
             }
         });
     }

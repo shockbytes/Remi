@@ -26,7 +26,7 @@ import at.shockbytes.remote.fragment.AppsFragment;
 import at.shockbytes.remote.fragment.FilesFragment;
 import at.shockbytes.remote.fragment.KeyboardFragment;
 import at.shockbytes.remote.fragment.MouseFragment;
-import at.shockbytes.remote.fragment.PresentationFragment;
+import at.shockbytes.remote.fragment.SlidesFragment;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.util.AppParams;
 import at.shockbytes.remote.util.RemiUtils;
@@ -38,7 +38,8 @@ import icepick.State;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.ResourceObserver;
 
-public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
+public class MainActivity extends AppCompatActivity
+        implements TabLayout.OnTabSelectedListener, FilesFragment.OnSlidesSelectedListener {
 
     public static Intent newIntent(Context context) {
         return new Intent(context, MainActivity.class);
@@ -65,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     private Unbinder unbinder;
 
     private MenuItem itemWear;
+
+    private String selectedSlides;
 
     private ResourceObserver<Object> disconnectSubscriber = new ResourceObserver<Object>() {
         @Override
@@ -111,14 +114,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         itemWear = menu.findItem(R.id.menu_main_wear);
-
-        String desktopOS = client.getDesktopOS();
-        if (!desktopOS.equals("NA")) {
-            menu.findItem(R.id.menu_main_desktop_os)
-                    .setVisible(true)
-                    .setTitle(client.getDesktopOS())
-                    .setIcon(RemiUtils.getOperatingSystemIcon(client.getDesktopOS()));
-        }
+        setupDesktopMenuItem(menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -164,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
             case R.id.menu_main_desktop_os:
 
-                showSnackbar("Connected to " + client.getDesktopOS());
+                showSnackbar("Connected to " + item.getTitle());
                 break;
 
             case R.id.menu_main_logout:
@@ -172,9 +168,15 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
                 supportFinishAfterTransition();
                 break;
 
-            case R.id.menu_main_settings:
+            case R.id.menu_main_help:
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
+                startActivity(HelpActivity.newIntent(this), options.toBundle());
+                break;
+
+            case R.id.menu_main_settings:
+
+                options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
                 startActivity(SettingsActivity.newIntent(this), options.toBundle());
                 break;
         }
@@ -217,9 +219,10 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
                         .newInstance(client.getConnectionPermissions().hasFilesPermission()));
                 break;
 
-            case AppParams.POSITION_PRESENTATION:
+            case AppParams.POSITION_SLIDES:
                 fabKeyboard.hide();
-                ft.replace(R.id.main_content, PresentationFragment.newInstance());
+                ft.replace(R.id.main_content, SlidesFragment.newInstance(selectedSlides));
+                selectedSlides = null; // Reset to avoid multiple reusage
                 break;
         }
         ft.commit();
@@ -231,6 +234,31 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
+    }
+
+    @Override
+    public void onSlidesSelected(String pathToSlides) {
+
+        selectedSlides = pathToSlides;
+        TabLayout.Tab slidesTab = tabLayout.getTabAt(AppParams.POSITION_SLIDES);
+        if (slidesTab != null) {
+            slidesTab.select();
+        }
+    }
+
+    private void setupDesktopMenuItem(Menu menu) {
+        String desktopOS = client.getDesktopOS();
+        if (!desktopOS.equals("NA") && !desktopOS.isEmpty()) {
+            menu.findItem(R.id.menu_main_desktop_os)
+                    .setVisible(true)
+                    .setTitle(client.getDesktopOS())
+                    .setIcon(RemiUtils.getOperatingSystemIcon(client.getDesktopOS()));
+        } else if (desktopOS.isEmpty()) { // <-- Debug mode
+            menu.findItem(R.id.menu_main_desktop_os)
+                    .setVisible(true)
+                    .setTitle("Dev mode")
+                    .setIcon(R.drawable.ic_dev_mode);
+        }
     }
 
     private void initializeViews() {

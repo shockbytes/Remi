@@ -1,0 +1,152 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1.0"
+    android:background="@color/backgroundPrimary"
+    android:orientation="vertical"
+    tools:context="at.shockbytes.remote.fragment.SlidesFragment">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_weight="0.5"
+        android:padding="8dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:padding="16dp"
+                android:id="@+id/fragment_slides_preview_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ProgressBar
+                    android:id="@+id/fragment_slides_preview_progressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/fragment_slides_preview_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="1.0">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/fragment_slides_imgview_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="0.7" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/fragment_slides_rv_slideshow"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.3" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_weight="0.5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/fragment_slides_btn_start"
+                android:orientation="horizontal"
+                android:weightSum="1.0">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/fragment_slides_btn_previous"
+                    style="?android:borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:alpha="0"
+                    app:srcCompat="@drawable/ic_slides_previous"
+                    app:tint="@color/colorPrimaryDark" />
+
+                <Chronometer
+                    android:id="@+id/fragment_slides_chronometer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="46sp" />
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/fragment_slides_btn_next"
+                    style="?android:borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:alpha="0"
+                    app:srcCompat="@drawable/ic_slides_next"
+                    app:tint="@color/colorPrimaryDark" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/fragment_slides_btn_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/background_accent_border"
+                android:fontFamily="sans-serif-light"
+                android:paddingBottom="8dp"
+                android:paddingEnd="24dp"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:paddingStart="24dp"
+                android:paddingTop="8dp"
+                android:text="START"
+                android:textColor="@color/colorAccent"
+                android:textSize="25sp" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/fragment_slides_imgbtn_overflow"
+                style="?borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                app:srcCompat="@drawable/ic_overflow_horizontal"
+                app:tint="@color/colorPrimaryDark" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

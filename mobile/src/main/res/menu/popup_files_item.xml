@@ -16,5 +16,18 @@
         android:icon="@drawable/ic_copy"
         app:iconTint="@color/green" />
 
+    <item
+        android:title="Open on desktop"
+        android:id="@+id/popup_file_open_on_desktop"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_open_desktop"
+        app:iconTint="@color/purple"/>
+
+    <item
+        android:title="Open in Slides tab"
+        android:id="@+id/popup_file_open_in_slides"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_tab_presentation"
+        app:iconTint="@color/orange"/>
 
 </menu>

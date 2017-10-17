@@ -2,12 +2,14 @@ package at.shockbytes.remote.fragment;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +44,11 @@ public class FilesFragment extends BaseFragment
         implements BaseAdapter.OnItemClickListener<RemiFile>,
         FilesAdapter.OnOverflowMenuItemClickListener<RemiFile> {
 
+    public interface OnSlidesSelectedListener {
+
+        void onSlidesSelected(String pathToSlides);
+    }
+
     private static final int REQ_CODE_EXTERNAL_STORAGE = 0x9482;
     private static final String ARG_PERMISSION = "arg_permission";
 
@@ -68,6 +75,8 @@ public class FilesFragment extends BaseFragment
 
     private boolean hasPermission;
 
+    private OnSlidesSelectedListener slidesSelectedListener;
+
     public FilesFragment() {
     }
 
@@ -82,6 +91,18 @@ public class FilesFragment extends BaseFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_files, container, false);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            slidesSelectedListener = (OnSlidesSelectedListener) context;
+        } catch (IllegalArgumentException iae) {
+            iae.printStackTrace();
+            Log.wtf("Remi", "Activity must provide interface");
+        }
     }
 
     @Override
@@ -150,6 +171,19 @@ public class FilesFragment extends BaseFragment
                 showSnackbar(content.getName() + " added to apps");
                 client.sendAddAppRequest(content.getPath()).subscribe();
                 break;
+
+            case R.id.popup_file_open_on_desktop:
+
+                showSnackbar(content.getName() + " opened on desktop");
+                client.sendAppOpenRequest(content.getPath()).subscribe();
+                break;
+
+            case R.id.popup_file_open_in_slides:
+
+                if (slidesSelectedListener != null) {
+                    slidesSelectedListener.onSlidesSelected(content.getPath());
+                }
+                break;
         }
     }
 
@@ -166,22 +200,6 @@ public class FilesFragment extends BaseFragment
             txtPath.setText("");
             client.requestBaseDirectories().subscribeWith(new FileObserver());
         }
-    }
-
-    private RecyclerView.LayoutManager getLayoutManager() {
-        return new LinearLayoutManager(getContext());
-    }
-
-    private void tryTransferFile(final RemiFile content) {
-
-        fileToTransfer = content;
-        if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            transferFile();
-        } else {
-            EasyPermissions.requestPermissions(this, "Write the transferred file into the downloads folder",
-                    REQ_CODE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-
     }
 
     @AfterPermissionGranted(REQ_CODE_EXTERNAL_STORAGE)
@@ -212,6 +230,22 @@ public class FilesFragment extends BaseFragment
                         showSnackbar(throwable.getMessage());
                     }
                 });
+    }
+
+    private RecyclerView.LayoutManager getLayoutManager() {
+        return new LinearLayoutManager(getContext());
+    }
+
+    private void tryTransferFile(final RemiFile content) {
+
+        fileToTransfer = content;
+        if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            transferFile();
+        } else {
+            EasyPermissions.requestPermissions(this, "Write the transferred file into the downloads folder",
+                    REQ_CODE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+
     }
 
     private void showSnackbar(String text) {
