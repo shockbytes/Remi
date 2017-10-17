@@ -1,14 +1,17 @@
 <resources>
     <string name="app_name" translatable="false">Remi</string>
-    <string name="app_version" translatable="false">2.0b4 - 13.10.17</string>
+    <string name="app_version" translatable="false">2.0b5 - 17.10.17</string>
 
     <string name="tab_mouse">Mouse</string>
     <string name="tab_files">Files</string>
     <string name="tab_apps">Apps</string>
     <string name="tab_presentation">Slides</string>
+
     <string name="menu_help">Help</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_settings">Settings</string>
+
+    <string name="label_help">Help</string>
 
     <!-- Preferences -->
     <string name="prefs_category_mouse_and_keyboard">Mouse &amp; Keyboard</string>
@@ -24,9 +27,18 @@
     <string name="prefs_title_icons" translatable="false">Icons</string>
     <string name="prefs_summary_icons" translatable="false">icons8.com\niconfinder.com\nflaticon.com</string>
 
-    <string name="label_help">Help</string>
     <string name="connection_error_already_connected">Desktop connected to other client</string>
     <string name="connection_error_unknown">Unknown error</string>
     <string name="connection_error_network">Network error</string>
+
+    <string name="popup_menu_slides_submenu_fullscreen">Fullscreen</string>
+    <string name="popup_menu_slides_fullscreen_google_slides">Google Slides</string>
+    <string name="popup_menu_slides_fullscreen_powerpoint">Powerpoint</string>
+    <string name="popup_menu_slides_stop_timer">Stop timer</string>
+    <string name="popup_menu_slides_reset">Reset</string>
+
+    <string name="fragment_slides_open_in_files">Open power point presentation in files to get slides preview</string>
+    <string name="fragment_slides_requesting_slides">Requesting slides...</string>
+    <string name="fragment_slides_loading_error">Cannot load slides</string>
 
 </resources>

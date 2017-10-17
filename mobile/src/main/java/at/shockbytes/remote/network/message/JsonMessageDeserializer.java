@@ -16,6 +16,7 @@ import java.util.List;
 import at.shockbytes.remote.network.model.ConnectionConfig;
 import at.shockbytes.remote.network.model.FileTransferResponse;
 import at.shockbytes.remote.network.model.RemiFile;
+import at.shockbytes.remote.network.model.SlidesResponse;
 
 /**
  * @author Martin Macheiner
@@ -80,5 +81,10 @@ public class JsonMessageDeserializer implements MessageDeserializer {
             e.printStackTrace();
         }
         return new FileTransferResponse();
+    }
+
+    @Override
+    public SlidesResponse requestSlides(String msg) {
+        return gson.fromJson(msg, SlidesResponse.class);
     }
 }

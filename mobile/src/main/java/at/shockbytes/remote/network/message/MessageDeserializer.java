@@ -5,6 +5,7 @@ import java.util.List;
 import at.shockbytes.remote.network.model.ConnectionConfig;
 import at.shockbytes.remote.network.model.FileTransferResponse;
 import at.shockbytes.remote.network.model.RemiFile;
+import at.shockbytes.remote.network.model.SlidesResponse;
 
 /**
  * @author Martin Macheiner
@@ -20,5 +21,7 @@ public interface MessageDeserializer {
     ConnectionConfig welcomeMessage(String msg);
 
     FileTransferResponse fileTransferMessage(String msg);
+
+    SlidesResponse requestSlides(String msg);
 
 }

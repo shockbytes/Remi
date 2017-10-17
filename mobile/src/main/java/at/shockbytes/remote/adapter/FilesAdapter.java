@@ -98,10 +98,17 @@ public class FilesAdapter extends BaseAdapter<RemiFile> {
         private void hidePopupIconsIfNecessary() {
             // Only non directory files can be transferred to the phone
             imgBtnOverflow.setVisibility(content.isDirectory() ? View.GONE : View.VISIBLE);
-            // Only executables can be added to apps
+            // Only executables can be added to apps or can be executed on desktop
             popupMenu.getMenu().getItem(0).setVisible(content.isExecutable());
+            popupMenu.getMenu().getItem(2).setVisible(content.isExecutable());
             // Sending to phone must be permitted by the desktop
             popupMenu.getMenu().getItem(1).setVisible(isFileTransferPermitted);
+            // Only powerpoint files can be opened in slides
+            popupMenu.getMenu().getItem(3).setVisible(isPowerpointFile(content.getExtension()));
+        }
+
+        private boolean isPowerpointFile(String extension) {
+            return extension.contains("ppt");
         }
 
         private void tryShowIconsInPopupMenu(PopupMenu menu) {

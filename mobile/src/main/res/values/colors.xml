@@ -14,8 +14,11 @@
     <color name="apptour_bg_2">#607D8B</color>
     <color name="apptour_bg_3">#2196F3</color>
     <color name="apptour_bg_4">#4CAF50</color>
+
     <color name="gray">#767676</color>
     <color name="green">#8BC34A</color>
+    <color name="purple">#9C27B0</color>
+    <color name="orange">#FF9800</color>
 
     <color name="keyboard_theme_dark">#424242</color>
     <color name="keyboard_theme_light">#EEE</color>

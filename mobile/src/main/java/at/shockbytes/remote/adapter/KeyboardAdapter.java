@@ -55,6 +55,7 @@ public class KeyboardAdapter extends BaseAdapter<RemiKeyEvent> {
 
         @Override
         public void bind(RemiKeyEvent remiKeyEvent) {
+            content = remiKeyEvent;
 
             if (remiKeyEvent instanceof StandardRemiKeyEvent) {
                 Button keyBtn = (Button) itemView;

@@ -42,7 +42,8 @@ import butterknife.Unbinder;
  *         Date: 10.10.2017.
  */
 
-public class KeyboardFragment extends BottomSheetDialogFragment implements BaseAdapter.OnItemClickListener<RemiKeyEvent> {
+public class KeyboardFragment extends BottomSheetDialogFragment
+        implements BaseAdapter.OnItemClickListener<RemiKeyEvent> {
 
     public static KeyboardFragment newInstance() {
         KeyboardFragment fragment = new KeyboardFragment();

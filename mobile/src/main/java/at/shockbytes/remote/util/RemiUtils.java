@@ -1,8 +1,11 @@
 package at.shockbytes.remote.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.util.Base64;
 
 import org.apache.commons.io.IOUtils;
 
@@ -61,6 +64,9 @@ public class RemiUtils extends ResourceManager {
     public enum ArrowDirection {
         UP, LEFT, DOWN, RIGHT
     }
+
+    public static final int KEYCODE_BACK = 37;
+    public static final int KEYCODE_NEXT = 39;
 
     private static Map<FileCategory, Integer> fileExtensionMap;
 
@@ -220,7 +226,6 @@ public class RemiUtils extends ResourceManager {
         return category;
     }
 
-
     public static List<RemiKeyEvent> getKeyboard() {
 
         List<RemiKeyEvent> keyboard = new ArrayList<>();
@@ -283,7 +288,6 @@ public class RemiUtils extends ResourceManager {
         }
         return keyboard;
     }
-
 
     public static RemiKeyEvent getArrowKeyEvent(ArrowDirection direction) {
 
@@ -352,6 +356,11 @@ public class RemiUtils extends ResourceManager {
         IOUtils.copy(inStream, out);
         IOUtils.closeQuietly(inStream);
         IOUtils.closeQuietly(out);
+    }
+
+    public static Bitmap base64ToImage(byte[] base64Image) {
+        byte[] decoded = Base64.decode(base64Image, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
     }
 
     @NonNull
