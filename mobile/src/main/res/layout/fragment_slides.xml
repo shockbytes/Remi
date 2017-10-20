@@ -130,7 +130,7 @@
                 android:paddingRight="24dp"
                 android:paddingStart="24dp"
                 android:paddingTop="8dp"
-                android:text="START"
+                android:text="@string/fragment_slides_start"
                 android:textColor="@color/colorAccent"
                 android:textSize="25sp" />
 

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="help_mouse_left_click">Mit einem Finger drücken für Mausklick links</string>
+    <string name="help_mouse_move">Finger über Display wischen um Maus zu bewegen</string>
+    <string name="help_mouse_right_click">Langer Klick mit einem Finger für rechten Mausklick</string>
+    <string name="help_mouse_scrolling">Mit zwei Finger vertikal wischen um zu scrollen</string>
+    <string name="prefs_title_developer">Entwickler</string>
+    <string name="label_help">Hilfe</string>
+    <string name="menu_logout">Ausloggen</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="popup_menu_slides_reset">Zurücksetzen</string>
+    <string name="popup_menu_slides_stop_timer">Uhr stoppen</string>
+    <string name="popup_menu_slides_submenu_fullscreen">Fullscreen</string>
+    <string name="prefs_cat_about">Über</string>
+    <string name="menu_help">Hilfe</string>
+    <string name="prefs_category_mouse_and_keyboard">Maus &amp; Tastatur</string>
+    <string name="fragment_slides_requesting_slides">Slides werden angefordert&#8230;</string>
+    <string name="fragment_slides_loading_error">Slides konnten nicht geladen werden</string>
+    <string name="connection_error_unknown">Unbekannter Fehler</string>
+    <string name="connection_error_network">Netzwerkfehler</string>
+    <string name="connection_error_already_connected">Desktop ist bereits verbunden</string>
+    <string name="contentdesc_help_icon">Icon für Hilfe</string>
+    <string name="contentdesc_icon">App icon</string>
+    <string name="tab_apps">Apps</string>
+    <string name="tab_files">Dateien</string>
+    <string name="tab_mouse">Maus</string>
+    <string name="tab_slides">Slides</string>
+    <string name="prefs_title_simple_mouse">Mausempfindlichkeit</string>
+    <string name="prefs_title_scrolling">Scroll-Empfindlichkeit</string>
+
+
+    <string name="help_apps">
+        Mit dieser Funktion kannst du beliebte Apps direkt vom Handy mit einem Klick starten.
+        \n\n
+        Dafür musst du:
+        > Auf den Dateien-Tab wechseln \n
+        > Zu einer ausführbaren Datei navigieren \n
+        > Auf das Icon rechts davon klicken \n
+        > Click \&#39;Zu Apps hinzufügen\&#39; klicken \n
+        \n\nDu kannst nur Apps hinzufügen, die am Desktop Betriebssystem als ausführbar gekennzeichnet sind
+    </string>
+
+    <string name="help_files">
+        Entdecke all deine Dateien am Desktop!
+        \n\n
+        > Browse durch dein Dateisystem \n
+        > Füge Apps zur Liste hinzu \n
+        > Übertrage Dateien auf dein Handy \n
+        > Öffne Dateien am Desktop \n
+        > Hol dir Powerpoint Folienvorschauen aufs Handy \n
+        \n\nDie Dateiübertragung und das Browsen durch Dateien kann mittels der Desktop App ausgeschaltet werden.
+    </string>
+    <string name="help_slides">
+        Lass mich dir helfen eine Präsentation zu halten!
+        \n\n
+        > Navigiere auf die nächste oder vorherige Seite \n
+        > Sieh an wie lange du schon präsentierst \n
+        > Gehe in den Fullscreen-Modus der Präsentation \n
+        > Fordere die Folienvorschau vom Desktop an \n
+        \n\nFolienvorschau funktioniert nur mit Microsoft Powerpoint Dateien.
+    </string>
+    <string name="fragment_slides_open_in_files">Öffne eine Powerpoint Präsentation im Dateien-Tab um die Folienvorschau zu bekommen</string>
+    <string name="popup_files_copy_to_phone">Auf Handy kopieren</string>
+    <string name="popup_files_add_to_apps">Zu Apps hinzufügen</string>
+    <string name="popup_files_open_in_slides_tab">Im Slides-Tab öffnen</string>
+    <string name="popup_files_open_on_desktop">Am Desktop öffnen</string>
+    <string name="apps_no_apps">Keine Apps in deiner Liste</string>
+    <string name="apps_remove_app">App entfernen</string>
+    <string name="desktop_apps_trusted">BEKANNT</string>
+    <string name="fragment_slides_start">STARTE</string>
+    <string name="help_category">Hilfe für Kategorie</string>
+    <string name="keyboard_abc">ABC</string>
+    <string name="keyboard_space">LEERZEICHEN</string>
+    <string name="login_look_for_devices">Nach Geräten suchen</string>
+    <string name="login_welcome">Willkommen zu Remi</string>
+    <string name="wear_device">Wear Gerät</string>
+    <string name="desktop_apps_untrusted">UNBEKANNT</string>
+
+</resources>

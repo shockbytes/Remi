@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name" translatable="false">Remi</string>
-    <string name="app_version" translatable="false">2.0b5 - 17.10.17</string>
+    <string name="app_version" translatable="false">2.0b6 - 20.10.17</string>
 
     <string name="tab_mouse">Mouse</string>
     <string name="tab_files">Files</string>
     <string name="tab_apps">Apps</string>
-    <string name="tab_presentation">Slides</string>
+    <string name="tab_slides">Slides</string>
 
     <string name="menu_help">Help</string>
     <string name="menu_logout">Logout</string>
@@ -27,18 +27,75 @@
     <string name="prefs_title_icons" translatable="false">Icons</string>
     <string name="prefs_summary_icons" translatable="false">icons8.com\niconfinder.com\nflaticon.com</string>
 
+    <!-- Help Strings -->
+    <string name="help_mouse_move">Move your finger to move the mouse</string>
+    <string name="help_mouse_left_click">Click with one finger for left mouse click</string>
+    <string name="help_mouse_right_click">Long click with one finger for right mouse click</string>
+    <string name="help_mouse_scrolling">Move with two fingers vertically for scrolling</string>
+
+    <string name="help_apps">
+        With this function you can start your favourite apps directly from your phone with a single click.
+        \n\n
+        How to add them:
+        \n\n
+        > Switch to Files tab \n
+        > Navigate to executable \n
+        > Click on the overflow icon \n
+        > Click \&#39;Add to  apps\&#39; \n
+        \n\nYou can only add apps if they are marked as executable on the desktop operating system.
+    </string>
+    <string name="help_files">
+        Explore all your files on your desktop!
+        \n\n
+        > Browse through your filesystem \n
+        > Add apps to your list \n
+        > Transfer files to your device \n
+        > Open files on the desktop \n
+        > Get powerpoint slides preview on your phone \n
+        \n\nFile transfer and file explorer can be manually disabled on the desktop app.
+    </string>
+    <string name="help_slides">
+        Let me help you while you hold a presentation!
+        \n\n
+        > Navigate to next/previous slide \n
+        > See the time you are presenting \n
+        > Start fullscreen mode of presentation \n
+        > Request slides preview from your desktop \n
+        \n\nSlides preview only works with Microsoft powerpoint files.
+    </string>
+
+
+    <!-- Content descriptions -->
+    <string name="contentdesc_icon">App icon</string>
+    <string name="contentdesc_help_icon">Help app icon</string>
+
     <string name="connection_error_already_connected">Desktop connected to other client</string>
     <string name="connection_error_unknown">Unknown error</string>
     <string name="connection_error_network">Network error</string>
 
     <string name="popup_menu_slides_submenu_fullscreen">Fullscreen</string>
-    <string name="popup_menu_slides_fullscreen_google_slides">Google Slides</string>
-    <string name="popup_menu_slides_fullscreen_powerpoint">Powerpoint</string>
+    <string name="popup_menu_slides_fullscreen_google_slides" translatable="false">Google Slides</string>
+    <string name="popup_menu_slides_fullscreen_powerpoint" translatable="false">Powerpoint</string>
     <string name="popup_menu_slides_stop_timer">Stop timer</string>
     <string name="popup_menu_slides_reset">Reset</string>
 
     <string name="fragment_slides_open_in_files">Open power point presentation in files to get slides preview</string>
-    <string name="fragment_slides_requesting_slides">Requesting slides...</string>
+    <string name="fragment_slides_requesting_slides">Requesting slides&#8230;</string>
     <string name="fragment_slides_loading_error">Cannot load slides</string>
+    <string name="popup_files_add_to_apps">Add to apps</string>
+    <string name="popup_files_copy_to_phone">Copy to phone</string>
+    <string name="popup_files_open_on_desktop">Open on desktop</string>
+    <string name="popup_files_open_in_slides_tab">Open in Slides tab</string>
+    <string name="apps_no_apps">No apps in your app list</string>
+    <string name="help_category">Help for category</string>
+    <string name="keyboard_abc">ABC</string>
+    <string name="login_welcome">Welcome to Remi</string>
+    <string name="login_look_for_devices">Look for devices</string>
+    <string name="fragment_slides_start">START</string>
+    <string name="desktop_apps_trusted">TRUSTED</string>
+    <string name="desktop_apps_untrusted">UNTRUSTED</string>
+    <string name="keyboard_space">SPACE</string>
+    <string name="wear_device">Wear device</string>
+    <string name="apps_remove_app">Remove app</string>
 
 </resources>

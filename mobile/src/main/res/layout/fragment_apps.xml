@@ -25,7 +25,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="No apps in your app list"
+                android:text="@string/apps_no_apps"
                 android:textColor="@android:color/tertiary_text_light"
                 android:textSize="20sp"
                 android:fontFamily="sans-serif-light"
