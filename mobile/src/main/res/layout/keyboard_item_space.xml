@@ -9,6 +9,6 @@
     android:fontFamily="sans-serif-light"
     android:gravity="center"
     android:padding="2dp"
-    android:text="SPACE"
+    android:text="@string/keyboard_space"
     android:textColor="@color/colorAccent"
     android:textSize="22sp" />

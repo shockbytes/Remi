@@ -5,7 +5,7 @@
     <item
         android:id="@+id/menu_main_wear"
         android:icon="@drawable/ic_wear"
-        android:title="Wear device"
+        android:title="@string/wear_device"
         android:visible="false"
         app:showAsAction="ifRoom" />
 
@@ -20,13 +20,13 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/menu_main_help"
-        android:title="@string/menu_help"
+        android:id="@+id/menu_main_settings"
+        android:title="@string/menu_settings"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/menu_main_settings"
-        android:title="@string/menu_settings"
+        android:id="@+id/menu_main_help"
+        android:title="@string/menu_help"
         app:showAsAction="never" />
 
 </menu>

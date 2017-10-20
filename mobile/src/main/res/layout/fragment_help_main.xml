@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:text="@string/help_category"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="96dp"
+            android:weightSum="1">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/fragment_help_main_btn_apps"
+                style="?borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:drawablePadding="16dp"
+                android:drawableTop="@drawable/ic_help_apps"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/tab_apps"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/fragment_help_main_btn_mouse"
+                style="?borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:drawablePadding="16dp"
+                android:drawableTop="@drawable/ic_help_mouse"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/tab_mouse"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minHeight="96dp"
+            android:weightSum="1">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/fragment_help_main_btn_files"
+                style="?borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:drawablePadding="16dp"
+                android:drawableTop="@drawable/ic_help_files"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/tab_files"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/fragment_help_main_btn_slides"
+                style="?borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:drawablePadding="16dp"
+                android:drawableTop="@drawable/ic_help_slides"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/tab_slides"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

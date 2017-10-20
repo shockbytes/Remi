@@ -3,31 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="Add to apps"
+        android:title="@string/popup_files_add_to_apps"
         android:id="@+id/popup_file_item_to_apps"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_tab_apps"
         app:iconTint="@color/colorAccent" />
 
     <item
-        android:title="Copy to phone"
+        android:title="@string/popup_files_copy_to_phone"
         android:id="@+id/popup_file_item_copy"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_copy"
         app:iconTint="@color/green" />
 
     <item
-        android:title="Open on desktop"
+        android:title="@string/popup_files_open_on_desktop"
         android:id="@+id/popup_file_open_on_desktop"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_open_desktop"
         app:iconTint="@color/purple"/>
 
     <item
-        android:title="Open in Slides tab"
+        android:title="@string/popup_files_open_in_slides_tab"
         android:id="@+id/popup_file_open_in_slides"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_tab_presentation"
+        android:icon="@drawable/ic_tab_slides"
         app:iconTint="@color/orange"/>
 
 </menu>

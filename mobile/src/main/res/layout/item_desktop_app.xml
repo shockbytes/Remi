@@ -54,7 +54,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="4dp"
         android:gravity="center"
-        android:text="TRUSTED"
+        android:text="@string/desktop_apps_trusted"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         android:textStyle="bold" />
