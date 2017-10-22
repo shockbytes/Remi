@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#ff4c636d</color>
-    <color name="colorPrimaryDark">#ff455A64</color>
-    <color name="colorAccent">#448aff</color>
-    <color name="colorAccentDark">#1976D2</color>
-
     <color name="error">#D50000</color>
     <color name="backgroundPrimary">#EEE</color>
     <color name="divider">#DDD</color>
