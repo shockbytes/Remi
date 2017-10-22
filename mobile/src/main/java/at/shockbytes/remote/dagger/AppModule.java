@@ -6,8 +6,13 @@ import android.content.SharedPreferences;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 
+import com.google.gson.Gson;
+
 import javax.inject.Singleton;
 
+import at.shockbytes.remote.network.RemiClient;
+import at.shockbytes.remote.wear.AndroidWearManager;
+import at.shockbytes.remote.wear.WearableManager;
 import dagger.Module;
 import dagger.Provides;
 
@@ -35,6 +40,18 @@ public class AppModule {
     @Singleton
     SharedPreferences providedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(app);
+    }
+
+    @Provides
+    @Singleton
+    Gson provideGson() {
+        return new Gson();
+    }
+
+    @Provides
+    @Singleton
+    WearableManager provideWearableManager(RemiClient client, Gson gson) {
+        return new AndroidWearManager(app.getApplicationContext(), client, gson);
     }
 
 }

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">core</string>
+
+
+    <string name="capability">remi_remote_control</string>
+
+</resources>

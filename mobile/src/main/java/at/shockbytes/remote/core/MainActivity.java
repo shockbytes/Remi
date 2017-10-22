@@ -30,6 +30,7 @@ import at.shockbytes.remote.fragment.SlidesFragment;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.util.AppParams;
 import at.shockbytes.remote.util.RemiUtils;
+import at.shockbytes.remote.wear.WearableManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -39,7 +40,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.observers.ResourceObserver;
 
 public class MainActivity extends AppCompatActivity
-        implements TabLayout.OnTabSelectedListener, FilesFragment.OnSlidesSelectedListener {
+        implements TabLayout.OnTabSelectedListener, FilesFragment.OnSlidesSelectedListener,
+        WearableManager.OnWearableConnectedListener {
 
     public static Intent newIntent(Context context) {
         return new Intent(context, MainActivity.class);
@@ -62,6 +64,9 @@ public class MainActivity extends AppCompatActivity
 
     @Inject
     protected RemiClient client;
+
+    @Inject
+    protected WearableManager wearableManager;
 
     private Unbinder unbinder;
 
@@ -121,7 +126,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        wearableManager.connect(this, this);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        wearableManager.onPause();
     }
 
     @Override
@@ -222,7 +233,7 @@ public class MainActivity extends AppCompatActivity
             case AppParams.POSITION_SLIDES:
                 fabKeyboard.hide();
                 ft.replace(R.id.main_content, SlidesFragment.newInstance(selectedSlides));
-                selectedSlides = null; // Reset to avoid multiple reusage
+                selectedSlides = null; // Reset to avoid multiple re-usage
                 break;
         }
         ft.commit();
@@ -244,6 +255,20 @@ public class MainActivity extends AppCompatActivity
         if (slidesTab != null) {
             slidesTab.select();
         }
+    }
+
+    @Override
+    public void onWearableConnected(String wearableDevice) {
+
+        itemWear.setVisible(true);
+        showSnackbar("Wearable connected");
+    }
+
+    @Override
+    public void onWearableConnectionFailed(String errorMessage) {
+
+        itemWear.setVisible(false);
+        showSnackbar(errorMessage);
     }
 
     private void setupDesktopMenuItem(Menu menu) {

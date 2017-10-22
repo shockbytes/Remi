@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:deviceIds="wear">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        app:layout_box="top|bottom">
+
+        <Chronometer
+            android:id="@+id/wear_fragment_slides_chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal|top"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/wear_fragment_slides_btn_start"
+            android:layout_below="@+id/wear_fragment_slides_chronometer"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:weightSum="1">
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/wear_fragment_slides_btn_previous"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:hapticFeedbackEnabled="true"
+                android:src="@drawable/ic_slides_previous"
+                app:tint="@android:color/white" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/wear_fragment_slides_btn_next"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:hapticFeedbackEnabled="true"
+                android:src="@drawable/ic_slides_next"
+                app:tint="@android:color/white" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/wear_fragment_slides_btn_start"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:hapticFeedbackEnabled="true"
+            android:text="@string/start"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+</android.support.wear.widget.BoxInsetLayout>
