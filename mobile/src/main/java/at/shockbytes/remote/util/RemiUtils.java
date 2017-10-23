@@ -68,7 +68,7 @@ public class RemiUtils extends ResourceManager {
     public static final int KEYCODE_BACK = 37;
     public static final int KEYCODE_NEXT = 39;
 
-    private static Map<FileCategory, Integer> fileExtensionMap;
+    private static final Map<FileCategory, Integer> fileExtensionMap;
 
     static {
         fileExtensionMap = new HashMap<>();

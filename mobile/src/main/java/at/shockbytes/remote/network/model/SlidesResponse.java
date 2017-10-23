@@ -9,7 +9,7 @@ import java.util.List;
 
 public class SlidesResponse {
 
-    private String name;
+    private final String name;
     private final int errorCode;
     private final List<SlidesEntry> slides;
     private final int slideAmount;

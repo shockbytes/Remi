@@ -39,6 +39,7 @@ import icepick.State;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.ResourceObserver;
 
+@SuppressWarnings("unchecked")
 public class MainActivity extends AppCompatActivity
         implements TabLayout.OnTabSelectedListener, FilesFragment.OnSlidesSelectedListener,
         WearableManager.OnWearableConnectedListener {
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity
 
     private String selectedSlides;
 
-    private ResourceObserver<Object> disconnectSubscriber = new ResourceObserver<Object>() {
+    private final ResourceObserver<Object> disconnectSubscriber = new ResourceObserver<Object>() {
         @Override
         public void onComplete() {
             dispose();
@@ -83,14 +84,14 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onError(Throwable e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Error while listening for connection loss",
-                    Toast.LENGTH_SHORT).show();
+            showToast(R.string.desktop_disconnection_error);
             dispose();
         }
 
         @Override
         public void onNext(Object obj) {
-            Toast.makeText(getApplicationContext(), "Desktop disconnected", Toast.LENGTH_SHORT).show();
+            showToast(R.string.desktop_disconnected);
+            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
             supportFinishAfterTransition();
         }
     };
@@ -148,13 +149,13 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void accept(Object object) {
                 client.close();
-                Toast.makeText(getApplicationContext(), "Disconnected", Toast.LENGTH_SHORT).show();
+                showToast(R.string.disconnected);
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(Throwable throwable) {
                 throwable.printStackTrace();
-                Toast.makeText(getApplicationContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                showToast(R.string.disconnection_error);
             }
         });
     }
@@ -166,12 +167,12 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.menu_main_wear:
 
-                showSnackbar("Android wear control active");
+                showSnackbar(getString(R.string.wearable_connection_active));
                 break;
 
             case R.id.menu_main_desktop_os:
 
-                showSnackbar("Connected to " + item.getTitle());
+                showSnackbar(getString(R.string.connected_to, item.getTitle()));
                 break;
 
             case R.id.menu_main_logout:
@@ -181,7 +182,8 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.menu_main_help:
 
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
+                ActivityOptionsCompat options = ActivityOptionsCompat
+                        .makeSceneTransitionAnimation(this);
                 startActivity(HelpActivity.newIntent(this), options.toBundle());
                 break;
 
@@ -261,7 +263,7 @@ public class MainActivity extends AppCompatActivity
     public void onWearableConnected(String wearableDevice) {
 
         itemWear.setVisible(true);
-        showSnackbar("Wearable connected");
+        showSnackbar(getString(R.string.wear_connected));
     }
 
     @Override
@@ -281,7 +283,7 @@ public class MainActivity extends AppCompatActivity
         } else if (desktopOS.isEmpty()) { // <-- Debug mode
             menu.findItem(R.id.menu_main_desktop_os)
                     .setVisible(true)
-                    .setTitle("Dev mode")
+                    .setTitle(getString(R.string.dev_mode))
                     .setIcon(R.drawable.ic_dev_mode);
         }
     }
@@ -302,7 +304,7 @@ public class MainActivity extends AppCompatActivity
                     KeyboardFragment.newInstance()
                             .show(getSupportFragmentManager(), "keyboard-fragment");
                 } else {
-                    showSnackbar("No permission for keyboard");
+                    showSnackbar(getString(R.string.permission_keyboard));
                 }
 
             }
@@ -311,6 +313,10 @@ public class MainActivity extends AppCompatActivity
 
     private void showSnackbar(String text) {
         Snackbar.make(findViewById(R.id.main_layout), text, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void showToast(int text) {
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -25,14 +25,14 @@ public class NativeNsdServiceFinder implements ServiceFinder {
     private final String TAG = "Remi";
     private NsdManager.DiscoveryListener discoveryListener;
     private NsdManager.ResolveListener resolveListener;
-    private NsdManager nsdManager;
+    private final NsdManager nsdManager;
 
     private NsdServiceInfo mService;
 
     private static final String SERVICE_TYPE = "_remi._tcp.";
     private static final String mServiceName = "remi_desktop_app";
 
-    private PublishSubject<DesktopApp> publishSubject;
+    private final PublishSubject<DesktopApp> publishSubject;
 
     private boolean isListening;
 

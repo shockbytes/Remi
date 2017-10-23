@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GestureDetectorCompat;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -86,7 +85,7 @@ public class MouseFragment extends BaseFragment
             detector = new GestureDetectorCompat(getActivity().getApplicationContext(), this);
             mouseView.setOnTouchListener(this);
         } else {
-            Snackbar.make(getView(), "No permission for mouse!", Snackbar.LENGTH_LONG).show();
+            showSnackbar(getString(R.string.permission_mouse));
         }
     }
 

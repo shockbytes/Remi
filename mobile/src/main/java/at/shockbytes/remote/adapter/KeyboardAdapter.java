@@ -24,7 +24,7 @@ import at.shockbytes.util.adapter.BaseAdapter;
 
 public class KeyboardAdapter extends BaseAdapter<RemiKeyEvent> {
 
-    private int tintColorRes;
+    private final int tintColorRes;
 
     public KeyboardAdapter(Context cxt, List<RemiKeyEvent> data, boolean useDarkTheme) {
         super(cxt, data);

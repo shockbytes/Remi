@@ -32,18 +32,18 @@ import static at.shockbytes.remote.util.RemiUtils.eventName;
 public class SocketIoRemiClient implements RemiClient {
 
     private Socket socket;
-    private OkHttpClient okHttpClient;
+    private final OkHttpClient okHttpClient;
 
-    private MessageSerializer msgSerializer;
-    private MessageDeserializer msgDeserializer;
+    private final MessageSerializer msgSerializer;
+    private final MessageDeserializer msgDeserializer;
     private ConnectionConfig connectionConfig;
 
-    private PublishSubject<Integer> connectedSubject;
-    private PublishSubject<Object> disconnectedSubject;
-    private PublishSubject<List<String>> requestAppsSubject;
-    private PublishSubject<List<RemiFile>> requestFilesSubject;
-    private PublishSubject<FileTransferResponse> requestFileTransferSubject;
-    private PublishSubject<SlidesResponse> requestSlidesSubject;
+    private final PublishSubject<Integer> connectedSubject;
+    private final PublishSubject<Object> disconnectedSubject;
+    private final PublishSubject<List<String>> requestAppsSubject;
+    private final PublishSubject<List<RemiFile>> requestFilesSubject;
+    private final PublishSubject<FileTransferResponse> requestFileTransferSubject;
+    private final PublishSubject<SlidesResponse> requestSlidesSubject;
 
     public SocketIoRemiClient(OkHttpClient okHttpClient,
                               MessageSerializer msgSerializer, MessageDeserializer msgDeserializer) {

@@ -7,10 +7,10 @@ package at.shockbytes.remote.network.model.text;
 
 public abstract class RemiKeyEvent {
 
-    private int keyCode;
-    private String display;
+    private final int keyCode;
+    private final String display;
 
-    public RemiKeyEvent(String display, int keyCode) {
+    RemiKeyEvent(String display, int keyCode) {
         this.display = display;
         this.keyCode = keyCode;
     }

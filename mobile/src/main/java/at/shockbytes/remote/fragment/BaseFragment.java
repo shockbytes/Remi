@@ -3,6 +3,7 @@ package at.shockbytes.remote.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
@@ -33,5 +34,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected abstract void setupViews();
+
+    protected void showSnackbar(String text) {
+        if (getView() != null) {
+            Snackbar.make(getView(), text, Snackbar.LENGTH_LONG).show();
+        }
+    }
 
 }

@@ -35,7 +35,7 @@ public class FilesAdapter extends BaseAdapter<RemiFile> {
 
     private OnOverflowMenuItemClickListener<RemiFile> listener;
 
-    private boolean isFileTransferPermitted;
+    private final boolean isFileTransferPermitted;
 
     public FilesAdapter(Context cxt, List<RemiFile> data, boolean isFileTransferPermitted) {
         super(cxt, data);
@@ -60,7 +60,7 @@ public class FilesAdapter extends BaseAdapter<RemiFile> {
         @BindView(R.id.item_app_and_file_imgbtn_overflow)
         ImageButton imgBtnOverflow;
 
-        private PopupMenu popupMenu;
+        private final PopupMenu popupMenu;
 
         ViewHolder(View itemView) {
             super(itemView);

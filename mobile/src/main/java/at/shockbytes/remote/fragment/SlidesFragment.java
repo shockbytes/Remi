@@ -79,7 +79,7 @@ public class SlidesFragment extends BaseFragment
     @Inject
     protected RemiClient client;
 
-    protected PopupMenu popupMenu;
+    private PopupMenu popupMenu;
 
     private String selectedSlides;
     private boolean isSlidesMode;

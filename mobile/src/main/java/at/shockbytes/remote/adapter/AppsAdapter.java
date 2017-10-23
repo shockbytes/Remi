@@ -55,7 +55,7 @@ public class AppsAdapter extends BaseAdapter<String> {
         @BindView(R.id.item_app_and_file_imgbtn_overflow)
         ImageButton imgBtnOverflow;
 
-        private PopupMenu popupMenu;
+        private final PopupMenu popupMenu;
 
         ViewHolder(View itemView) {
             super(itemView);

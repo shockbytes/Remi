@@ -25,7 +25,7 @@ import at.shockbytes.remote.network.model.SlidesResponse;
 
 public class JsonMessageDeserializer implements MessageDeserializer {
 
-    private Gson gson;
+    private final Gson gson;
 
     public JsonMessageDeserializer() {
         gson = new Gson();

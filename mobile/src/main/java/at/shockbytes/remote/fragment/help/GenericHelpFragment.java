@@ -23,7 +23,7 @@ public class GenericHelpFragment extends BaseFragment {
         APPS, FILES, SLIDES
     }
 
-    private static String ARG_HELP_TYPE = "arg_help_type";
+    private static final String ARG_HELP_TYPE = "arg_help_type";
 
     public static GenericHelpFragment newInstance(HelpType helptype) {
         GenericHelpFragment fragment = new GenericHelpFragment();
@@ -65,7 +65,7 @@ public class GenericHelpFragment extends BaseFragment {
         imgView.setImageResource(getImageIdByHelpType());
     }
 
-    public int getTextIdByHelpType() {
+    private int getTextIdByHelpType() {
 
         int textId = 0;
         switch (helpType) {
@@ -83,7 +83,7 @@ public class GenericHelpFragment extends BaseFragment {
         return textId;
     }
 
-    public int getImageIdByHelpType() {
+    private int getImageIdByHelpType() {
 
         int imageId = 0;
         switch (helpType) {
@@ -101,7 +101,7 @@ public class GenericHelpFragment extends BaseFragment {
         return imageId;
     }
 
-    public int getTitleIdByHelpType() {
+    private int getTitleIdByHelpType() {
 
         int titleId = 0;
         switch (helpType) {

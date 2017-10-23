@@ -4,7 +4,6 @@ package at.shockbytes.remote.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -113,7 +112,7 @@ public class FilesFragment extends BaseFragment
             backStack = new Stack<>();
             client.requestBaseDirectories().subscribeWith(new FileObserver());
         } else {
-            Snackbar.make(getView(), "No permission to request files!", Snackbar.LENGTH_LONG).show();
+            showSnackbar(getString(R.string.permission_files));
         }
     }
 
@@ -168,13 +167,13 @@ public class FilesFragment extends BaseFragment
 
             case R.id.popup_file_item_to_apps:
 
-                showSnackbar(content.getName() + " added to apps");
+                showSnackbar(getString(R.string.files_menu_add_to_apps, content.getName()));
                 client.sendAddAppRequest(content.getPath()).subscribe();
                 break;
 
             case R.id.popup_file_open_on_desktop:
 
-                showSnackbar(content.getName() + " opened on desktop");
+                showSnackbar(getString(R.string.files_menu_open_on_desktop, content.getName()));
                 client.sendAppOpenRequest(content.getPath()).subscribe();
                 break;
 
@@ -210,14 +209,15 @@ public class FilesFragment extends BaseFragment
         }
 
         // TODO Post notification for ongoing download
-        showSnackbar("Copying " + fileToTransfer.getName());
+        showSnackbar(getString(R.string.filetransfer_initiated, fileToTransfer.getName()));
 
         client.transferFile(fileToTransfer.getPath())
                 .subscribe(new Consumer<FileTransferResponse>() {
                     @Override
                     public void accept(FileTransferResponse response) throws Exception {
 
-                        Toast.makeText(getContext(), fileToTransfer.getName() + " copied!",
+                        Toast.makeText(getContext(),
+                                getString(R.string.filetransfer_finished, fileToTransfer.getName()),
                                 Toast.LENGTH_SHORT).show();
                         RemiUtils.copyFileToDownloadsFolder(response.getContent(),
                                 fileToTransfer.getName());
@@ -242,14 +242,10 @@ public class FilesFragment extends BaseFragment
         if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             transferFile();
         } else {
-            EasyPermissions.requestPermissions(this, "Write the transferred file into the downloads folder",
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_external_storage),
                     REQ_CODE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
-    }
-
-    private void showSnackbar(String text) {
-        Snackbar.make(getView(), text, Snackbar.LENGTH_SHORT).show();
     }
 
     private class FileObserver extends DisposableObserver<List<RemiFile>> {
@@ -266,7 +262,7 @@ public class FilesFragment extends BaseFragment
         @Override
         public void onError(@NonNull Throwable e) {
             e.printStackTrace();
-            showSnackbar("Can't access files");
+            showSnackbar(getString(R.string.files_request_error));
             dispose();
         }
 

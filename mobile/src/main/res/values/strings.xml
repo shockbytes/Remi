@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name" translatable="false">Remi</string>
-    <string name="app_version" translatable="false">2.0b7 - 23.10.17</string>
+    <string name="app_name">Remi</string>
+    <string name="app_version" translatable="false">2.0b8 - 23.10.17</string>
 
     <string name="tab_mouse">Mouse</string>
     <string name="tab_files">Files</string>
@@ -97,5 +97,25 @@
     <string name="keyboard_space">SPACE</string>
     <string name="wear_device">Wear device</string>
     <string name="apps_remove_app">Remove app</string>
+    <string name="permission_keyboard">No permission for keyboard!</string>
+    <string name="dev_mode" translatable="false">Dev mode</string>
+    <string name="wear_connected">Wearable connected</string>
+    <string name="connected_to">Connected to %s</string>
+    <string name="wearable_connection_active">Wearable control active</string>
+    <string name="disconnected">Disconnect</string>
+    <string name="disconnection_error">Disconnection error</string>
+    <string name="desktop_disconnected">Desktop disconnected</string>
+    <string name="desktop_disconnection_error">Cannot listen for connection loss</string>
+    <string name="apps_request_error">Cannot request apps</string>
+    <string name="permission_apps">No permission to request apps!</string>
+    <string name="apps_start">Start %s</string>
+    <string name="permission_mouse">No permission for mouse!</string>
+    <string name="permission_files">No permission to request files!</string>
+    <string name="files_request_error">Can\'t access files</string>
+    <string name="rationale_external_storage">Store the transferred file into the downloads folder</string>
+    <string name="filetransfer_finished">%s copied to device</string>
+    <string name="filetransfer_initiated">Copying %s</string>
+    <string name="files_menu_add_to_apps">%s added to apps</string>
+    <string name="files_menu_open_on_desktop">%s will be opened on dekstop</string>
 
 </resources>
