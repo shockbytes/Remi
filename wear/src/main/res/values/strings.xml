@@ -6,5 +6,7 @@
     <string name="navigation_slides">Slides</string>
 
     <string name="start">Start</string>
+    <string name="left">LEFT</string>
+    <string name="right">RIGHT</string>
 
 </resources>

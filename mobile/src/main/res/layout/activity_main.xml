@@ -5,6 +5,7 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:keepScreenOn="true"
     android:orientation="vertical"
     tools:cxt=".core.MainActivity">
 
@@ -31,26 +32,26 @@
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tab_apps"
-                android:icon="@drawable/ic_tab_apps" />
+                android:icon="@drawable/ic_tab_apps"
+                android:text="@string/tab_apps" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tab_mouse"
-                android:icon="@drawable/ic_tab_mouse" />
+                android:icon="@drawable/ic_tab_mouse"
+                android:text="@string/tab_mouse" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tab_files"
-                android:icon="@drawable/ic_tab_files" />
+                android:icon="@drawable/ic_tab_files"
+                android:text="@string/tab_files" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tab_slides"
-                android:icon="@drawable/ic_tab_slides" />
+                android:icon="@drawable/ic_tab_slides"
+                android:text="@string/tab_slides" />
 
         </android.support.design.widget.TabLayout>
 

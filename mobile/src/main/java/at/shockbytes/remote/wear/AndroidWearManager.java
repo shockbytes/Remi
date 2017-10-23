@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -62,9 +61,19 @@ public class AndroidWearManager implements WearableManager,
     }
 
     @Override
+    public void synchronize() {
+        client.requestApps().subscribe(new Consumer<List<String>>() {
+            @Override
+            public void accept(List<String> workouts) {
+                synchronizeApps(workouts);
+            }
+        });
+    }
+
+    @Override
     public void synchronizeApps(List<String> apps) {
 
-        PutDataRequest request = PutDataRequest.create("/apps");
+        PutDataRequest request = PutDataRequest.create("/apps/list");
         String serializedWorkouts = gson.toJson(apps);
         request.setData(serializedWorkouts.getBytes());
 
@@ -72,7 +81,7 @@ public class AndroidWearManager implements WearableManager,
     }
 
     @Override
-    public void onPause() {
+    public void onStop() {
         Wearable.MessageApi.removeListener(apiClient, this);
         Wearable.CapabilityApi.removeLocalCapability(apiClient, context.getString(R.string.capability));
     }
@@ -101,33 +110,31 @@ public class AndroidWearManager implements WearableManager,
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
 
-        Log.wtf("Remi", "information received! + " + messageEvent.toString());
-
-        String text = "";
-
         String path = messageEvent.getPath();
-        switch (path) {
-
-            case "/exec_apps":
-                text = "Start: " + new String(messageEvent.getData());
-                break;
-
-            case "/hello":
-
-                text = "Hello";
-                break;
-
+        String data = new String(messageEvent.getData());
+        if (path.equals("/slides")) {
+            handleSlidesMessage(data);
+        } else if (path.equals("/apps/start")) {
+            client.sendAppExecutionRequest(data).subscribe();
+        } else if (path.equals("/mouse/click")) {
+            handleMouseClickMessage(data);
         }
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
     }
 
-    private void synchronize() {
-        client.requestApps().subscribe(new Consumer<List<String>>() {
-            @Override
-            public void accept(List<String> workouts) {
-                synchronizeApps(workouts);
-            }
-        });
+    private void handleSlidesMessage(String data) {
+        if (data.equals("next")) {
+            client.sendSlidesNextCommand().subscribe();
+        } else if (data.equals("previous")) {
+            client.sendSlidesPreviousCommand().subscribe();
+        }
+    }
+
+    private void handleMouseClickMessage(String data) {
+        if (data.equals("left")) {
+            client.sendLeftClick().subscribe();
+        } else if (data.equals("right")) {
+            client.sendRightClick().subscribe();
+        }
     }
 
 }
