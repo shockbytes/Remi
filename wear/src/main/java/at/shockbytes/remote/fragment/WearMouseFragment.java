@@ -41,12 +41,7 @@ public class WearMouseFragment extends WearBaseFragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.wear_fragment_mouse, container, false);
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
+    
     @Override
     protected void setupViews() {
     }

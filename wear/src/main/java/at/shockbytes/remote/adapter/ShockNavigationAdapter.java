@@ -18,9 +18,9 @@ import java.util.List;
 public class ShockNavigationAdapter
         extends WearableNavigationDrawerView.WearableNavigationDrawerAdapter {
 
-    private List<NavigationItem> items;
+    private final List<NavigationItem> items;
 
-    private Context context;
+    private final Context context;
 
     public ShockNavigationAdapter(@NonNull Context context,
                                   List<NavigationItem> items) {
@@ -45,8 +45,8 @@ public class ShockNavigationAdapter
 
     public static class NavigationItem {
 
-        protected int text;
-        protected int drawable;
+        final int text;
+        final int drawable;
 
         public NavigationItem(@StringRes int text, @DrawableRes int drawable) {
             this.text = text;

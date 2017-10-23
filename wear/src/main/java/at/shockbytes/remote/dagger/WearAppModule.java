@@ -22,7 +22,7 @@ import dagger.Provides;
 @Module
 public class WearAppModule {
 
-    private Application app;
+    private final Application app;
 
     public WearAppModule(Application app) {
         this.app = app;
