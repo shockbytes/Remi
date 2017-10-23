@@ -41,22 +41,23 @@ public class WearMainActivity extends WearableActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setAmbientEnabled();
         ((WearRemiApp) getApplication()).getAppComponent().inject(this);
         unbinder = ButterKnife.bind(this);
-        gateway.setup();
+        gateway.connect();
         setupNavigationDrawer();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        gateway.onResume();
+    protected void onStart() {
+        super.onStart();
+        gateway.onStart(this);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        gateway.onPause();
+    protected void onStop() {
+        super.onStop();
+        gateway.onStop();
     }
 
     @Override
@@ -73,17 +74,14 @@ public class WearMainActivity extends WearableActivity
         switch (pos) {
 
             case WearAppParams.NAVIGATION_POSITION_APPS:
-
                 transaction.replace(R.id.wearable_main_content, WearAppsFragment.newInstance());
                 break;
 
             case WearAppParams.NAVIGATION_POSITION_MOUSE:
-
                 transaction.replace(R.id.wearable_main_content, WearMouseFragment.newInstance());
                 break;
 
             case WearAppParams.NAVIGATION_POSITION_SLIDES:
-
                 transaction.replace(R.id.wearable_main_content, WearSlidesFragment.newInstance());
                 break;
         }

@@ -65,7 +65,7 @@
             android:hapticFeedbackEnabled="true"
             android:text="@string/start"
             android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
     </RelativeLayout>
 

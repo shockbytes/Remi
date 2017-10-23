@@ -1,5 +1,7 @@
 package at.shockbytes.remote.communication;
 
+import android.app.Activity;
+
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -11,21 +13,17 @@ import io.reactivex.Observable;
 
 public interface CommunicationManager {
 
-    void setup();
+    void connect();
 
-    void onResume();
+    void onStart(Activity activity);
 
-    void onPause();
+    void onStop();
 
     // ------------------ Mouse messages -------------------
 
     void sendMouseLeftClickMessage();
 
     void sendMouseRightClickMessage();
-
-    void sendMouseScrollMessage(int amount);
-
-    void sendMouseMoveMessage(int deltaX, int deltaY);
 
     // -----------------------------------------------------
 

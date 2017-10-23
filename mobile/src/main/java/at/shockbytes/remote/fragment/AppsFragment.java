@@ -57,7 +57,7 @@ public class AppsFragment extends BaseFragment
         @Override
         public void onError(Throwable e) {
             e.printStackTrace();
-            Snackbar.make(getView(), "Cannot request apps", Snackbar.LENGTH_LONG).show();
+            showSnackbar("Cannot request apps", true);
             dispose();
         }
 
@@ -94,7 +94,7 @@ public class AppsFragment extends BaseFragment
         if (hasPermission) {
             client.requestApps().subscribe(subscriber);
         } else {
-            Snackbar.make(getView(), "No permission to request apps!", Snackbar.LENGTH_LONG).show();
+            showSnackbar("No permission to request apps!", true);
         }
     }
 
@@ -109,7 +109,7 @@ public class AppsFragment extends BaseFragment
     @Override
     public void onItemClick(String app, View view) {
         client.sendAppExecutionRequest(app).subscribe();
-        Snackbar.make(getView(), "Start " + app, Snackbar.LENGTH_LONG).show();
+        showSnackbar("Start " + app, false);
     }
 
     @Override
@@ -139,6 +139,14 @@ public class AppsFragment extends BaseFragment
 
     private RecyclerView.LayoutManager getLayoutManager() {
         return new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+    }
+
+    private void showSnackbar(String text, boolean showLong) {
+
+        if (getView() != null) {
+            int length =  showLong ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_SHORT;
+            Snackbar.make(getView(), text, length).show();
+        }
     }
 
 }

@@ -124,15 +124,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         wearableManager.connect(this, this);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        wearableManager.onPause();
+    protected void onStop() {
+        super.onStop();
+        wearableManager.onStop();
     }
 
     @Override

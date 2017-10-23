@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -78,7 +77,7 @@ public class WearAppsFragment extends WearBaseFragment
             }
         });
 
-        adapter.setData(Arrays.asList("Stronghold Crusader", "Android Studio", "Eclipse", "IntelliJ IDEA"));
+        //adapter.setData(Arrays.asList("Stronghold Crusader", "Android Studio", "Eclipse", "IntelliJ IDEA"));
     }
 
     @Override

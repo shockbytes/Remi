@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:id="@+id/wear_fragment_mouse_background"
+<android.support.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    <TextView
-        android:text="Help text"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:fontFamily="sans-serif-light"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    tools:deviceIds="wear">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/wear_fragment_slides_btn_start"
+        android:layout_below="@+id/wear_fragment_slides_chronometer"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:weightSum="1"
+        app:layout_box="top|bottom">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/wear_fragment_mouse_btn_left"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/left"
+            android:hapticFeedbackEnabled="true" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/wear_fragment_mouse_btn_right"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/right"
+            android:hapticFeedbackEnabled="true" />
+
+    </LinearLayout>
+
+</android.support.wear.widget.BoxInsetLayout>

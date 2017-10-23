@@ -21,8 +21,10 @@ public interface WearableManager {
 
     void connect(FragmentActivity activity, OnWearableConnectedListener listener);
 
+    void synchronize();
+
     void synchronizeApps(List<String> apps);
 
-    void onPause();
+    void onStop();
 
 }
