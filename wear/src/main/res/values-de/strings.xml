@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Remi</string>
+    <string name="left">LINKS</string>
+    <string name="right">RECHTS</string>
+    <string name="start">Start</string>
+    <string name="navigation_apps">Apps</string>
+    <string name="navigation_mouse">Maus</string>
+    <string name="navigation_slides">Slides</string>
+</resources>

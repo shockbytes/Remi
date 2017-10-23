@@ -43,12 +43,14 @@ public class DefaultCommunicationManager implements CommunicationManager,
         GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
         DataApi.DataListener, CapabilityApi.CapabilityListener {
 
-    private Context context;
     private GoogleApiClient apiClient;
-    private Gson gson;
     private Node connectedNode;
 
-    private ReplaySubject<List<String>> appsSubject;
+    private final Gson gson;
+    private final Context context;
+
+
+    private final ReplaySubject<List<String>> appsSubject;
 
     private Activity activity;
 
