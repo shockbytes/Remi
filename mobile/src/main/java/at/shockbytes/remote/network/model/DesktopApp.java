@@ -7,10 +7,10 @@ package at.shockbytes.remote.network.model;
 
 public class DesktopApp {
 
-    private String name;
-    private String ip;
+    private final String name;
+    private final String ip;
+    private final String signature;
     private String os;
-    private String signature;
 
     public DesktopApp(String name, String ip, String os, String signature) {
         this.name = name;

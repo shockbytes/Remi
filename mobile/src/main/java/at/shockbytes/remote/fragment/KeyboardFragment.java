@@ -94,7 +94,7 @@ public class KeyboardFragment extends BottomSheetDialogFragment
     private boolean isCapsLock;
     private boolean useDarkTheme;
 
-    private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback
+    private final BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback
             = new BottomSheetBehavior.BottomSheetCallback() {
 
         @Override

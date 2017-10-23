@@ -33,9 +33,9 @@ public class AndroidWearManager implements WearableManager,
         MessageApi.MessageListener {
 
     private GoogleApiClient apiClient;
-    private Gson gson;
-    private Context context;
-    private RemiClient client;
+    private final Gson gson;
+    private final Context context;
+    private final RemiClient client;
 
     private OnWearableConnectedListener connectionListener;
 

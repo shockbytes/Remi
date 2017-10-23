@@ -2,7 +2,6 @@ package at.shockbytes.remote.fragment;
 
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,12 +51,12 @@ public class AppsFragment extends BaseFragment
 
     private boolean hasPermission;
 
-    private ResourceObserver<List<String>> subscriber = new ResourceObserver<List<String>>() {
+    private final ResourceObserver<List<String>> subscriber = new ResourceObserver<List<String>>() {
 
         @Override
         public void onError(Throwable e) {
             e.printStackTrace();
-            showSnackbar("Cannot request apps", true);
+            showSnackbar(getString(R.string.apps_request_error));
             dispose();
         }
 
@@ -94,7 +93,7 @@ public class AppsFragment extends BaseFragment
         if (hasPermission) {
             client.requestApps().subscribe(subscriber);
         } else {
-            showSnackbar("No permission to request apps!", true);
+            showSnackbar(getString(R.string.permission_apps));
         }
     }
 
@@ -109,7 +108,7 @@ public class AppsFragment extends BaseFragment
     @Override
     public void onItemClick(String app, View view) {
         client.sendAppExecutionRequest(app).subscribe();
-        showSnackbar("Start " + app, false);
+        showSnackbar(getString(R.string.apps_start, app));
     }
 
     @Override
@@ -139,14 +138,6 @@ public class AppsFragment extends BaseFragment
 
     private RecyclerView.LayoutManager getLayoutManager() {
         return new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-    }
-
-    private void showSnackbar(String text, boolean showLong) {
-
-        if (getView() != null) {
-            int length =  showLong ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_SHORT;
-            Snackbar.make(getView(), text, length).show();
-        }
     }
 
 }

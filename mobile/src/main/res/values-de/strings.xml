@@ -76,5 +76,25 @@
     <string name="login_welcome">Willkommen zu Remi</string>
     <string name="wear_device">Wear Gerät</string>
     <string name="desktop_apps_untrusted">UNBEKANNT</string>
+    <string name="app_name">Remi</string>
+    <string name="apps_request_error">Apps konnten nicht angefordert werden</string>
+    <string name="apps_start">Starte %s</string>
+    <string name="connected_to">Verbunden mit %s</string>
+    <string name="wearable_connection_active">Wearable Gerät aktiv</string>
+    <string name="wear_connected">Wearable verbunden</string>
+    <string name="rationale_external_storage">Die übertragenen Dateien werden im Downloads-Ordner gespeichert</string>
+    <string name="permission_mouse">Keine Berechtigung für die Maus!</string>
+    <string name="permission_keyboard">Keine Berechtigung für die Tastatur!</string>
+    <string name="permission_files">Keine Berechtigungen die Dateien!</string>
+    <string name="permission_apps">Keine Berechtigung für die Apps!</string>
+    <string name="filetransfer_initiated">Kopiere %s</string>
+    <string name="filetransfer_finished">%s wurde auf das Gerät kopiert</string>
+    <string name="files_request_error">Kann nicht auf Dateien zugreifen</string>
+    <string name="desktop_disconnected">Verbindung zu Desktop verloren</string>
+    <string name="disconnected">Verbindung verloren</string>
+    <string name="disconnection_error">Fehler beim Trennen</string>
+    <string name="desktop_disconnection_error">Verbindungsabbruch kann nicht überwacht werden</string>
+    <string name="files_menu_open_on_desktop">%s wird am Desktop geöffnet</string>
+    <string name="files_menu_add_to_apps">%s wird zu Apps hinzugefügt</string>
 
 </resources>

@@ -26,7 +26,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 @Module
 public class NetworkModule {
 
-    private Application app;
+    private final Application app;
 
     public NetworkModule(Application app) {
         this.app = app;

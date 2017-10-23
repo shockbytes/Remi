@@ -2,6 +2,6 @@
     <string name="app_name">core</string>
 
 
-    <string name="capability">remi_remote_control</string>
+    <string name="capability" translatable="false">remi_remote_control</string>
 
 </resources>

@@ -1,7 +1,5 @@
 package at.shockbytes.remote.core;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -14,12 +12,9 @@ import at.shockbytes.remote.R;
 import at.shockbytes.remote.fragment.LoginFragment;
 import at.shockbytes.remote.util.RemiUtils;
 
+@SuppressWarnings("unchecked")
 public class LoginActivity extends AppCompatActivity
         implements LoginFragment.OnConnectionResponseListener{
-
-    public static Intent newIntent(Context context) {
-        return new Intent(context, LoginActivity.class);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

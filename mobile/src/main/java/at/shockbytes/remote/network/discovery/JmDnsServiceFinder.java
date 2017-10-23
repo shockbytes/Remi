@@ -24,18 +24,17 @@ import io.reactivex.subjects.PublishSubject;
 
 public class JmDnsServiceFinder implements ServiceFinder {
 
-    private RxBonjour rxBonjour;
+    private final RxBonjour rxBonjour;
 
     private static final String SERVICE_TYPE = "_http._tcp";
     private static final String SERVICE_NAME = "remi_desktop_app";
 
-    private PublishSubject<DesktopApp> publishSubject;
+    private final PublishSubject<DesktopApp> publishSubject;
     private EventObserver observer;
 
     public JmDnsServiceFinder(Context context) {
 
         publishSubject = PublishSubject.create();
-
         rxBonjour = new RxBonjour.Builder()
                 .platform(AndroidPlatform.create(context))
                 .driver(JmDNSDriver.create())
