@@ -11,6 +11,8 @@ import com.google.gson.Gson;
 import javax.inject.Singleton;
 
 import at.shockbytes.remote.network.RemiClient;
+import at.shockbytes.remote.network.security.DefaultDesktopSecurityManager;
+import at.shockbytes.remote.network.security.DesktopSecurityManager;
 import at.shockbytes.remote.wear.AndroidWearManager;
 import at.shockbytes.remote.wear.WearableManager;
 import dagger.Module;
@@ -53,5 +55,12 @@ public class AppModule {
     WearableManager provideWearableManager(RemiClient client, Gson gson) {
         return new AndroidWearManager(app.getApplicationContext(), client, gson);
     }
+
+    @Provides
+    @Singleton
+    DesktopSecurityManager provideDesktopSecurityManager() {
+        return new DefaultDesktopSecurityManager();
+    }
+
 
 }
