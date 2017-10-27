@@ -122,6 +122,11 @@ public class DefaultCommunicationManager implements CommunicationManager,
     }
 
     @Override
+    public void sendSlidesFullscreenRequest(SlidesProduct slidesProduct) {
+        sendMessage("/slides/fullscreen", slidesProduct.name().getBytes());
+    }
+
+    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
         Toast.makeText(context,

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">core</string>
+
+    <string name="popup_menu_slides_reset">Zurücksetzen</string>
+    <string name="popup_menu_slides_stop_timer">Uhr stoppen</string>
+    <string name="popup_menu_slides_submenu_fullscreen">Fullscreen</string>
+
+</resources>

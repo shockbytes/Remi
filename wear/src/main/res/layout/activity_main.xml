@@ -20,12 +20,17 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-
     <android.support.wear.widget.drawer.WearableNavigationDrawerView
         android:id="@+id/main_navigation_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorAccent"
         app:navigation_style="single_page" />
+
+    <android.support.wear.widget.drawer.WearableActionDrawerView
+        android:id="@+id/main_action_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:actionMenu="@menu/wear_popup_slides" />
 
 </android.support.wear.widget.drawer.WearableDrawerLayout>

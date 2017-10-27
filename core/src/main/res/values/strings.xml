@@ -4,4 +4,12 @@
 
     <string name="capability" translatable="false">remi_remote_control</string>
 
+    <string name="popup_menu_slides_submenu_fullscreen">Fullscreen</string>
+    <string name="popup_menu_slides_fullscreen_google_slides" translatable="false">Google Slides</string>
+    <string name="popup_menu_slides_fullscreen_powerpoint" translatable="false">Powerpoint</string>
+    <string name="popup_menu_slides_wear_fullscreen_google_slides" translatable="false">Fullscreen Google Slides</string>
+    <string name="popup_menu_slides_wear_fullscreen_powerpoint" translatable="false">Fullscreen Powerpoint</string>
+    <string name="popup_menu_slides_stop_timer">Stop timer</string>
+    <string name="popup_menu_slides_reset">Reset</string>
+
 </resources>

@@ -3,9 +3,12 @@ package at.shockbytes.remote.core;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.wear.widget.drawer.WearableActionDrawerView;
 import android.support.wear.widget.drawer.WearableDrawerLayout;
 import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.support.wearable.activity.WearableActivity;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +27,31 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class WearMainActivity extends WearableActivity
-        implements WearableNavigationDrawerView.OnItemSelectedListener {
+        implements WearableNavigationDrawerView.OnItemSelectedListener, MenuItem.OnMenuItemClickListener {
+
+
+    public interface OnWristNavigationListener {
+
+        void onNext();
+
+        void onBack();
+
+    }
+
+    public interface OnSlidesControlListener {
+
+        void onStopTimer();
+
+        void onStartSlideshow();
+
+        void onResetTimer();
+
+        void onGoogleSlidesFullscreen();
+
+        void onPowerpointFullscreen();
+
+    }
+
 
     @BindView(R.id.main_navigation_drawer)
     protected WearableNavigationDrawerView navigationDrawer;
@@ -32,10 +59,16 @@ public class WearMainActivity extends WearableActivity
     @BindView(R.id.main_drawer_layout)
     protected WearableDrawerLayout drawerLayout;
 
+    @BindView(R.id.main_action_drawer)
+    protected WearableActionDrawerView actionDrawer;
+
     @Inject
     protected CommunicationManager gateway;
 
     private Unbinder unbinder;
+
+    private OnWristNavigationListener wristNavigationListener;
+    private OnSlidesControlListener slidesControlListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +78,7 @@ public class WearMainActivity extends WearableActivity
         ((WearRemiApp) getApplication()).getAppComponent().inject(this);
         unbinder = ButterKnife.bind(this);
         gateway.connect();
-        setupNavigationDrawer();
+        setupNavigation();
     }
 
     @Override
@@ -82,10 +115,66 @@ public class WearMainActivity extends WearableActivity
                 break;
 
             case WearAppParams.NAVIGATION_POSITION_SLIDES:
-                transaction.replace(R.id.wearable_main_content, WearSlidesFragment.newInstance());
+                WearSlidesFragment slidesFragment = WearSlidesFragment.newInstance();
+                wristNavigationListener = slidesFragment;
+                slidesControlListener = slidesFragment;
+                transaction.replace(R.id.wearable_main_content, slidesFragment);
                 break;
         }
+        updateActionDrawer(pos);
         transaction.commit();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (wristNavigationListener == null) {
+            return false;
+        }
+
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_NAVIGATE_NEXT:
+                wristNavigationListener.onNext();
+                break;
+            case KeyEvent.KEYCODE_NAVIGATE_PREVIOUS:
+                wristNavigationListener.onBack();
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+
+        if (slidesControlListener == null) {
+            return false;
+        }
+
+        switch (menuItem.getItemId()) {
+
+            case R.id.popup_menu_slides_wear_start:
+                slidesControlListener.onStartSlideshow();
+                break;
+
+            case R.id.popup_menu_slides_wear_stop_timer:
+                slidesControlListener.onStopTimer();
+                break;
+
+            case R.id.popup_menu_slides_wear_reset:
+                slidesControlListener.onResetTimer();
+                break;
+
+            case R.id.popup_menu_slides_wear_fullscreen_google:
+                slidesControlListener.onGoogleSlidesFullscreen();
+                break;
+
+            case R.id.popup_menu_slides_wear_fullscreen_powerpoint:
+                slidesControlListener.onPowerpointFullscreen();
+                break;
+        }
+
+        actionDrawer.getController().closeDrawer();
+        return true;
     }
 
     @NonNull
@@ -100,10 +189,24 @@ public class WearMainActivity extends WearableActivity
                         R.drawable.ic_tab_slides));
     }
 
-    private void setupNavigationDrawer() {
+    private void updateActionDrawer(int position) {
+
+        if (position == WearAppParams.NAVIGATION_POSITION_SLIDES) {
+            actionDrawer.setIsLocked(false);
+            actionDrawer.getController().peekDrawer();
+        } else {
+            actionDrawer.getController().closeDrawer();
+            actionDrawer.setIsLocked(true);
+        }
+
+    }
+
+    private void setupNavigation() {
         navigationDrawer.setAdapter(new ShockNavigationAdapter(this, getNavigationItems()));
         navigationDrawer.addOnItemSelectedListener(this);
         navigationDrawer.getController().peekDrawer();
         navigationDrawer.setCurrentItem(WearAppParams.NAVIGATION_POSITION_MOUSE, true);
+
+        actionDrawer.setOnMenuItemClickListener(this);
     }
 }

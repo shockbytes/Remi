@@ -73,11 +73,6 @@
     <string name="connection_error_unknown">Unknown error</string>
     <string name="connection_error_network">Network error</string>
 
-    <string name="popup_menu_slides_submenu_fullscreen">Fullscreen</string>
-    <string name="popup_menu_slides_fullscreen_google_slides" translatable="false">Google Slides</string>
-    <string name="popup_menu_slides_fullscreen_powerpoint" translatable="false">Powerpoint</string>
-    <string name="popup_menu_slides_stop_timer">Stop timer</string>
-    <string name="popup_menu_slides_reset">Reset</string>
 
     <string name="fragment_slides_open_in_files">Open power point presentation in files to get slides preview</string>
     <string name="fragment_slides_requesting_slides">Requesting slides&#8230;</string>

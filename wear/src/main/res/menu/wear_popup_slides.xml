@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popup_menu_slides_wear_start"
+        android:icon="@drawable/ic_start"
+        android:title="@string/start" />
+
+    <item
+        android:id="@+id/popup_menu_slides_wear_stop_timer"
+        android:icon="@drawable/ic_stop"
+        android:title="@string/popup_menu_slides_stop_timer" />
+
+    <item
+        android:id="@+id/popup_menu_slides_wear_reset"
+        android:icon="@drawable/ic_reset"
+        android:title="@string/popup_menu_slides_reset" />
+
+    <item
+        android:id="@+id/popup_menu_slides_wear_fullscreen_google"
+        android:icon="@drawable/ic_os_na"
+        android:title="@string/popup_menu_slides_wear_fullscreen_google_slides" />
+
+    <item
+        android:id="@+id/popup_menu_slides_wear_fullscreen_powerpoint"
+        android:icon="@drawable/ic_os_windows"
+        android:title="@string/popup_menu_slides_wear_fullscreen_powerpoint" />
+
+
+
+</menu>
