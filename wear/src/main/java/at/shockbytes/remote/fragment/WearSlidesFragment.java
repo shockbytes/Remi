@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.communication.CommunicationManager;
+import at.shockbytes.remote.core.WearMainActivity;
 import at.shockbytes.remote.core.WearRemiApp;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -27,7 +28,8 @@ import butterknife.OnClick;
  */
 
 public class WearSlidesFragment extends WearBaseFragment
-        implements Chronometer.OnChronometerTickListener {
+        implements Chronometer.OnChronometerTickListener,
+        WearMainActivity.OnWristNavigationListener, WearMainActivity.OnSlidesControlListener {
 
     public static WearSlidesFragment newInstance() {
         WearSlidesFragment fragment = new WearSlidesFragment();
@@ -58,7 +60,8 @@ public class WearSlidesFragment extends WearBaseFragment
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.wear_fragment_slides, container, false);
     }
 
@@ -88,20 +91,48 @@ public class WearSlidesFragment extends WearBaseFragment
         gateway.sendSlidesNextMessage();
     }
 
-    @OnClick(R.id.wear_fragment_slides_btn_start)
-    protected void onClickStartSlideShow(final View btnStart) {
+    @Override
+    public void onNext() {
+        onClickNextSlide();
+    }
+
+    @Override
+    public void onBack() {
+        onClickPreviousSlide();
+    }
+
+    @Override
+    public void onStopTimer() {
+        stopTimer();
+    }
+
+    @Override
+    public void onStartSlideshow() {
+        startSlideshow();
+    }
+
+    @Override
+    public void onResetTimer() {
+        stopTimer();
+        setControlsEnabled(false);
+    }
+
+    @Override
+    public void onGoogleSlidesFullscreen() {
+        gateway.sendSlidesFullscreenRequest(CommunicationManager.SlidesProduct.GOOGLE_SLIDES);
+    }
+
+    @Override
+    public void onPowerpointFullscreen() {
+        gateway.sendSlidesFullscreenRequest(CommunicationManager.SlidesProduct.POWERPOINT);
+    }
+
+    protected void startSlideshow() {
 
         setControlsEnabled(true);
 
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.start();
-
-        btnStart.animate().scaleX(0.5f).scaleY(0.5f).alpha(0).withEndAction(new Runnable() {
-            @Override
-            public void run() {
-                btnStart.setVisibility(View.INVISIBLE);
-            }
-        }).start();
     }
 
     private void setControlsEnabled(boolean isEnabled) {
@@ -109,6 +140,11 @@ public class WearSlidesFragment extends WearBaseFragment
             imgBtnControl.setEnabled(isEnabled);
             imgBtnControl.animate().alpha(isEnabled ? 1 : 0).start();
         }
+    }
+
+    private void stopTimer() {
+        chronometer.stop();
+        chronometer.setText("--:--");
     }
 
 

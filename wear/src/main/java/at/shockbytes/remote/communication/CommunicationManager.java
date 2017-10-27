@@ -13,6 +13,10 @@ import io.reactivex.Observable;
 
 public interface CommunicationManager {
 
+    enum SlidesProduct {
+        POWERPOINT, GOOGLE_SLIDES
+    }
+
     void connect();
 
     void onStart(Activity activity);
@@ -40,6 +44,8 @@ public interface CommunicationManager {
     void sendSlidesNextMessage();
 
     void sendSlidesPreviousMessage();
+
+    void sendSlidesFullscreenRequest(SlidesProduct slidesProduct);
 
     // -----------------------------------------------------
 

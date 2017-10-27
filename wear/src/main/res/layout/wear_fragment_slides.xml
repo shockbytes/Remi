@@ -55,6 +55,7 @@
 
         </LinearLayout>
 
+        <!--
         <Button
             android:id="@+id/wear_fragment_slides_btn_start"
             style="?android:borderlessButtonStyle"
@@ -65,7 +66,7 @@
             android:hapticFeedbackEnabled="true"
             android:text="@string/start"
             android:textColor="@android:color/white"
-            android:textSize="24sp" />
+            android:textSize="24sp" /> -->
 
     </RelativeLayout>
 
