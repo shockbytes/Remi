@@ -68,14 +68,15 @@ public class JsonMessageDeserializer implements MessageDeserializer {
 
             String filename = object.getString("filename");
             long size = object.getLong("size");
-            byte[] content = null;
-            String exception = null;
+            int transferCode = object.getInt("transferCode");
+            byte[] content = new byte[0];
+            String exception = "";
             if (size > 0) {
                 content = Base64.decode(object.getString("content"), Base64.DEFAULT);
             } else {
                 exception = object.getString("exception");
             }
-            return new FileTransferResponse(filename, content, exception);
+            return new FileTransferResponse(filename, content, transferCode, exception);
 
         } catch (JSONException e) {
             e.printStackTrace();

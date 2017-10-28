@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -34,7 +35,6 @@ import at.shockbytes.util.adapter.BaseAdapter;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -76,6 +76,8 @@ public class FilesFragment extends BaseFragment
 
     private OnSlidesSelectedListener slidesSelectedListener;
 
+    private FileTransferObserver fileTransferObserver;
+
     public FilesFragment() {
     }
 
@@ -113,6 +115,17 @@ public class FilesFragment extends BaseFragment
             client.requestBaseDirectories().subscribeWith(new FileObserver());
         } else {
             showSnackbar(getString(R.string.permission_files));
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (fileTransferObserver != null && !fileTransferObserver.isDisposed()) {
+            fileTransferObserver.dispose();
+            Toast.makeText(getContext(), R.string.filetransfer_cancelled, Toast.LENGTH_SHORT).show();
+            RemiUtils.revokeFileTransferNotification(getContext());
         }
     }
 
@@ -208,28 +221,11 @@ public class FilesFragment extends BaseFragment
             return;
         }
 
-        // TODO Post notification for ongoing download
+        RemiUtils.postFileTransferNotification(getContext(), fileToTransfer.getName());
         showSnackbar(getString(R.string.filetransfer_initiated, fileToTransfer.getName()));
 
-        client.transferFile(fileToTransfer.getPath())
-                .subscribe(new Consumer<FileTransferResponse>() {
-                    @Override
-                    public void accept(FileTransferResponse response) throws Exception {
-
-                        Toast.makeText(getContext(),
-                                getString(R.string.filetransfer_finished, fileToTransfer.getName()),
-                                Toast.LENGTH_SHORT).show();
-                        RemiUtils.copyFileToDownloadsFolder(response.getContent(),
-                                fileToTransfer.getName());
-                        fileToTransfer = null;
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        fileToTransfer = null;
-                        showSnackbar(throwable.getMessage());
-                    }
-                });
+        fileTransferObserver = client.transferFile(fileToTransfer.getPath())
+                .subscribeWith(new FileTransferObserver());
     }
 
     private RecyclerView.LayoutManager getLayoutManager() {
@@ -245,7 +241,23 @@ public class FilesFragment extends BaseFragment
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_external_storage),
                     REQ_CODE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
+    }
 
+    private void copyToInternalStorage(FileTransferResponse response) {
+
+        String msg;
+        try {
+            RemiUtils.copyFileToDownloadsFolder(response.getContent(),
+                    response.getFilename());
+            msg = getString(R.string.filetransfer_finished, response.getFilename());
+        } catch (IOException e) {
+            e.printStackTrace();
+            msg = getString(R.string.filetransfer_finished_w_error, response.getFilename());
+        }
+
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        fileToTransfer = null;
+        RemiUtils.revokeFileTransferNotification(getContext());
     }
 
     private class FileObserver extends DisposableObserver<List<RemiFile>> {
@@ -268,6 +280,35 @@ public class FilesFragment extends BaseFragment
 
         @Override
         public void onComplete() {
+            dispose();
+        }
+    }
+
+    private class FileTransferObserver extends DisposableObserver<FileTransferResponse> {
+
+        @Override
+        public void onNext(FileTransferResponse response) {
+
+            FileTransferResponse.TransferCode transferCode = response.getTransferCodeAsEnum();
+            if (transferCode == FileTransferResponse.TransferCode.OKAY) {
+                copyToInternalStorage(response);
+            } else {
+                showSnackbar(getString(RemiUtils.getErrorTextForTransferCode(transferCode)));
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            e.printStackTrace();
+            fileToTransfer = null;
+            showSnackbar(e.getMessage());
+            RemiUtils.revokeFileTransferNotification(getContext());
+            dispose();
+        }
+
+        @Override
+        public void onComplete() {
+            RemiUtils.revokeFileTransferNotification(getContext());
             dispose();
         }
     }

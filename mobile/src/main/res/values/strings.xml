@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Remi</string>
-    <string name="app_version" translatable="false">2.0b8 - 23.10.17</string>
+    <string name="app_version" translatable="false">2.0b9 - 28.10.17</string>
 
     <string name="tab_mouse">Mouse</string>
     <string name="tab_files">Files</string>
@@ -112,5 +112,13 @@
     <string name="filetransfer_initiated">Copying %s</string>
     <string name="files_menu_add_to_apps">%s added to apps</string>
     <string name="files_menu_open_on_desktop">%s will be opened on dekstop</string>
+    <string name="filetransfer_finished_w_error">%s could not be stored on device!</string>
+    <string name="notification_channel_transfer">Transfer</string>
+    <string name="notification_ft_title">Transferring</string>
+    <string name="filetransfer_cancelled">File transfer cancelled</string>
+    <string name="filetransfer_error_no_access">No access rights for file</string>
+    <string name="filetransfer_error_too_big">File is too big to transfer</string>
+    <string name="filetransfer_error_encoding">File could not be loaded</string>
+    <string name="filetransfer_error_unintialized">Oops, this error should not occur</string>
 
 </resources>

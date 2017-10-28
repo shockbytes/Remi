@@ -94,5 +94,13 @@
     <string name="desktop_disconnection_error">Verbindungsabbruch kann nicht überwacht werden</string>
     <string name="files_menu_open_on_desktop">%s wird am Desktop geöffnet</string>
     <string name="files_menu_add_to_apps">%s wird zu Apps hinzugefügt</string>
+    <string name="notification_channel_transfer">Übertragung</string>
+    <string name="notification_ft_title">Übertrage</string>
+    <string name="filetransfer_finished_w_error">%s konnte nicht am Gerät gespeichert werden!</string>
+    <string name="filetransfer_cancelled">Dateiübertragung abgebrochen</string>
+    <string name="filetransfer_error_no_access">App konnte nicht geöffnet werden</string>
+    <string name="filetransfer_error_too_big">Datei ist zu groß um gesendet zu werden</string>
+    <string name="filetransfer_error_encoding">Datei konnte nicht geladen werden</string>
+    <string name="filetransfer_error_unintialized">Ups, dieser Fehler sollte nicht auftreten</string>
 
 </resources>
