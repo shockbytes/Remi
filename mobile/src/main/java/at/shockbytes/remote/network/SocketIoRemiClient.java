@@ -1,5 +1,7 @@
 package at.shockbytes.remote.network;
 
+import android.util.Log;
+
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -303,7 +305,7 @@ public class SocketIoRemiClient implements RemiClient {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                // TODO Do something in here?
+                Log.d("Remi", "Connected to Desktop App!");
             }
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
