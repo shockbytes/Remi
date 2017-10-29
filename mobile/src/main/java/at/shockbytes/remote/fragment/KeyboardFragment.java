@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.adapter.KeyboardAdapter;
+import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.network.model.text.RemiKeyEvent;
 import at.shockbytes.remote.network.model.text.StandardRemiKeyEvent;
@@ -204,7 +205,7 @@ public class KeyboardFragment extends BottomSheetDialogFragment
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return adapter.item(position).getRowSpan();
+                return adapter.item(position).rowSpan();
             }
         });
         adapter.setData(RemiUtils.getKeyboard());

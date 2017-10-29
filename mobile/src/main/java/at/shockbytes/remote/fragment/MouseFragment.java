@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import at.shockbytes.remote.R;
+import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
 import butterknife.BindView;
 

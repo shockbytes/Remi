@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.adapter.DesktopAppsAdapter;
 import at.shockbytes.remote.core.AppTourActivity;
+import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.network.discovery.ServiceFinder;
 import at.shockbytes.remote.network.model.DesktopApp;

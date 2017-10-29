@@ -6,6 +6,7 @@ import at.shockbytes.remote.dagger.AppComponent;
 import at.shockbytes.remote.dagger.AppModule;
 import at.shockbytes.remote.dagger.DaggerAppComponent;
 import at.shockbytes.remote.dagger.NetworkModule;
+import butterknife.ButterKnife;
 
 /**
  * @author Martin Macheiner
@@ -19,6 +20,8 @@ public class RemiApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        ButterKnife.setDebug(true);
 
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))

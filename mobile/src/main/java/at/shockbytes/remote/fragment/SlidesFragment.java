@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.adapter.SlidesPreviewAdapter;
+import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.network.model.SlidesResponse;
 import at.shockbytes.remote.util.RemiUtils;
