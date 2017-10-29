@@ -37,7 +37,7 @@ public interface RemiClient {
 
     //------------------------------- Basic operations -------------------------------
 
-    Observable<Integer> connect(String serverUrl);
+    Observable<Integer> connect(String desktopUrl);
 
     Observable<Object> disconnect();
 
@@ -47,7 +47,11 @@ public interface RemiClient {
 
     String getDesktopOS();
 
+    int getPort();
+
     ConnectionConfig.ConnectionPermissions getConnectionPermissions();
+
+    boolean isSSLEnabled();
 
     //--------------------------------------------------------------------------------
 

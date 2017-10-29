@@ -25,7 +25,6 @@ import javax.inject.Inject;
 
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.adapter.KeyboardAdapter;
-import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.network.model.text.RemiKeyEvent;
 import at.shockbytes.remote.network.model.text.StandardRemiKeyEvent;

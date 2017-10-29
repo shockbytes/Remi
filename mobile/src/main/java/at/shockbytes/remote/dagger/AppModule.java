@@ -11,8 +11,8 @@ import com.google.gson.Gson;
 import javax.inject.Singleton;
 
 import at.shockbytes.remote.network.RemiClient;
-import at.shockbytes.remote.network.security.DefaultDesktopSecurityManager;
-import at.shockbytes.remote.network.security.DesktopSecurityManager;
+import at.shockbytes.remote.network.security.AndroidSecurityManager;
+import at.shockbytes.remote.network.security.DefaultAndroidSecurityManager;
 import at.shockbytes.remote.wear.AndroidWearManager;
 import at.shockbytes.remote.wear.WearableManager;
 import dagger.Module;
@@ -58,9 +58,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    DesktopSecurityManager provideDesktopSecurityManager() {
-        return new DefaultDesktopSecurityManager();
+    AndroidSecurityManager provideSecurityManager() {
+        return new DefaultAndroidSecurityManager(app.getApplicationContext());
     }
-
 
 }

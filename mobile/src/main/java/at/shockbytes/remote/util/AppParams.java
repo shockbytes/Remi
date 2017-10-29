@@ -12,7 +12,5 @@ public class AppParams {
     public static final int POSITION_FILES = 2;
     public static final int POSITION_SLIDES = 3;
 
-    public static final int STD_PORT = 8080;
-
     public static final String NOTIF_CHANNEL_ID = "default_channel";
 }

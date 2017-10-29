@@ -19,11 +19,9 @@ import javax.inject.Inject;
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.adapter.DesktopAppsAdapter;
 import at.shockbytes.remote.core.AppTourActivity;
-import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.network.discovery.ServiceFinder;
 import at.shockbytes.remote.network.model.DesktopApp;
-import at.shockbytes.remote.util.AppParams;
 import at.shockbytes.remote.util.RemiUtils;
 import at.shockbytes.util.adapter.BaseAdapter;
 import butterknife.BindView;
@@ -94,7 +92,8 @@ public class LoginFragment extends BaseFragment
 
     @Override
     public void onItemClick(DesktopApp app, View view) {
-        connectToDevice(RemiUtils.createUrlFromIp(app.getIp(), AppParams.STD_PORT, false));
+        connectToDevice(RemiUtils.createUrlFromIp(app.getIp(), client.getPort(),
+                client.isSSLEnabled()));
     }
 
     @OnLongClick(R.id.fragment_login_imgview_icon)
