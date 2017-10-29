@@ -48,15 +48,13 @@ public class JsonMessageDeserializer implements MessageDeserializer {
 
         JsonObject element = new JsonParser().parse(msg).getAsJsonObject();
 
-        JsonObject permissionObject = element.get("permissions").getAsJsonObject();
-        ConnectionConfig.ConnectionPermissions permissions = new ConnectionConfig.ConnectionPermissions()
-                .setHasMousePermission(permissionObject.get("perm_mouse").getAsBoolean())
-                .setHasFilesPermission(permissionObject.get("perm_files").getAsBoolean())
-                .setHasFileTransferPermission(permissionObject.get("perm_file_transfer").getAsBoolean())
-                .setHasAppsPermission(permissionObject.get("perm_apps").getAsBoolean());
-        return new ConnectionConfig()
-                .setDesktopOS(element.get("operating_system").getAsString())
-                .setPermissions(permissions);
+        JsonObject permObj = element.get("permissions").getAsJsonObject();
+        ConnectionConfig.ConnectionPermissions permissions =
+                new ConnectionConfig.ConnectionPermissions(permObj.get("perm_mouse").getAsBoolean(),
+                        permObj.get("perm_files").getAsBoolean(),
+                        permObj.get("perm_file_transfer").getAsBoolean(),
+                        permObj.get("perm_apps").getAsBoolean());
+        return new ConnectionConfig(element.get("operating_system").getAsString(), permissions);
     }
 
     @Override

@@ -217,19 +217,19 @@ public class MainActivity extends AppCompatActivity
             case AppParams.POSITION_APPS:
                 fabKeyboard.hide();
                 ft.replace(R.id.main_content,
-                        AppsFragment.newInstance(client.getConnectionPermissions().hasAppsPermission()));
+                        AppsFragment.newInstance(client.getConnectionPermissions().getHasAppsPermission()));
                 break;
 
             case AppParams.POSITION_MOUSE:
                 fabKeyboard.show();
                 ft.replace(R.id.main_content, MouseFragment
-                        .newInstance(client.getConnectionPermissions().hasMousePermission()));
+                        .newInstance(client.getConnectionPermissions().getHasMousePermission()));
                 break;
 
             case AppParams.POSITION_FILES:
                 fabKeyboard.hide();
                 ft.replace(R.id.main_content, FilesFragment
-                        .newInstance(client.getConnectionPermissions().hasFilesPermission()));
+                        .newInstance(client.getConnectionPermissions().getHasFilesPermission()));
                 break;
 
             case AppParams.POSITION_SLIDES:
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                if (client.getConnectionPermissions().hasMousePermission()) {
+                if (client.getConnectionPermissions().getHasMousePermission()) {
                     KeyboardFragment.newInstance()
                             .show(getSupportFragmentManager(), "keyboard-fragment");
                 } else {

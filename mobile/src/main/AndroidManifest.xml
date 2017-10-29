@@ -36,6 +36,8 @@
             android:name=".core.HelpActivity"
             android:label="@string/label_help"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".core.AppTourActivity" />
     </application>
 
 </manifest>
