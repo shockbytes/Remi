@@ -121,4 +121,16 @@
     <string name="filetransfer_error_encoding">File could not be loaded</string>
     <string name="filetransfer_error_unintialized">Oops, this error should not occur</string>
 
+    <!-- AppTour -->
+    <string name="apptour_title_1">Welcome to Remi</string>
+    <string name="apptour_title_2">Apps, Mouse, Files &amp; Slides</string>
+    <string name="apptour_title_3">Get the Desktop App</string>
+    <string name="apptour_title_4">Use Remi on your wrist</string>
+    <string name="apptour_title_5">Everything\'s fine?</string>
+    <string name="apptour_description_1">Just follow the simple steps and see what you can do with Remi and how to connect to your computer.</string>
+    <string name="apptour_description_2">Remi let\'s you easily control  your mouse, view all your files, transfer files to your phone, start apps and control your current slideshow.</string>
+    <string name="apptour_description_3">Download the Desktop App from \n<b>\'shockbytes.github.io/Remi\'</b>\n for your operating system. The Desktop App needs to run in the same Wifi as the phone in order to establish a connection.</string>
+    <string name="apptour_description_4">Remi can also be used on your smart watch. It allows you to start your apps, click your mouse and control your presentation. The smartphone app must be active during the usage.</string>
+    <string name="apptour_description_5">Ready to roll? Start the Desktop App and connect with your phone.</string>
+
 </resources>

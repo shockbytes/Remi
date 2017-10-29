@@ -23,6 +23,7 @@ public class LoginActivity extends AppCompatActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorAccent));
             getWindow().setExitTransition(new Explode());
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorAccent));
         }
 
         getSupportFragmentManager()

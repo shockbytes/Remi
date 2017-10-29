@@ -71,7 +71,7 @@
     <string name="keyboard_abc">ABC</string>
     <string name="keyboard_space">LEERZEICHEN</string>
     <string name="login_look_for_devices">Nach Geräten suchen</string>
-    <string name="login_welcome">Willkommen zu Remi</string>
+    <string name="login_welcome">Willkommen bei Remi</string>
     <string name="wear_device">Wear Gerät</string>
     <string name="desktop_apps_untrusted">UNBEKANNT</string>
     <string name="app_name">Remi</string>
@@ -102,5 +102,15 @@
     <string name="filetransfer_error_too_big">Datei ist zu groß um gesendet zu werden</string>
     <string name="filetransfer_error_encoding">Datei konnte nicht geladen werden</string>
     <string name="filetransfer_error_unintialized">Ups, dieser Fehler sollte nicht auftreten</string>
+    <string name="apptour_title_1">Willkommen bei Remi</string>
+    <string name="apptour_title_2">Apps, Maus, Dateien &amp; Slides</string>
+    <string name="apptour_title_3">Hole dir die Desktop App</string>
+    <string name="apptour_title_4">Nutze Remi am Hangelenk</string>
+    <string name="apptour_title_5">Alles okay soweit?</string>
+    <string name="apptour_description_1">Folge diesen einfachen Schritten und sieh dir an was du mit Remi alles machen kannst und wie du dich mit deinem Computer verbindest.</string>
+    <string name="apptour_description_2">Remi lässt dich deine Maus steuern, deine Dateien am Computer ansehen, Dateien auf das Handy übertragen, Apps starten und deine aktuelle Präsentation steuern.</string>
+    <string name="apptour_description_3">Lade die Desktop App für dein Betriebssystem von \n<b>\'shockbytes.github.io/Remi\'</b>\n herunter. Die Desktop App muss sich im selben WLAN-Netzwerk befinden wie dein Handy.</string>
+    <string name="apptour_description_4">Remi kann auch auf deiner Smartwatch genutzt werden. Es ist möglich deine Apps zu starten, die Maus zu klicken und deine Präsentation zu steuern. The Handy-App muss während der Benutzung geöffnet bleiben.</string>
+    <string name="apptour_description_5">Kann es losgehen? Starte die Desktop App und verbinde dich mit deinem Handy.</string>
 
 </resources>

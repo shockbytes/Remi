@@ -4,13 +4,13 @@ package at.shockbytes.remote.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -18,6 +18,7 @@ import javax.inject.Inject;
 
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.adapter.DesktopAppsAdapter;
+import at.shockbytes.remote.core.AppTourActivity;
 import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.network.discovery.ServiceFinder;
@@ -122,8 +123,8 @@ public class LoginFragment extends BaseFragment
 
     @OnClick(R.id.fragment_login_imgbtn_apptour)
     protected void onClickAppTour() {
-        // TODO Implement AppTour
-        Toast.makeText(getContext(), "Start AppTour", Toast.LENGTH_SHORT).show();
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
+        startActivity(AppTourActivity.Companion.newIntent(getContext()), optionsCompat.toBundle());
     }
 
     @Override

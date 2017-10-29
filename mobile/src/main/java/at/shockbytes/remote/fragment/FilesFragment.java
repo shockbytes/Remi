@@ -134,7 +134,7 @@ public class FilesFragment extends BaseFragment
 
         recyclerView.setLayoutManager(getLayoutManager());
         adapter = new FilesAdapter(getContext(), new ArrayList<RemiFile>(),
-                client.getConnectionPermissions().hasFileTransferPermission());
+                client.getConnectionPermissions().getHasFileTransferPermission());
         adapter.setOnItemClickListener(this);
         adapter.setOnOverflowMenuItemClickListener(this);
         recyclerView.setAdapter(adapter);
