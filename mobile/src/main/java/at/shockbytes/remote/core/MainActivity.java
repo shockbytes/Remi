@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onNext(Object obj) {
             showToast(R.string.desktop_disconnected);
-            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
             supportFinishAfterTransition();
         }
     };
@@ -312,7 +311,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showSnackbar(String text) {
-        Snackbar.make(findViewById(R.id.main_layout), text, Snackbar.LENGTH_LONG).show();
+        if (text != null && !text.isEmpty()) {
+            Snackbar.make(findViewById(R.id.main_layout), text, Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private void showToast(int text) {

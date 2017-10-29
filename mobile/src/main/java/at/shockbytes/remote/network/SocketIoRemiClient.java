@@ -12,6 +12,7 @@ import at.shockbytes.remote.network.model.ConnectionConfig;
 import at.shockbytes.remote.network.model.FileTransferResponse;
 import at.shockbytes.remote.network.model.RemiFile;
 import at.shockbytes.remote.network.model.SlidesResponse;
+import at.shockbytes.remote.network.security.AndroidSecurityManager;
 import at.shockbytes.remote.util.RemiUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -33,8 +34,11 @@ import static at.shockbytes.remote.util.RemiUtils.eventName;
 
 public class SocketIoRemiClient implements RemiClient {
 
+    private static final boolean IS_SSL_ENABLED = true;
+    private static final int STD_PORT = 8080;
+
     private Socket socket;
-    private final OkHttpClient okHttpClient;
+    private final AndroidSecurityManager securityManager;
 
     private final MessageSerializer msgSerializer;
     private final MessageDeserializer msgDeserializer;
@@ -47,11 +51,12 @@ public class SocketIoRemiClient implements RemiClient {
     private final PublishSubject<FileTransferResponse> requestFileTransferSubject;
     private final PublishSubject<SlidesResponse> requestSlidesSubject;
 
-    public SocketIoRemiClient(OkHttpClient okHttpClient,
-                              MessageSerializer msgSerializer, MessageDeserializer msgDeserializer) {
-        this.okHttpClient = okHttpClient;
+    public SocketIoRemiClient(MessageSerializer msgSerializer,
+                              MessageDeserializer msgDeserializer,
+                              AndroidSecurityManager securityManager) {
         this.msgSerializer = msgSerializer;
         this.msgDeserializer = msgDeserializer;
+        this.securityManager = securityManager;
 
         connectionConfig = new ConnectionConfig();
 
@@ -64,12 +69,12 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
-    public Observable<Integer> connect(final String serverUrl) {
+    public Observable<Integer> connect(final String desktopUrl) {
         return Observable.defer(new Callable<ObservableSource<Integer>>() {
             @Override
             public ObservableSource<Integer> call() throws Exception {
                 try {
-                    setupSocket(serverUrl);
+                    setupSocket(desktopUrl);
                     socket.connect();
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
@@ -110,8 +115,18 @@ public class SocketIoRemiClient implements RemiClient {
     }
 
     @Override
+    public int getPort() {
+        return STD_PORT;
+    }
+
+    @Override
     public ConnectionConfig.ConnectionPermissions getConnectionPermissions() {
         return connectionConfig.getPermissions();
+    }
+
+    @Override
+    public boolean isSSLEnabled() {
+        return IS_SSL_ENABLED;
     }
 
     @Override
@@ -295,9 +310,13 @@ public class SocketIoRemiClient implements RemiClient {
 
     private void setupSocket(String serverUrl) throws URISyntaxException {
 
+        OkHttpClient okHttpClient = RemiUtils.getOkHttpClient(securityManager);
+
         IO.Options opts = new IO.Options();
         opts.callFactory = okHttpClient;
         opts.webSocketFactory = okHttpClient;
+        opts.secure = isSSLEnabled();
+
         opts.port = 8080;
 
         socket = IO.socket(serverUrl, opts);

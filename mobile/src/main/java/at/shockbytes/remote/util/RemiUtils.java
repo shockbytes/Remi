@@ -35,7 +35,10 @@ import at.shockbytes.remote.network.model.text.EnterRemiKeyEvent;
 import at.shockbytes.remote.network.model.text.RemiKeyEvent;
 import at.shockbytes.remote.network.model.text.SpaceRemiKeyEvent;
 import at.shockbytes.remote.network.model.text.StandardRemiKeyEvent;
+import at.shockbytes.remote.network.security.AndroidSecurityManager;
 import at.shockbytes.util.ResourceManager;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 import static at.shockbytes.remote.util.RemiUtils.FileCategory.APK;
 import static at.shockbytes.remote.util.RemiUtils.FileCategory.APP;
@@ -300,6 +303,24 @@ public class RemiUtils extends ResourceManager {
         }
 
         return errorTextId;
+    }
+
+    /**
+     *  This method cannot be provided by Dagger, because it has
+     *  to be recreated after every time a new desktop is added at runtime
+     *
+     * @return fresh created OkHttpClient
+     */
+    @NonNull
+    public static OkHttpClient getOkHttpClient(AndroidSecurityManager securityManager) {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        return new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .hostnameVerifier(securityManager.getHostNameVerifier())
+                .sslSocketFactory(securityManager.getSslContext().getSocketFactory(),
+                        securityManager.getX509TrustManager())
+                .build();
     }
 
     @NonNull
