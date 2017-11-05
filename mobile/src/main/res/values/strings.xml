@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Remi</string>
-    <string name="app_version" translatable="false">2.0b10 - 29.10.17</string>
+    <string name="app_version" translatable="false">2.0b11 - 05.11.17</string>
 
     <string name="tab_mouse">Mouse</string>
     <string name="tab_files">Files</string>
@@ -111,7 +111,7 @@
     <string name="filetransfer_finished">%s copied to device</string>
     <string name="filetransfer_initiated">Copying %s</string>
     <string name="files_menu_add_to_apps">%s added to apps</string>
-    <string name="files_menu_open_on_desktop">%s will be opened on dekstop</string>
+    <string name="files_menu_open_on_desktop">%s will be opened on desktop</string>
     <string name="filetransfer_finished_w_error">%s could not be stored on device!</string>
     <string name="notification_channel_transfer">Transfer</string>
     <string name="notification_ft_title">Transferring</string>
@@ -132,5 +132,10 @@
     <string name="apptour_description_3">Download the Desktop App from \n<b>\'shockbytes.github.io/Remi\'</b>\n for your operating system. The Desktop App needs to run in the same Wifi as the phone in order to establish a connection.</string>
     <string name="apptour_description_4">Remi can also be used on your smart watch. It allows you to start your apps, click your mouse and control your presentation. The smartphone app must be active during the usage.</string>
     <string name="apptour_description_5">Ready to roll? Start the Desktop App and connect with your phone.</string>
+    <string name="debug_options">Debug options</string>
+    <string name="connect_with">Connect with %s</string>
+    <string name="connect">Connect</string>
+    <string name="connection_accept_confirmation">%s accepted the connection. Click connect to continue!</string>
+    <string name="connection_accept_pending">Waiting for desktop to accept the connection&#8230;</string>
 
 </resources>

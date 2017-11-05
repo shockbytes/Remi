@@ -1,5 +1,6 @@
 package at.shockbytes.remote.network.security
 
+import at.shockbytes.remote.network.model.DesktopApp
 import at.shockbytes.remote.util.RemiUtils
 import io.reactivex.Observable
 import javax.net.ssl.HostnameVerifier
@@ -26,7 +27,7 @@ interface AndroidSecurityManager {
 
     fun addDesktopApp(certificate: String, encodedPublicKey: String)
 
-    fun identifyDesktopApp(signature: String)
+    fun verifyDesktopApp(app : DesktopApp) : Boolean
 
     fun reset()
 

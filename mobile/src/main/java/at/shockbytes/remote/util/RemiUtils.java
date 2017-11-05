@@ -333,6 +333,11 @@ public class RemiUtils extends ResourceManager {
         return event.name().toLowerCase();
     }
 
+    @NonNull
+    public static String getPhoneName() {
+        return Build.MODEL;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void setupNotificationChannelIfNecessary(NotificationManager notificationManager,
                                                             String channelId, String channel) {

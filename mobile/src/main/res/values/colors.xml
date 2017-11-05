@@ -2,6 +2,7 @@
 <resources>
 
     <color name="error">#D50000</color>
+    <color name="error_light">#FF1744</color>
     <color name="backgroundPrimary">#EEE</color>
     <color name="divider">#DDD</color>
 
