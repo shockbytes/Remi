@@ -68,7 +68,7 @@ public class JmDnsServiceFinder implements ServiceFinder {
     private DesktopApp service2DesktopApp(BonjourService service) {
         Map<String, String> m = service.getTxtRecords();
         return new DesktopApp(m.get("name"), m.get("ip"), m.get("os"),
-                m.get("signature"), m.get("public_key"));
+                m.get("signature"), false);
     }
 
     private class EventObserver extends DisposableObserver<BonjourEvent> {

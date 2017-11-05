@@ -3,7 +3,7 @@ package at.shockbytes.remote.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -20,15 +22,19 @@ import at.shockbytes.remote.R;
 import at.shockbytes.remote.adapter.DesktopAppsAdapter;
 import at.shockbytes.remote.core.AppTourActivity;
 import at.shockbytes.remote.core.RemiApp;
+import at.shockbytes.remote.fragment.dialog.AcceptDesktopConnectionDialogFragment;
+import at.shockbytes.remote.fragment.dialog.DebugOptionsDialogFragment;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.network.discovery.ServiceFinder;
 import at.shockbytes.remote.network.model.DesktopApp;
+import at.shockbytes.remote.network.security.AndroidSecurityManager;
 import at.shockbytes.remote.util.RemiUtils;
 import at.shockbytes.util.adapter.BaseAdapter;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 public class LoginFragment extends BaseFragment
         implements BaseAdapter.OnItemClickListener<DesktopApp> {
@@ -55,6 +61,9 @@ public class LoginFragment extends BaseFragment
 
     @Inject
     protected ServiceFinder serviceFinder;
+
+    @Inject
+    protected AndroidSecurityManager securityManager;
 
     @BindView(R.id.fragment_login_rv_desktop_apps)
     protected RecyclerView recyclerView;
@@ -86,39 +95,70 @@ public class LoginFragment extends BaseFragment
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setupViews();
-    }
-
-    @Override
     public void onItemClick(DesktopApp app, View view) {
-        connectToDevice(RemiUtils.createUrlFromIp(app.getIp(), client.getPort(),
-                client.isSSLEnabled()));
+
+        if (app.isTrusted()) {
+            connectToDevice(RemiUtils.createUrlFromIp(app.getIp(), client.getPort(),
+                    client.isSSLEnabled()));
+        } else {
+            showAcceptConnectionDialogFragment(app);
+        }
+
     }
 
     @OnLongClick(R.id.fragment_login_imgview_icon)
     protected boolean onClickDebugEntryIcon() {
-        listener.onConnected();
+
+        DebugOptionsDialogFragment fragment = DebugOptionsDialogFragment.Companion.newInstance();
+        fragment.setListener(new DebugOptionsDialogFragment.OnDebugOptionSelectedListener() {
+            @Override
+            public void onDebugLoginClicked() {
+                listener.onConnected();
+            }
+
+            @Override
+            public void onFakeDevicesClicked() {
+                adapter.setData(Arrays.asList(
+                        new DesktopApp("Fake Windows", "192.168.0.2", "Windows", "asdfgh", false),
+                        new DesktopApp("Fake, but trustworthy Linux", "192.168.0.3", "Linux", "asdfgh", true)
+                ));
+                animateRecyclerView();
+            }
+
+            @Override
+            public void onRegenerateKeysClicked() {
+                Toast.makeText(getContext(), "Re-generate keys", Toast.LENGTH_SHORT).show();
+            }
+        });
+        fragment.show(getFragmentManager(), "debug-options-fragment");
+
         return true;
     }
 
     @OnClick(R.id.fragment_login_btn_lookup)
     protected void onClickBtnLookup() {
 
-        serviceFinder.lookForDesktopApps().subscribe(new Consumer<DesktopApp>() {
-            @Override
-            public void accept(DesktopApp desktopApp) throws Exception {
-                adapter.addEntityAtFirst(desktopApp);
-                recyclerView.scrollToPosition(0);
-                animateRecyclerView();
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-                throwable.printStackTrace();
-            }
-        });
+        serviceFinder.lookForDesktopApps()
+                .map(new Function<DesktopApp, DesktopApp>() {
+                    @Override
+                    public DesktopApp apply(DesktopApp desktopApp) throws Exception {
+                        desktopApp.setTrusted(securityManager.verifyDesktopApp(desktopApp));
+                        return desktopApp;
+                    }
+                })
+                .subscribe(new Consumer<DesktopApp>() {
+                    @Override
+                    public void accept(DesktopApp desktopApp) throws Exception {
+                        adapter.addEntityAtFirst(desktopApp);
+                        recyclerView.scrollToPosition(0);
+                        animateRecyclerView();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 
     @OnClick(R.id.fragment_login_imgbtn_apptour)
@@ -174,7 +214,33 @@ public class LoginFragment extends BaseFragment
 
     private void animateRecyclerView() {
         recyclerView.animate().alpha(1).scaleX(1).scaleY(1)
-                .setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500).start();
+                .setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (adapter.getItemCount() > 1) {
+                            // TODO Not hardcode 80, rather use 1/10 or 1/5 of  recyclerview
+                            recyclerView.smoothScrollBy(80, 0);
+                        }
+                    }
+                })
+                .start();
+    }
+
+    private void showAcceptConnectionDialogFragment(DesktopApp app) {
+
+        AcceptDesktopConnectionDialogFragment fragment = AcceptDesktopConnectionDialogFragment
+                .Companion.newInstance(app);
+        fragment.setListener(new AcceptDesktopConnectionDialogFragment
+                .OnAcceptDesktopConnectionListener() {
+            @Override
+            public void onAccept(@NonNull DesktopApp app) {
+                adapter.updateEntity(app);
+                connectToDevice(RemiUtils.createUrlFromIp(app.getIp(), client.getPort(),
+                        client.isSSLEnabled()));
+            }
+        });
+        fragment.show(getFragmentManager(), "accept-connection-fragment");
     }
 
 }

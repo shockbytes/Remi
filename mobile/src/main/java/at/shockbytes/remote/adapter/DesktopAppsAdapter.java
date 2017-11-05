@@ -1,6 +1,8 @@
 package at.shockbytes.remote.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,7 +36,7 @@ public class DesktopAppsAdapter extends BaseAdapter<DesktopApp> {
     public void addEntityAtFirst(DesktopApp entity) {
         // Only add entity if it's not already added
         int location = this.getLocation(this.data, entity);
-        if(location < 0) {
+        if (location < 0) {
             super.addEntityAtFirst(entity);
         }
     }
@@ -50,6 +52,9 @@ public class DesktopAppsAdapter extends BaseAdapter<DesktopApp> {
         @BindView(R.id.item_desktop_app_txt_ip)
         TextView txtIp;
 
+        @BindView(R.id.item_desktop_app_txt_trusted_connection)
+        TextView txtTrusted;
+
         ViewHolder(View itemView) {
             super(itemView);
         }
@@ -61,6 +66,15 @@ public class DesktopAppsAdapter extends BaseAdapter<DesktopApp> {
             imgViewOs.setImageResource(RemiUtils.getOperatingSystemIcon(s.getOs()));
             txtName.setText(s.getName());
             txtIp.setText(s.getIp());
+
+            if (s.isTrusted()) {
+                txtTrusted.setText(R.string.desktop_apps_trusted);
+                txtTrusted.setTextColor(Color.WHITE);
+            } else {
+                txtTrusted.setText(R.string.desktop_apps_untrusted);
+                txtTrusted.setTextColor(ContextCompat.getColor(context, R.color.error_light));
+            }
+
         }
     }
 }

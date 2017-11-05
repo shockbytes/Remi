@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity
             menu.findItem(R.id.menu_main_desktop_os)
                     .setVisible(true)
                     .setTitle(getString(R.string.dev_mode))
-                    .setIcon(R.drawable.ic_dev_mode);
+                    .setIcon(R.drawable.ic_dev_mode_menu);
         }
     }
 
