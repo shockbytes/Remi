@@ -8,13 +8,19 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Explode;
 
+import javax.inject.Inject;
+
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.fragment.LoginFragment;
+import at.shockbytes.remote.network.security.AndroidSecurityManager;
 import at.shockbytes.remote.util.RemiUtils;
 
 @SuppressWarnings("unchecked")
 public class LoginActivity extends AppCompatActivity
         implements LoginFragment.OnLoginActionListener {
+
+    @Inject
+    protected AndroidSecurityManager securityManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,12 @@ public class LoginActivity extends AppCompatActivity
                 .beginTransaction()
                 .replace(R.id.login_content, LoginFragment.newInstance())
                 .commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        securityManager.close();
     }
 
     @Override

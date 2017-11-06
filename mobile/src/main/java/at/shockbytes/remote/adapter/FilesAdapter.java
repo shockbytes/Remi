@@ -1,5 +1,6 @@
 package at.shockbytes.remote.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
@@ -111,6 +112,7 @@ public class FilesAdapter extends BaseAdapter<RemiFile> {
             return extension.contains("ppt");
         }
 
+        @SuppressLint("RestrictedApi")
         private void tryShowIconsInPopupMenu(PopupMenu menu) {
 
             try {

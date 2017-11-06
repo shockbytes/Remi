@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.network.RemiClient;
+import at.shockbytes.remote.network.model.DesktopApp;
 import at.shockbytes.remote.network.model.FileTransferResponse;
 import at.shockbytes.remote.network.model.RemiFile;
 import at.shockbytes.remote.network.model.text.BackspaceRemiKeyEvent;
@@ -38,7 +40,10 @@ import at.shockbytes.remote.network.model.text.StandardRemiKeyEvent;
 import at.shockbytes.remote.network.security.AndroidSecurityManager;
 import at.shockbytes.remote.network.security.DefaultAndroidSecurityManager;
 import at.shockbytes.util.ResourceManager;
+import okhttp3.CipherSuite;
+import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
+import okhttp3.TlsVersion;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import static at.shockbytes.remote.util.RemiUtils.FileCategory.APK;
@@ -201,9 +206,9 @@ public class RemiUtils extends ResourceManager {
     public static String getConnectionErrorByResultCode(Context context, int resultCode) {
 
         String error;
-        if (resultCode == RemiClient.CONNECTION_RESULT_ERROR_ALREADY_CONNECTED) {
+        if (resultCode == RemiClient.Companion.getCONNECTION_RESULT_ERROR_ALREADY_CONNECTED()) {
             error = context.getString(R.string.connection_error_already_connected);
-        } else if (resultCode == RemiClient.CONNECTION_RESULT_ERROR_NETWORK) {
+        } else if (resultCode == RemiClient.Companion.getCONNECTION_RESULT_ERROR_NETWORK()) {
             error = context.getString(R.string.connection_error_network);
         } else {
             error = context.getString(R.string.connection_error_unknown);
@@ -307,21 +312,37 @@ public class RemiUtils extends ResourceManager {
     }
 
     /**
-     *  This method cannot be provided by Dagger, because it has
-     *  to be recreated after every time a new desktop is added at runtime
+     * This method cannot be provided by Dagger, because it has
+     * to be recreated after every time a new desktop is added at runtime
      *
      * @return fresh created OkHttpClient
      */
     @NonNull
-    public static OkHttpClient getOkHttpClient(AndroidSecurityManager securityManager) {
+    public static OkHttpClient getOkHttpClient(AndroidSecurityManager securityManager,
+                                               DesktopApp connectedApp,
+                                               boolean isSslEnabled) {
+
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        return new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .hostnameVerifier(securityManager.getHostNameVerifier())
-                .sslSocketFactory(securityManager.getSslContext().getSocketFactory(),
-                        securityManager.getX509TrustManager())
-                .build();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor);
+
+        if (isSslEnabled) {
+            ConnectionSpec spec = new
+                    ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                    .tlsVersions(TlsVersion.TLS_1_2)
+                    .cipherSuites(
+                            CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                            CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                            CipherSuite.TLS_DHE_RSA_WITH_AES_128_GCM_SHA256)
+                    .build();
+            builder.connectionSpecs(Collections.singletonList(spec))
+                    .hostnameVerifier(securityManager.getHostnameVerifier(connectedApp.getIp()))
+                    .sslSocketFactory(securityManager.getSslContext().getSocketFactory(),
+                            securityManager.getX509TrustManager());
+        }
+
+        return builder.build();
     }
 
     @NonNull

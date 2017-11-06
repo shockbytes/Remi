@@ -8,7 +8,7 @@ package at.shockbytes.remote.debug
 class DebugOptions {
 
     enum class DebugAction {
-        FAKE_LOGIN, FAKE_DEVICES, REGENERATE_KEYS, FORCE_UNAUTHORIZED_CONNECTION
+        FAKE_LOGIN, FAKE_DEVICES, REGENERATE_KEYS, FORCE_UNAUTHORIZED_CONNECTION, RESET_KEY_STORES
     }
 
     interface OnDebugOptionSelectedListener {
