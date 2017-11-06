@@ -112,5 +112,11 @@
     <string name="apptour_description_3">Lade die Desktop App für dein Betriebssystem von \n<b>\'shockbytes.github.io/Remi\'</b>\n herunter. Die Desktop App muss sich im selben WLAN-Netzwerk befinden wie dein Handy.</string>
     <string name="apptour_description_4">Remi kann auch auf deiner Smartwatch genutzt werden. Es ist möglich deine Apps zu starten, die Maus zu klicken und deine Präsentation zu steuern. The Handy-App muss während der Benutzung geöffnet bleiben.</string>
     <string name="apptour_description_5">Kann es losgehen? Starte die Desktop App und verbinde dich mit deinem Handy.</string>
+    <string name="debug_options">Debug Optionen</string>
+    <string name="connect_with">Verbinden mit %s</string>
+    <string name="connect">Verbinden</string>
+    <string name="connection_accept_confirmation">%s hat die Verbindung akzeptiert. Klick auf Verbinden um fortzufahren!</string>
+    <string name="connection_accept_pending">Warten bis der Desktop die Verbindung akzeptiert&#8230;</string>
+    <string name="connection_accept_reject">%s hat die Verbindung nicht akzeptiert!</string>
 
 </resources>

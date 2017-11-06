@@ -27,11 +27,15 @@ interface AndroidSecurityManager {
 
     fun addDesktopApp(certificate: String, encodedPublicKey: String)
 
-    fun verifyDesktopApp(app : DesktopApp) : Boolean
+    fun verifyDesktopApp(app: DesktopApp): Boolean
+
+    fun initializeKeyExchange(app: DesktopApp): Observable<Boolean>
 
     fun reset()
 
     fun hasKeys(): Boolean
+
+    fun getEncodedCertificate(): String
 
     @Throws(Exception::class)
     fun initializeKeyStores()

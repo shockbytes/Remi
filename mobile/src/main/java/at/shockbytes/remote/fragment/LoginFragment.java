@@ -4,7 +4,6 @@ package at.shockbytes.remote.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +12,8 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -20,8 +21,8 @@ import javax.inject.Inject;
 
 import at.shockbytes.remote.R;
 import at.shockbytes.remote.adapter.DesktopAppsAdapter;
-import at.shockbytes.remote.core.AppTourActivity;
 import at.shockbytes.remote.core.RemiApp;
+import at.shockbytes.remote.debug.DebugOptions;
 import at.shockbytes.remote.fragment.dialog.AcceptDesktopConnectionDialogFragment;
 import at.shockbytes.remote.fragment.dialog.DebugOptionsDialogFragment;
 import at.shockbytes.remote.network.RemiClient;
@@ -39,7 +40,9 @@ import io.reactivex.functions.Function;
 public class LoginFragment extends BaseFragment
         implements BaseAdapter.OnItemClickListener<DesktopApp> {
 
-    public interface OnConnectionResponseListener {
+    public interface OnLoginActionListener {
+
+        void onStartAppTour();
 
         void onConnected();
 
@@ -70,12 +73,13 @@ public class LoginFragment extends BaseFragment
 
     private DesktopAppsAdapter adapter;
 
-    private OnConnectionResponseListener listener;
+    private OnLoginActionListener listener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((RemiApp) getActivity().getApplication()).getAppComponent().inject(this);
+        createKeysIfNecessary();
     }
 
     @Override
@@ -88,7 +92,7 @@ public class LoginFragment extends BaseFragment
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            listener = (OnConnectionResponseListener) context;
+            listener = (OnLoginActionListener) context;
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
@@ -110,24 +114,30 @@ public class LoginFragment extends BaseFragment
     protected boolean onClickDebugEntryIcon() {
 
         DebugOptionsDialogFragment fragment = DebugOptionsDialogFragment.Companion.newInstance();
-        fragment.setListener(new DebugOptionsDialogFragment.OnDebugOptionSelectedListener() {
+        fragment.setDebugListener(new DebugOptions.OnDebugOptionSelectedListener() {
             @Override
-            public void onDebugLoginClicked() {
-                listener.onConnected();
-            }
+            public void onDebugOptionSelected(@NotNull DebugOptions.DebugAction action) {
 
-            @Override
-            public void onFakeDevicesClicked() {
-                adapter.setData(Arrays.asList(
-                        new DesktopApp("Fake Windows", "192.168.0.2", "Windows", "asdfgh", false),
-                        new DesktopApp("Fake, but trustworthy Linux", "192.168.0.3", "Linux", "asdfgh", true)
-                ));
-                animateRecyclerView();
-            }
+                switch (action) {
 
-            @Override
-            public void onRegenerateKeysClicked() {
-                Toast.makeText(getContext(), "Re-generate keys", Toast.LENGTH_SHORT).show();
+                    case FAKE_LOGIN:
+                        listener.onConnected();
+                        break;
+                    case FAKE_DEVICES:
+                        adapter.setData(Arrays.asList(
+                                new DesktopApp("Fake Windows", "192.168.0.2", "Windows", "asdfgh", false),
+                                new DesktopApp("Fake, but trustworthy Linux", "192.168.0.3", "Linux", "asdfgh", true)
+                        ));
+                        animateRecyclerView();
+                        break;
+                    case REGENERATE_KEYS:
+                        Toast.makeText(getContext(), "Re-generate keys", Toast.LENGTH_SHORT).show();
+                        break;
+                    case FORCE_UNAUTHORIZED_CONNECTION:
+                        Toast.makeText(getContext(), "Unauthorized connection", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
             }
         });
         fragment.show(getFragmentManager(), "debug-options-fragment");
@@ -163,8 +173,7 @@ public class LoginFragment extends BaseFragment
 
     @OnClick(R.id.fragment_login_imgbtn_apptour)
     protected void onClickAppTour() {
-        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
-        startActivity(AppTourActivity.Companion.newIntent(getContext()), optionsCompat.toBundle());
+        listener.onStartAppTour();
     }
 
     @Override
@@ -219,12 +228,28 @@ public class LoginFragment extends BaseFragment
                     @Override
                     public void run() {
                         if (adapter.getItemCount() > 1) {
-                            // TODO Not hardcode 80, rather use 1/10 or 1/5 of  recyclerview
-                            recyclerView.smoothScrollBy(80, 0);
+                            recyclerView.smoothScrollBy(recyclerView.getWidth() / 5, 0);
                         }
                     }
                 })
                 .start();
+    }
+
+    private void createKeysIfNecessary() {
+        if (securityManager.hasKeys()) {
+            securityManager.generateKeys().subscribe(new Consumer<RemiUtils.Irrelevant>() {
+                @Override
+                public void accept(RemiUtils.Irrelevant irrelevant) throws Exception {
+                    Toast.makeText(getContext(), "Keys created and stored!", Toast.LENGTH_LONG).show();
+                }
+            }, new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) throws Exception {
+                    throwable.printStackTrace();
+                    Toast.makeText(getContext(), throwable.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     private void showAcceptConnectionDialogFragment(DesktopApp app) {

@@ -33,4 +33,15 @@ public class JsonMessageSerializer implements MessageSerializer {
         }
         return object.toString();
     }
+
+    @Override
+    public String keyExchange(String deviceName, String certificate) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("device", deviceName);
+            object.put("certificate", certificate);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return object.toString();    }
 }

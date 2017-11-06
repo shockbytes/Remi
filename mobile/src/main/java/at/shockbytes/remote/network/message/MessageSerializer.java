@@ -10,4 +10,6 @@ public interface MessageSerializer {
     String mouseMoveMessage(int deltaX, int deltaY);
 
     String writeTextMessage(int keyCode, boolean isUpperCase);
+
+    String keyExchange(String deviceName, String certificate);
 }

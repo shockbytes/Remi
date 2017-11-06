@@ -19,10 +19,7 @@ import at.shockbytes.remote.network.security.AndroidSecurityManager
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
+import io.reactivex.observers.DisposableObserver
 import javax.inject.Inject
 
 
@@ -58,8 +55,9 @@ class AcceptDesktopConnectionDialogFragment : DialogFragment() {
 
     private lateinit var btnPositive: Button
 
-    var listener: OnAcceptDesktopConnectionListener? = null
+    private lateinit var keyExchangeObserver: DisposableObserver<Boolean>
 
+    var listener: OnAcceptDesktopConnectionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,9 +89,16 @@ class AcceptDesktopConnectionDialogFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
 
+        keyExchangeObserver = securityManager.initializeKeyExchange(app)
+                .subscribeWith(KeyExchangeObserver())
+    }
 
-        // TODO Start the interaction
-        fakeAccept()
+    override fun onStop() {
+        super.onStop()
+
+        if (!keyExchangeObserver.isDisposed) {
+            keyExchangeObserver.dispose()
+        }
     }
 
     @SuppressLint("InflateParams")
@@ -109,17 +114,31 @@ class AcceptDesktopConnectionDialogFragment : DialogFragment() {
         super.onDestroyView()
     }
 
+    /*
     private fun fakeAccept() {
         Observable.interval(5, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.computation())
                 .take(1)
                 .subscribe { _ -> desktopAccepted() }
-    }
+    } */
 
     private fun desktopAccepted() {
+        updateView(true,
+                getString(R.string.connection_accept_confirmation, app.name),
+                R.drawable.ic_check_circle)
+    }
 
-        btnPositive.isEnabled = true
+    private fun desktopRejected() {
+        updateView(false,
+                getString(R.string.connection_accept_reject, app.name),
+                R.drawable.ic_reject)
+    }
+
+    private fun updateView(enabled: Boolean, text: String, iconId: Int) {
+
+        imgViewCheck.setImageResource(iconId)
+        btnPositive.isEnabled = enabled
 
         progressBar.animate()
                 .alpha(0f)
@@ -137,7 +156,7 @@ class AcceptDesktopConnectionDialogFragment : DialogFragment() {
                 .setInterpolator(AnticipateOvershootInterpolator(4f))
                 .start()
 
-        txtStatus.text = getString(R.string.connection_accept_confirmation, app.name)
+        txtStatus.text = text
     }
 
     companion object {
@@ -151,6 +170,28 @@ class AcceptDesktopConnectionDialogFragment : DialogFragment() {
             fragment.arguments = args
             return fragment
         }
+    }
+
+    private inner class KeyExchangeObserver : DisposableObserver<Boolean>() {
+
+        override fun onError(e: Throwable) {
+            e.printStackTrace()
+            dispose()
+        }
+
+        override fun onNext(t: Boolean) {
+
+            if (t) {
+                desktopAccepted()
+            } else {
+                desktopRejected()
+            }
+        }
+
+        override fun onComplete() {
+            dispose()
+        }
+
     }
 
 

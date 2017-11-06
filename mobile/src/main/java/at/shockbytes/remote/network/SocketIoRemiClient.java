@@ -35,7 +35,7 @@ import static at.shockbytes.remote.util.RemiUtils.eventName;
 public class SocketIoRemiClient implements RemiClient {
 
     private static final boolean IS_SSL_ENABLED = true;
-    private static final int STD_PORT = 8080;
+    private static final int STD_PORT = 9627;
 
     private Socket socket;
     private final AndroidSecurityManager securityManager;
@@ -317,7 +317,7 @@ public class SocketIoRemiClient implements RemiClient {
         opts.webSocketFactory = okHttpClient;
         opts.secure = isSSLEnabled();
 
-        opts.port = 8080;
+        opts.port = STD_PORT;
 
         socket = IO.socket(serverUrl, opts);
 

@@ -15,6 +15,7 @@ import java.util.List;
 
 import at.shockbytes.remote.network.model.ConnectionConfig;
 import at.shockbytes.remote.network.model.FileTransferResponse;
+import at.shockbytes.remote.network.model.KeyExchangeResponse;
 import at.shockbytes.remote.network.model.RemiFile;
 import at.shockbytes.remote.network.model.SlidesResponse;
 
@@ -85,5 +86,12 @@ public class JsonMessageDeserializer implements MessageDeserializer {
     @Override
     public SlidesResponse requestSlides(String msg) {
         return gson.fromJson(msg, SlidesResponse.class);
+    }
+
+    @Override
+    public KeyExchangeResponse keyExchangeResponse(String msg) {
+        JsonObject element = new JsonParser().parse(msg).getAsJsonObject();
+        return new KeyExchangeResponse(element.get("desktop").getAsString(),
+                element.get("certificate").getAsString());
     }
 }
