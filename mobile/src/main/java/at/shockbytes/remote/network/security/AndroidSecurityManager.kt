@@ -1,6 +1,7 @@
 package at.shockbytes.remote.network.security
 
 import at.shockbytes.remote.network.model.DesktopApp
+import at.shockbytes.remote.network.model.KeyExchangeResponse
 import at.shockbytes.remote.util.RemiUtils
 import io.reactivex.Observable
 import javax.net.ssl.HostnameVerifier
@@ -14,28 +15,29 @@ import javax.net.ssl.X509TrustManager
 
 interface AndroidSecurityManager {
 
-
-    val hostNameVerifier: HostnameVerifier
-
     val sslContext: SSLContext
 
     val x509TrustManager: X509TrustManager
 
     // -----------------------------------------
 
+    fun getHostnameVerifier(desktopUrl: String): HostnameVerifier
+
     fun generateKeys(): Observable<RemiUtils.Irrelevant>
 
-    fun addDesktopApp(certificate: String, encodedPublicKey: String)
+    fun addDesktopApp(response: KeyExchangeResponse)
 
     fun verifyDesktopApp(app: DesktopApp): Boolean
 
     fun initializeKeyExchange(app: DesktopApp): Observable<Boolean>
 
-    fun reset()
+    fun reset(): Observable<RemiUtils.Irrelevant>
 
     fun hasKeys(): Boolean
 
     fun getEncodedCertificate(): String
+
+    fun close()
 
     @Throws(Exception::class)
     fun initializeKeyStores()

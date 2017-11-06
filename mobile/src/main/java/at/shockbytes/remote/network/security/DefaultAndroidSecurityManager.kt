@@ -1,11 +1,13 @@
 package at.shockbytes.remote.network.security
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Base64
 import android.util.Log
 import at.shockbytes.remote.network.message.MessageDeserializer
 import at.shockbytes.remote.network.message.MessageSerializer
 import at.shockbytes.remote.network.model.DesktopApp
+import at.shockbytes.remote.network.model.KeyExchangeResponse
 import at.shockbytes.remote.util.RemiUtils
 import at.shockbytes.remote.util.RemiUtils.eventName
 import io.reactivex.Observable
@@ -23,11 +25,15 @@ import org.spongycastle.cert.X509CertificateHolder
 import org.spongycastle.cert.jcajce.JcaX509CertificateConverter
 import org.spongycastle.cert.jcajce.JcaX509v3CertificateBuilder
 import org.spongycastle.operator.jcajce.JcaContentSignerBuilder
+import java.io.ByteArrayInputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.math.BigInteger
-import java.security.KeyPair
-import java.security.KeyPairGenerator
-import java.security.SecureRandom
+import java.security.*
+import java.security.cert.Certificate
 import java.security.cert.CertificateException
+import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.util.*
 import javax.net.ssl.*
@@ -47,49 +53,76 @@ class DefaultAndroidSecurityManager(private val context: Context,
         DH_EXCHANGE, DESKTOP_CERTIFICATE, REJECT_CONNECTION
     }
 
-    private val keyExchangePort = 9628
-
-    override
-    val hostNameVerifier: HostnameVerifier
-        get() = HostnameVerifier { s, sslSession -> true }// TODO
-
     override val sslContext: SSLContext
         get() {
             val context = SSLContext.getInstance("TLSv1.2")
-            context.init(keyManagers, trustManagers, null)
+            context.init(null, trustManagers, null)
             return context
         }
 
-    override
-    val x509TrustManager: X509TrustManager
+    override val x509TrustManager: X509TrustManager
         get() = object : X509TrustManager {
             @Throws(CertificateException::class)
-            override fun checkClientTrusted(x509Certificates: Array<X509Certificate>, s: String) {
-                // TODO
+            @SuppressLint("TrustAllX509TrustManager")
+            override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
+                //(trustManagers[0] as? X509TrustManager)?.checkClientTrusted(chain, authType)
             }
 
             @Throws(CertificateException::class)
-            override fun checkServerTrusted(x509Certificates: Array<X509Certificate>, s: String) {
-                // TODO
+            @SuppressLint("TrustAllX509TrustManager")
+            override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
+                try {
+                    if (chain.isNotEmpty()) {
+                        chain[0].checkValidity()
+                    } else {
+                        (trustManagers[0] as? X509TrustManager)?.checkServerTrusted(chain, authType)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
 
             override fun getAcceptedIssuers(): Array<X509Certificate> {
-                return arrayOf()
+                return arrayOf(getCertificate() as X509Certificate)
             }
         }
 
+    /*
     private val keyManagers: Array<KeyManager>
-        get() = arrayOf() // TODO
+        get() {
+            val kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
+            kmf.init(keyStore, CharArray(0))
+            return kmf.keyManagers
+        }
+    */
 
     private val trustManagers: Array<TrustManager>
-        get() = arrayOf() // TODO
+        get() {
+            val tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+            tmf.init(trustStore)
+            return tmf.trustManagers
+        }
+
+    private val keyExchangePort = 9628
 
     private val keyExchangeSubject: PublishSubject<Boolean> = PublishSubject.create()
 
     private lateinit var socket: Socket
 
+    private lateinit var keyStoreFile: File
+    private lateinit var trustStoreFile: File
+
+    private lateinit var keyStore: KeyStore
+    private lateinit var trustStore: KeyStore
+
+    private val base64Options = Base64.NO_WRAP
+
     init {
         initializeKeyStores()
+    }
+
+    override fun getHostnameVerifier(desktopUrl: String): HostnameVerifier {
+        return HostnameVerifier { hostName, _ -> hostName == desktopUrl }
     }
 
     override fun generateKeys(): Observable<RemiUtils.Irrelevant> {
@@ -100,54 +133,96 @@ class DefaultAndroidSecurityManager(private val context: Context,
             keyGen.initialize(2048, random)
 
             val pair = keyGen.generateKeyPair()
-            val cert = generateCertificate("CN=" + RemiUtils.getPhoneName(), pair, 1825, "SHA256WithRSAEncryption")
-            // TODO Store cert & private key
+            val certificate = generateCertificate("CN=" + RemiUtils.getPhoneName(),
+                    pair, 1825, "SHA256WithRSAEncryption")
 
-            Log.wtf("Remi", "Certificate: " + Base64.encodeToString(cert.publicKey.encoded, Base64.DEFAULT))
-            Log.wtf("Remi", "Public key:  " + (Base64.encodeToString(pair.public.encoded, Base64.DEFAULT)))
+            val certChain = arrayOf<Certificate>(certificate)
+            keyStore.setCertificateEntry(Companion.ALIAS, certificate)
+            keyStore.setKeyEntry(ALIAS_PRIVATE, pair.private, CharArray(0), certChain)
 
             Observable.just<RemiUtils.Irrelevant>(RemiUtils.Irrelevant.INSTANCE)
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.computation())
     }
 
-    override fun addDesktopApp(certificate: String, encodedPublicKey: String) {
-        // TODO
+    override fun addDesktopApp(response: KeyExchangeResponse) {
+
+        val decoded: ByteArray = Base64.decode(response.certificate, base64Options)
+        val factory: CertificateFactory = CertificateFactory.getInstance("X.509")
+        val clientCertificate: Certificate = factory.generateCertificate(ByteArrayInputStream(decoded))
+
+        Log.wtf("Remi", response.desktop + " has following Certificate: ")
+        Log.wtf("Remi", clientCertificate.toString())
+
+        trustStore.setCertificateEntry(response.desktop, clientCertificate)
     }
 
     override fun verifyDesktopApp(app: DesktopApp): Boolean {
-        // TODO
+
+        val appSignature = app.signature.toByteArray(charset("UTF8"))
+        val aliases = trustStore.aliases()
+        while (aliases.hasMoreElements()) {
+            val alias = aliases.nextElement()
+
+            val publicKey = trustStore.getCertificate(alias).publicKey
+            val signature = Signature.getInstance("SHA1WithRSA")
+            signature.initVerify(publicKey)
+            signature.update(SIGNATURE_SEED)
+            if (signature.verify(Base64.decode(appSignature, base64Options))) {
+                Log.wtf("Remi", "$alias matches signature")
+                return true
+            }
+        }
         return false
     }
 
-    override fun initializeKeyExchange(app: DesktopApp) : Observable<Boolean> {
+    override fun initializeKeyExchange(app: DesktopApp): Observable<Boolean> {
         connectToDesktop(RemiUtils.createUrlFromIp(app.ip, keyExchangePort, false))
         return keyExchangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
     }
 
-    override fun reset() {
-        // TODO
+    override fun reset(): Observable<RemiUtils.Irrelevant> {
+        return Observable.defer {
+            closeKeyStores()
+            deleteKeyStores()
+            initializeKeyStores()
+            generateKeys().blockingFirst()
+            Observable.just(RemiUtils.Irrelevant.INSTANCE)
+        }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.computation())
     }
 
     override fun hasKeys(): Boolean {
-        // TODO
+        try {
+            return getCertificate() != null && getPrivateKey() != null
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         return false
     }
 
-    override fun getEncodedCertificate() : String {
-        return "ENCODED CERTIFICATE" // TODO
+    override fun close() {
+        closeKeyStores()
     }
 
+    override fun getEncodedCertificate(): String {
+        val enc: ByteArray? = getCertificate()?.encoded ?: ByteArray(0)
+        return Base64.encodeToString(enc, base64Options)
+    }
 
     @Throws(Exception::class)
     override fun initializeKeyStores() {
-        // TODO
+        keyStoreFile = File(context.filesDir, "keystore.+${KeyStore.getDefaultType()}")
+        trustStoreFile = File(context.filesDir, "truststore.${KeyStore.getDefaultType()}")
+
+        keyStore = createKeyStoreIfNecessary(keyStoreFile, KeyStore.getDefaultType())
+        trustStore = createKeyStoreIfNecessary(trustStoreFile, KeyStore.getDefaultType())
     }
 
     @Throws(Exception::class)
     override fun closeKeyStores() {
-        // TODO
+        keyStore.store(FileOutputStream(keyStoreFile), CharArray(0))
+        trustStore.store(FileOutputStream(trustStoreFile), CharArray(0))
     }
 
     @Throws(Exception::class)
@@ -210,13 +285,54 @@ class DefaultAndroidSecurityManager(private val context: Context,
                     val resp = msgDeserializer.keyExchangeResponse(args as String)
 
                     Log.wtf("Remi", resp.certificate)
-                    // TODO Store certificate
+                    addDesktopApp(resp)
                     keyExchangeSubject.onNext(true)
                     socket.disconnect()
                 }
 
         socket.connect()
 
+    }
+
+    @Throws(Exception::class)
+    private fun createKeyStoreIfNecessary(file: File, keystoreType: String): KeyStore {
+        val keyStore = KeyStore.getInstance(keystoreType)
+        if (file.exists()) {
+            // if exists, load
+            keyStore.load(FileInputStream(file), CharArray(0))
+            Log.wtf("Remi", "Load keystore: " + file.absolutePath)
+        } else {
+            // if not exists, create
+            keyStore.load(null, CharArray(0))
+            keyStore.store(FileOutputStream(file), CharArray(0))
+            Log.wtf("Remi", "Create & store keystore: " + file.absolutePath)
+        }
+        return keyStore
+    }
+
+    @Throws(Exception::class)
+    private fun getPrivateKey(): PrivateKey? {
+        val privateKey = keyStore.getEntry(ALIAS_PRIVATE,
+                KeyStore.PasswordProtection(CharArray(0))) as KeyStore.PrivateKeyEntry
+        return privateKey.privateKey
+    }
+
+    @Throws(Exception::class)
+    private fun getCertificate(): java.security.cert.Certificate? {
+        val cert = keyStore.getCertificate(Companion.ALIAS)
+        Log.wtf("Remi", cert.toString())
+        return cert
+    }
+
+    private fun deleteKeyStores() {
+        keyStoreFile.delete()
+        trustStoreFile.delete()
+    }
+
+    companion object {
+        private val ALIAS = "remi_desktop"
+        private val ALIAS_PRIVATE = "remi_keypair"
+        private val SIGNATURE_SEED = "ajklndcjasdchbaldscnahghcadmj218ioklsnop21".toByteArray(charset("UTF8"))
     }
 
 }

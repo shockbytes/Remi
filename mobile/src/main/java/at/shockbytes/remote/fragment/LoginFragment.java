@@ -102,8 +102,7 @@ public class LoginFragment extends BaseFragment
     public void onItemClick(DesktopApp app, View view) {
 
         if (app.isTrusted()) {
-            connectToDevice(RemiUtils.createUrlFromIp(app.getIp(), client.getPort(),
-                    client.isSSLEnabled()));
+            connectToDevice(app);
         } else {
             showAcceptConnectionDialogFragment(app);
         }
@@ -135,6 +134,15 @@ public class LoginFragment extends BaseFragment
                         break;
                     case FORCE_UNAUTHORIZED_CONNECTION:
                         Toast.makeText(getContext(), "Unauthorized connection", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case RESET_KEY_STORES:
+                        securityManager.reset().subscribe(new Consumer<RemiUtils.Irrelevant>() {
+                            @Override
+                            public void accept(RemiUtils.Irrelevant irrelevant) throws Exception {
+                                Toast.makeText(getContext(), "Keystores reset!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         break;
                 }
 
@@ -178,7 +186,6 @@ public class LoginFragment extends BaseFragment
 
     @Override
     protected void setupViews() {
-
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         adapter = new DesktopAppsAdapter(getContext(), new ArrayList<DesktopApp>());
@@ -200,13 +207,13 @@ public class LoginFragment extends BaseFragment
         serviceFinder.stopListening();
     }
 
-    private void connectToDevice(String url) {
+    private void connectToDevice(DesktopApp app) {
 
-        client.connect(url).subscribe(new Consumer<Integer>() {
+        client.connect(app).subscribe(new Consumer<Integer>() {
             @Override
             public void accept(Integer resultCode) throws Exception {
 
-                if (resultCode == RemiClient.CONNECTION_RESULT_OK) {
+                if (resultCode == RemiClient.Companion.getCONNECTION_RESULT_OK()) {
                     listener.onConnected();
                 } else {
                     listener.onConnectionFailed(resultCode);
@@ -216,7 +223,7 @@ public class LoginFragment extends BaseFragment
             @Override
             public void accept(Throwable throwable) {
                 throwable.printStackTrace();
-                listener.onConnectionFailed(RemiClient.CONNECTION_RESULT_ERROR_NETWORK);
+                listener.onConnectionFailed(RemiClient.Companion.getCONNECTION_RESULT_ERROR_NETWORK());
             }
         });
     }
@@ -236,7 +243,7 @@ public class LoginFragment extends BaseFragment
     }
 
     private void createKeysIfNecessary() {
-        if (securityManager.hasKeys()) {
+        if (!securityManager.hasKeys()) {
             securityManager.generateKeys().subscribe(new Consumer<RemiUtils.Irrelevant>() {
                 @Override
                 public void accept(RemiUtils.Irrelevant irrelevant) throws Exception {
@@ -253,7 +260,6 @@ public class LoginFragment extends BaseFragment
     }
 
     private void showAcceptConnectionDialogFragment(DesktopApp app) {
-
         AcceptDesktopConnectionDialogFragment fragment = AcceptDesktopConnectionDialogFragment
                 .Companion.newInstance(app);
         fragment.setListener(new AcceptDesktopConnectionDialogFragment
@@ -261,8 +267,7 @@ public class LoginFragment extends BaseFragment
             @Override
             public void onAccept(@NonNull DesktopApp app) {
                 adapter.updateEntity(app);
-                connectToDevice(RemiUtils.createUrlFromIp(app.getIp(), client.getPort(),
-                        client.isSSLEnabled()));
+                connectToDevice(app);
             }
         });
         fragment.show(getFragmentManager(), "accept-connection-fragment");
