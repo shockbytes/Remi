@@ -36,6 +36,7 @@ import at.shockbytes.remote.network.model.text.RemiKeyEvent;
 import at.shockbytes.remote.network.model.text.SpaceRemiKeyEvent;
 import at.shockbytes.remote.network.model.text.StandardRemiKeyEvent;
 import at.shockbytes.remote.network.security.AndroidSecurityManager;
+import at.shockbytes.remote.network.security.DefaultAndroidSecurityManager;
 import at.shockbytes.util.ResourceManager;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -330,6 +331,11 @@ public class RemiUtils extends ResourceManager {
 
     @NonNull
     public static String eventName(RemiClient.ServerEvent event) {
+        return event.name().toLowerCase();
+    }
+
+    @NonNull
+    public static String eventName(DefaultAndroidSecurityManager.KeyExchangeEvent event) {
         return event.name().toLowerCase();
     }
 

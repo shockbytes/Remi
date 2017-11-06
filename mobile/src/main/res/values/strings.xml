@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Remi</string>
-    <string name="app_version" translatable="false">2.0b11 - 05.11.17</string>
+    <string name="app_version" translatable="false">2.0b12 - 06.11.17</string>
 
     <string name="tab_mouse">Mouse</string>
     <string name="tab_files">Files</string>
@@ -137,5 +137,6 @@
     <string name="connect">Connect</string>
     <string name="connection_accept_confirmation">%s accepted the connection. Click connect to continue!</string>
     <string name="connection_accept_pending">Waiting for desktop to accept the connection&#8230;</string>
+    <string name="connection_accept_reject">%s rejected your connection request!</string>
 
 </resources>

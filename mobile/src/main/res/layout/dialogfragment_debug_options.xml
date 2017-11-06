@@ -24,13 +24,30 @@
         android:text="Fake devices" />
 
     <Button
-        style="?android:borderlessButtonStyle"
-        android:padding="4dp"
-        android:fontFamily="sans-serif-light"
         android:id="@+id/dialogfragment_debug_options_btn_key_recreation"
+        style="?android:borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:padding="4dp"
         android:text="Re-generate keys" />
+
+    <Button
+        android:id="@+id/dialogfragment_debug_options_btn_unauthorized_connection"
+        style="?android:borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:padding="4dp"
+        android:text="Force unauthorized connection" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_version"
+        android:fontFamily="sans-serif-light"
+        android:textSize="12sp"
+        android:gravity="center"/>
 
 
 </LinearLayout>

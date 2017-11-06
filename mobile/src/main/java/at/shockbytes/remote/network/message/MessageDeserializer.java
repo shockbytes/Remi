@@ -4,6 +4,7 @@ import java.util.List;
 
 import at.shockbytes.remote.network.model.ConnectionConfig;
 import at.shockbytes.remote.network.model.FileTransferResponse;
+import at.shockbytes.remote.network.model.KeyExchangeResponse;
 import at.shockbytes.remote.network.model.RemiFile;
 import at.shockbytes.remote.network.model.SlidesResponse;
 
@@ -23,5 +24,7 @@ public interface MessageDeserializer {
     FileTransferResponse fileTransferMessage(String msg);
 
     SlidesResponse requestSlides(String msg);
+
+    KeyExchangeResponse keyExchangeResponse(String msg);
 
 }

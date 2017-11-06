@@ -2,6 +2,7 @@ package at.shockbytes.remote.dagger;
 
 import android.app.Application;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import at.shockbytes.remote.network.RemiClient;
@@ -15,6 +16,8 @@ import at.shockbytes.remote.network.message.MessageSerializer;
 import at.shockbytes.remote.network.security.AndroidSecurityManager;
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 
 /**
@@ -55,6 +58,17 @@ public class NetworkModule {
     @Singleton
     ServiceFinder provideServiceFinder() {
         return new JmDnsServiceFinder(app.getApplicationContext());
+    }
+
+    @Provides
+    @Singleton
+    @Named("unauthorized_okhttp")
+    OkHttpClient provideUnauthorizedOkHttpClient() {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        return new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .build();
     }
 
 }

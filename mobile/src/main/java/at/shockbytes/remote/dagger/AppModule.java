@@ -8,15 +8,19 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import at.shockbytes.remote.network.RemiClient;
+import at.shockbytes.remote.network.message.MessageDeserializer;
+import at.shockbytes.remote.network.message.MessageSerializer;
 import at.shockbytes.remote.network.security.AndroidSecurityManager;
 import at.shockbytes.remote.network.security.DefaultAndroidSecurityManager;
 import at.shockbytes.remote.wear.AndroidWearManager;
 import at.shockbytes.remote.wear.WearableManager;
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 
 /**
  * @author Martin Macheiner
@@ -58,8 +62,11 @@ public class AppModule {
 
     @Provides
     @Singleton
-    AndroidSecurityManager provideSecurityManager() {
-        return new DefaultAndroidSecurityManager(app.getApplicationContext());
+    AndroidSecurityManager provideSecurityManager(@Named("unauthorized_okhttp") OkHttpClient okHttpClient,
+                                                  MessageSerializer msgSerializer,
+                                                  MessageDeserializer msgDeserializer) {
+        return new DefaultAndroidSecurityManager(app.getApplicationContext(), okHttpClient,
+                msgSerializer, msgDeserializer);
     }
 
 }
