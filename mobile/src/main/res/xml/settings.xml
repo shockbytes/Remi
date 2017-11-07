@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/prefs_category_mouse_and_keyboard" >
+    <PreferenceCategory android:title="@string/prefs_category_mouse_and_keyboard">
 
         <at.shockbytes.util.view.SliderPreference
             android:defaultValue="5"
             android:key="@string/prefs_key_simple_mouse"
-            android:max="9"
+            android:max="10"
             android:text=""
             android:title="@string/prefs_title_simple_mouse" />
 
         <at.shockbytes.util.view.SliderPreference
             android:defaultValue="2"
             android:key="@string/prefs_key_scrolling"
-            android:max="9"
+            android:max="10"
             android:text=""
-            android:title="@string/prefs_title_scrolling"/>
+            android:title="@string/prefs_title_scrolling" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/prefs_key_keyboard_theme"
-            android:title="Use dark keyboard theme"
-            android:summaryOn="Dark keyboard"
-            android:summaryOff="Light keyboard"/>
+            android:summaryOff="@string/prefs_keyboard_summary_off"
+            android:summaryOn="@string/prefs_keyboard_summary_on"
+            android:title="@string/prefs_title_keyboard" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/prefs_cat_about" >
+    <PreferenceCategory android:title="@string/prefs_cat_keys">
+
+        <Preference
+            android:key="@string/prefs_key_keys_auth_desktops"
+            android:title="@string/prefs_title_authorized_desktop" />
+
+        <Preference
+            android:key="@string/prefs_key_keys_reset"
+            android:title="@string/prefs_title_keys_reset" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/prefs_cat_about">
 
         <Preference
             android:summary="@string/prefs_summary_developer"
@@ -34,7 +46,7 @@
 
         <Preference
             android:summary="@string/prefs_summary_icons"
-            android:title="@string/prefs_title_icons"/>
+            android:title="@string/prefs_title_icons" />
 
         <Preference
             android:summary="@string/app_version"

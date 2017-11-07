@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Remi</string>
-    <string name="app_version" translatable="false">2.0b12 - 06.11.17</string>
+    <string name="app_version" translatable="false">2.0</string>
 
     <string name="tab_mouse">Mouse</string>
     <string name="tab_files">Files</string>
@@ -20,6 +20,15 @@
     <string name="prefs_title_scrolling">Scroll sensitivity</string>
     <string name="prefs_key_keyboard_theme" translatable="false">key_keyboard_layout</string>
     <string name="prefs_key_scrolling" translatable="false">key_scrolling</string>
+    <string name="prefs_key_keys_auth_desktops" translatable="false">prefs_key_keys_auth_desktops</string>
+    <string name="prefs_key_keys_reset" translatable="false">prefs_key_keys_reset</string>
+    <string name="prefs_title_authorized_desktop">Authorized desktops</string>
+    <string name="prefs_title_keys_reset">Reset keys</string>
+    <string name="prefs_keyboard_summary_off">Light keyboard</string>
+    <string name="prefs_keyboard_summary_on">Dark keyboard</string>
+    <string name="prefs_title_keyboard">Keyboard theme</string>
+    <string name="prefs_cat_keys">Key Management</string>
+
     <string name="prefs_cat_about">About</string>
     <string name="prefs_title_developer">Developer</string>
     <string name="prefs_summary_developer" translatable="false">Shockbytes Studio (c) 2015 - 2017</string>
@@ -138,5 +147,9 @@
     <string name="connection_accept_confirmation">%s accepted the connection. Click connect to continue!</string>
     <string name="connection_accept_pending">Waiting for desktop to accept the connection&#8230;</string>
     <string name="connection_accept_reject">%s rejected your connection request!</string>
+    <string name="reset">Reset</string>
+    <string name="reset_keys">Reset keys</string>
+    <string name="reset_keys_message">Do you really want to reset all keys and remove all trusted connections? This action will immediately stop the current session!\n\n<b>Normally you should not do this!</b></string>
+    <string name="dialogfragment_authorized_desktops_title">Authorized desktops</string>
 
 </resources>

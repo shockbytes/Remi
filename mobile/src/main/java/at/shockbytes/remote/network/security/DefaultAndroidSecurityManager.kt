@@ -87,15 +87,6 @@ class DefaultAndroidSecurityManager(private val context: Context,
             }
         }
 
-    /*
-    private val keyManagers: Array<KeyManager>
-        get() {
-            val kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
-            kmf.init(keyStore, CharArray(0))
-            return kmf.keyManagers
-        }
-    */
-
     private val trustManagers: Array<TrustManager>
         get() {
             val tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
@@ -150,10 +141,11 @@ class DefaultAndroidSecurityManager(private val context: Context,
         val factory: CertificateFactory = CertificateFactory.getInstance("X.509")
         val clientCertificate: Certificate = factory.generateCertificate(ByteArrayInputStream(decoded))
 
-        Log.wtf("Remi", response.desktop + " has following Certificate: ")
-        Log.wtf("Remi", clientCertificate.toString())
-
         trustStore.setCertificateEntry(response.desktop, clientCertificate)
+    }
+
+    override fun removeVerifiedDesktopApp(desktopName: String) {
+        trustStore.deleteEntry(desktopName)
     }
 
     override fun verifyDesktopApp(app: DesktopApp): Boolean {
@@ -168,12 +160,16 @@ class DefaultAndroidSecurityManager(private val context: Context,
             signature.initVerify(publicKey)
             signature.update(SIGNATURE_SEED)
             if (signature.verify(Base64.decode(appSignature, base64Options))) {
-                Log.wtf("Remi", "$alias matches signature")
                 return true
             }
         }
         return false
     }
+
+    override fun getVerifiedDesktopApps(): List<String> {
+        return trustStore.aliases().toList()
+    }
+
 
     override fun initializeKeyExchange(app: DesktopApp): Observable<Boolean> {
         connectToDesktop(RemiUtils.createUrlFromIp(app.ip, keyExchangePort, false))
@@ -283,8 +279,6 @@ class DefaultAndroidSecurityManager(private val context: Context,
                 .on(eventName(KeyExchangeEvent.DESKTOP_CERTIFICATE)) { (args) ->
 
                     val resp = msgDeserializer.keyExchangeResponse(args as String)
-
-                    Log.wtf("Remi", resp.certificate)
                     addDesktopApp(resp)
                     keyExchangeSubject.onNext(true)
                     socket.disconnect()
@@ -300,12 +294,10 @@ class DefaultAndroidSecurityManager(private val context: Context,
         if (file.exists()) {
             // if exists, load
             keyStore.load(FileInputStream(file), CharArray(0))
-            Log.wtf("Remi", "Load keystore: " + file.absolutePath)
         } else {
             // if not exists, create
             keyStore.load(null, CharArray(0))
             keyStore.store(FileOutputStream(file), CharArray(0))
-            Log.wtf("Remi", "Create & store keystore: " + file.absolutePath)
         }
         return keyStore
     }
@@ -320,7 +312,6 @@ class DefaultAndroidSecurityManager(private val context: Context,
     @Throws(Exception::class)
     private fun getCertificate(): java.security.cert.Certificate? {
         val cert = keyStore.getCertificate(Companion.ALIAS)
-        Log.wtf("Remi", cert.toString())
         return cert
     }
 

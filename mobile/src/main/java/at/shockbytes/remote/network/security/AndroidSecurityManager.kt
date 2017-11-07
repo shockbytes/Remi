@@ -29,6 +29,10 @@ interface AndroidSecurityManager {
 
     fun verifyDesktopApp(app: DesktopApp): Boolean
 
+    fun removeVerifiedDesktopApp(desktopName: String)
+
+    fun getVerifiedDesktopApps(): List<String>
+
     fun initializeKeyExchange(app: DesktopApp): Observable<Boolean>
 
     fun reset(): Observable<RemiUtils.Irrelevant>
