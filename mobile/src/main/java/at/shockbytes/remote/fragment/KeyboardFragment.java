@@ -1,5 +1,6 @@
 package at.shockbytes.remote.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -13,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,7 +29,10 @@ import at.shockbytes.remote.R;
 import at.shockbytes.remote.adapter.KeyboardAdapter;
 import at.shockbytes.remote.core.RemiApp;
 import at.shockbytes.remote.network.RemiClient;
+import at.shockbytes.remote.network.model.text.BackspaceRemiKeyEvent;
+import at.shockbytes.remote.network.model.text.EnterRemiKeyEvent;
 import at.shockbytes.remote.network.model.text.RemiKeyEvent;
+import at.shockbytes.remote.network.model.text.SpaceRemiKeyEvent;
 import at.shockbytes.remote.network.model.text.StandardRemiKeyEvent;
 import at.shockbytes.remote.util.RemiUtils;
 import at.shockbytes.util.adapter.BaseAdapter;
@@ -42,6 +47,7 @@ import butterknife.Unbinder;
  *         Date: 10.10.2017.
  */
 
+@SuppressLint("RestrictedApi")
 public class KeyboardFragment extends BottomSheetDialogFragment
         implements BaseAdapter.OnItemClickListener<RemiKeyEvent> {
 
@@ -141,15 +147,14 @@ public class KeyboardFragment extends BottomSheetDialogFragment
 
     @Override
     public void onItemClick(RemiKeyEvent remiKeyEvent, View view) {
+        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
 
         // capsLockSensitive() will prevent space, backspace and
         // enter commands from being used in caps lock mode on desktop app
         client.writeText(remiKeyEvent.getKeyCode(), isCapsLock && remiKeyEvent.capsLockSensitive())
                 .subscribe();
 
-        if (remiKeyEvent instanceof StandardRemiKeyEvent) {
-            txtOut.append(remiKeyEvent.getDisplayString());
-        }
+        updateUI(remiKeyEvent);
     }
 
     @OnClick(R.id.fragment_keyboard_btn_switch_text)
@@ -213,6 +218,23 @@ public class KeyboardFragment extends BottomSheetDialogFragment
 
         applyKeyboardTheme();
         switchKeyboard(true);
+    }
+
+    private void updateUI(RemiKeyEvent remiKeyEvent) {
+
+        if (remiKeyEvent instanceof StandardRemiKeyEvent) {
+            txtOut.append(remiKeyEvent.getDisplayString());
+        } else if (remiKeyEvent instanceof EnterRemiKeyEvent) {
+            txtOut.setText("");
+        } else if (remiKeyEvent instanceof SpaceRemiKeyEvent) {
+            txtOut.append(" ");
+        } else if (remiKeyEvent instanceof BackspaceRemiKeyEvent) {
+            String text = txtOut.getText().toString();
+            if (!text.isEmpty()) {
+                txtOut.setText(text.substring(0, text.length()-1));
+            }
+        }
+
     }
 
     private void applyKeyboardTheme() {

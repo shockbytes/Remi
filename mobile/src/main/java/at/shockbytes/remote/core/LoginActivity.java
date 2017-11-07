@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.login_content, LoginFragment.newInstance())
+                .replace(R.id.login_content, LoginFragment.Companion.newInstance())
                 .commit();
     }
 
