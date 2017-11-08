@@ -29,7 +29,6 @@ import at.shockbytes.remote.fragment.MouseFragment;
 import at.shockbytes.remote.fragment.SlidesFragment;
 import at.shockbytes.remote.network.RemiClient;
 import at.shockbytes.remote.util.AppParams;
-import at.shockbytes.remote.util.RemiUtils;
 import at.shockbytes.remote.wear.WearableManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity
 
     private Unbinder unbinder;
 
-    private MenuItem itemWear;
+    // private MenuItem itemWear;
 
     private String selectedSlides;
 
@@ -118,8 +117,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        /*
         itemWear = menu.findItem(R.id.menu_main_wear);
         setupDesktopMenuItem(menu);
+        */
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -261,17 +262,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onWearableConnected(String wearableDevice) {
 
+        /*
         itemWear.setVisible(true);
         showSnackbar(getString(R.string.wear_connected));
+        */
     }
 
     @Override
     public void onWearableConnectionFailed(String errorMessage) {
 
+        /*
         itemWear.setVisible(false);
         showSnackbar(errorMessage);
+        */
     }
 
+    /*
     private void setupDesktopMenuItem(Menu menu) {
         String desktopOS = client.getDesktopOS();
         if (!desktopOS.equals("NA") && !desktopOS.isEmpty()) {
@@ -286,6 +292,7 @@ public class MainActivity extends AppCompatActivity
                     .setIcon(R.drawable.ic_dev_mode_menu);
         }
     }
+    */
 
     private void initializeViews() {
 
