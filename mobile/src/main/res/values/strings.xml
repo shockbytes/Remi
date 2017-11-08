@@ -34,7 +34,7 @@
     <string name="prefs_summary_developer" translatable="false">Shockbytes Studio (c) 2015 - 2017</string>
     <string name="prefs_title_version" translatable="false">Version</string>
     <string name="prefs_title_icons" translatable="false">Icons</string>
-    <string name="prefs_summary_icons" translatable="false">icons8.com\niconfinder.com\nflaticon.com</string>
+    <string name="prefs_summary_icons" translatable="false">iconfinder.com\nflaticon.com</string>
 
     <!-- Help Strings -->
     <string name="help_mouse_move">Move your finger to move the mouse</string>
@@ -126,7 +126,7 @@
     <string name="notification_ft_title">Transferring</string>
     <string name="filetransfer_cancelled">File transfer cancelled</string>
     <string name="filetransfer_error_no_access">No access rights for file</string>
-    <string name="filetransfer_error_too_big">File is too big to transfer</string>
+    <string name="filetransfer_error_too_big">Files bigger than 5MB cannot be transferred yet!</string>
     <string name="filetransfer_error_encoding">File could not be loaded</string>
     <string name="filetransfer_error_unintialized">Oops, this error should not occur</string>
 
@@ -151,5 +151,7 @@
     <string name="reset_keys">Reset keys</string>
     <string name="reset_keys_message">Do you really want to reset all keys and remove all trusted connections? This action will immediately stop the current session!\n\n<b>Normally you should not do this!</b></string>
     <string name="dialogfragment_authorized_desktops_title">Authorized desktops</string>
+    <string name="show">Show</string>
+    <string name="show_download_folder">Show Download Folder</string>
 
 </resources>

@@ -99,7 +99,7 @@
     <string name="filetransfer_finished_w_error">%s konnte nicht am Gerät gespeichert werden!</string>
     <string name="filetransfer_cancelled">Dateiübertragung abgebrochen</string>
     <string name="filetransfer_error_no_access">App konnte nicht geöffnet werden</string>
-    <string name="filetransfer_error_too_big">Datei ist zu groß um gesendet zu werden</string>
+    <string name="filetransfer_error_too_big">Dateien größer als 5MB können (noch) nicht übertragen werden!</string>
     <string name="filetransfer_error_encoding">Datei konnte nicht geladen werden</string>
     <string name="filetransfer_error_unintialized">Ups, dieser Fehler sollte nicht auftreten</string>
     <string name="apptour_title_1">Willkommen bei Remi</string>
@@ -118,5 +118,15 @@
     <string name="connection_accept_confirmation">%s hat die Verbindung akzeptiert. Klick auf Verbinden um fortzufahren!</string>
     <string name="connection_accept_pending">Warten bis der Desktop die Verbindung akzeptiert&#8230;</string>
     <string name="connection_accept_reject">%s hat die Verbindung nicht akzeptiert!</string>
+    <string name="reset">Zurücksetzen</string>
+    <string name="reset_keys">Schlüssel zurücksetzen</string>
+    <string name="prefs_cat_keys">Schlüsselmanagement</string>
+    <string name="prefs_title_keyboard">Tastaturthema</string>
+    <string name="prefs_keyboard_summary_on">Dunkle Tastatur</string>
+    <string name="prefs_keyboard_summary_off">Helle Tastatur</string>
+    <string name="prefs_title_keys_reset">Schlüssel zurücksetzen</string>
+    <string name="prefs_title_authorized_desktop">Authorisierte Desktops</string>
+    <string name="dialogfragment_authorized_desktops_title">Authorisierte Desktops</string>
+    <string name="reset_keys_message">Willst du wirklich alle Schlüssel zurücksetzen und alle bekannten Verbindungen löschen? Diese Aktion unterbricht die aktuelle Verbindung!\n\n<b>Normalerweise solltest du das nicht machen!</b></string>
 
 </resources>

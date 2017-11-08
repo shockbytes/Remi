@@ -7,16 +7,17 @@ import java.util.*
  * Date: 26.09.2017.
  */
 
-data class FileTransferResponse (val filename: String = "", val content: ByteArray = ByteArray(0),
-                                 val transferCode: Int = TransferCode.UNINITIALIZED.ordinal,
-                                 val exception: String = "") {
+data class FileTransferResponse (val filename: String = "",
+                                 private val transferCode: Int = TransferCode.PARSE_ERROR.ordinal,
+                                 val content: ByteArray?,
+                                 private val exception: String?) {
 
     enum class TransferCode {
-        OKAY, NO_ACCESS, TOO_BIG, ENCODING_ERROR, UNINITIALIZED
+        OKAY, NO_ACCESS, TOO_BIG, ENCODING_ERROR, PARSE_ERROR
     }
 
     val isEmpty: Boolean
-        get() = content.isEmpty()
+        get() = content?.isEmpty() ?: false
 
     fun getTransferCodeAsEnum() : TransferCode {
         return TransferCode.values()[transferCode]
@@ -40,7 +41,7 @@ data class FileTransferResponse (val filename: String = "", val content: ByteArr
         var result = filename.hashCode()
         result = 31 * result + Arrays.hashCode(content)
         result = 31 * result + transferCode
-        result = 31 * result + exception.hashCode()
+        result = 31 * result + (exception?.hashCode() ?: 0)
         return result
     }
 

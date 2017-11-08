@@ -175,28 +175,28 @@ public class KeyboardFragment extends BottomSheetDialogFragment
 
     @OnClick(R.id.fragment_keyboard_imgbtn_up)
     protected void onClickBtnArrowUp() {
-        client.writeText(RemiUtils
+        client.writeText(RemiUtils.Companion
                 .getArrowKeyEvent(RemiUtils.ArrowDirection.UP).getKeyCode(), false)
                 .subscribe();
     }
 
     @OnClick(R.id.fragment_keyboard_imgbtn_left)
     protected void onClickBtnArrowLeft() {
-        client.writeText(RemiUtils
+        client.writeText(RemiUtils.Companion
                 .getArrowKeyEvent(RemiUtils.ArrowDirection.LEFT).getKeyCode(), false)
                 .subscribe();
     }
 
     @OnClick(R.id.fragment_keyboard_imgbtn_down)
     protected void onClickBtnArrowDown() {
-        client.writeText(RemiUtils
+        client.writeText(RemiUtils.Companion
                 .getArrowKeyEvent(RemiUtils.ArrowDirection.DOWN).getKeyCode(), false)
                 .subscribe();
     }
 
     @OnClick(R.id.fragment_keyboard_imgbtn_right)
     protected void onClickBtnArrowRight() {
-        client.writeText(RemiUtils
+        client.writeText(RemiUtils.Companion
                 .getArrowKeyEvent(RemiUtils.ArrowDirection.RIGHT).getKeyCode(), false)
                 .subscribe();
     }
@@ -213,7 +213,7 @@ public class KeyboardFragment extends BottomSheetDialogFragment
                 return adapter.item(position).rowSpan();
             }
         });
-        adapter.setData(RemiUtils.getKeyboard());
+        adapter.setData(RemiUtils.Companion.getKeyboard());
         recyclerView.setAdapter(adapter);
 
         applyKeyboardTheme();

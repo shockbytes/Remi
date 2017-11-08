@@ -63,7 +63,7 @@ public class DesktopAppsAdapter extends BaseAdapter<DesktopApp> {
         public void bind(DesktopApp s) {
             content = s;
 
-            imgViewOs.setImageResource(RemiUtils.getOperatingSystemIcon(s.getOs()));
+            imgViewOs.setImageResource(RemiUtils.Companion.getOperatingSystemIcon(s.getOs()));
             txtName.setText(s.getName());
             txtIp.setText(s.getIp());
 

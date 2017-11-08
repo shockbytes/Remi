@@ -244,7 +244,7 @@ public class SlidesFragment extends BaseFragment
     private void showPreviewSlide(int slide) {
         if (slide < adapter.getItemCount()) {
             recyclerViewPreview.scrollToPosition(slide);
-            imgViewPreview.setImageBitmap(RemiUtils
+            imgViewPreview.setImageBitmap(RemiUtils.Companion
                     .base64ToImage(adapter.getData().get(slide).getBase64Image()));
         }
     }
@@ -268,7 +268,7 @@ public class SlidesFragment extends BaseFragment
         public void onNext(@NonNull SlidesResponse slidesResponse) {
             adapter.setData(slidesResponse.getSlides());
             currentSlide = 0;
-            imgViewPreview.setImageBitmap(RemiUtils
+            imgViewPreview.setImageBitmap(RemiUtils.Companion
                     .base64ToImage(slidesResponse.getSlides().get(currentSlide).getBase64Image()));
             previewContainer.setVisibility(View.GONE);
         }
