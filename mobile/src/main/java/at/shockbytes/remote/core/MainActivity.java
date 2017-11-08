@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -228,7 +229,7 @@ public class MainActivity extends AppCompatActivity
 
             case AppParams.POSITION_FILES:
                 fabKeyboard.hide();
-                ft.replace(R.id.main_content, FilesFragment
+                ft.replace(R.id.main_content, FilesFragment.Companion
                         .newInstance(client.getConnectionPermissions().getHasFilesPermission()));
                 break;
 
@@ -250,7 +251,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSlidesSelected(String pathToSlides) {
+    public void onSlidesSelected(@NonNull String pathToSlides) {
 
         selectedSlides = pathToSlides;
         TabLayout.Tab slidesTab = tabLayout.getTabAt(AppParams.POSITION_SLIDES);
@@ -284,7 +285,7 @@ public class MainActivity extends AppCompatActivity
             menu.findItem(R.id.menu_main_desktop_os)
                     .setVisible(true)
                     .setTitle(client.getDesktopOS())
-                    .setIcon(RemiUtils.getOperatingSystemIcon(client.getDesktopOS()));
+                    .setIcon(RemiUtils.Companion.getOperatingSystemIcon(client.getDesktopOS()));
         } else if (desktopOS.isEmpty()) { // <-- Debug mode
             menu.findItem(R.id.menu_main_desktop_os)
                     .setVisible(true)

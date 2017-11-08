@@ -40,7 +40,7 @@ public class SlidesPreviewAdapter extends BaseAdapter<SlidesResponse.SlidesEntry
             content = slidesEntry;
 
             ImageView imgView = (ImageView) itemView;
-            imgView.setImageBitmap(RemiUtils.base64ToImage(slidesEntry.getBase64Image()));
+            imgView.setImageBitmap(RemiUtils.Companion.base64ToImage(slidesEntry.getBase64Image()));
         }
     }
 

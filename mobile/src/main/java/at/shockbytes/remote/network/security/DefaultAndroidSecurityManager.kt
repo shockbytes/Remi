@@ -9,7 +9,7 @@ import at.shockbytes.remote.network.message.MessageSerializer
 import at.shockbytes.remote.network.model.DesktopApp
 import at.shockbytes.remote.network.model.KeyExchangeResponse
 import at.shockbytes.remote.util.RemiUtils
-import at.shockbytes.remote.util.RemiUtils.eventName
+import at.shockbytes.remote.util.RemiUtils.Companion.eventName
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -124,7 +124,7 @@ class DefaultAndroidSecurityManager(private val context: Context,
             keyGen.initialize(2048, random)
 
             val pair = keyGen.generateKeyPair()
-            val certificate = generateCertificate("CN=" + RemiUtils.getPhoneName(),
+            val certificate = generateCertificate("CN=" + RemiUtils.phoneName,
                     pair, 1825, "SHA256WithRSAEncryption")
 
             val certChain = arrayOf<Certificate>(certificate)
@@ -267,7 +267,7 @@ class DefaultAndroidSecurityManager(private val context: Context,
         socket
                 .on(Socket.EVENT_CONNECT) {
                     socket.emit("app_certificate",
-                            msgSerializer.keyExchange(RemiUtils.getPhoneName(), getEncodedCertificate()))
+                            msgSerializer.keyExchange(RemiUtils.phoneName, getEncodedCertificate()))
                 }
                 .on(eventName(KeyExchangeEvent.DH_EXCHANGE)) {
                     Log.wtf("Remi", "Diffie Hellman key exchange")

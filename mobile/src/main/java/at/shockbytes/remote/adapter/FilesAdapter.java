@@ -79,7 +79,7 @@ public class FilesAdapter extends BaseAdapter<RemiFile> {
 
             txtApp.setText(file.getName());
             txtApp.setCompoundDrawablesWithIntrinsicBounds(
-                    RemiUtils.getDrawableResourceForFileType(file), 0, 0, 0);
+                    RemiUtils.Companion.getDrawableResourceForFileType(file), 0, 0, 0);
         }
 
         @OnClick(R.id.item_app_and_file_imgbtn_overflow)

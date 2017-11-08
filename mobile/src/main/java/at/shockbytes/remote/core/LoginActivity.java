@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity
     @Override
     public void onConnectionFailed(int resultCode) {
 
-        String msg = RemiUtils.getConnectionErrorByResultCode(this, resultCode);
+        String msg = RemiUtils.Companion.getConnectionErrorByResultCode(this, resultCode);
         Snackbar.make(findViewById(R.id.login_content), msg, Snackbar.LENGTH_SHORT).show();
     }
 

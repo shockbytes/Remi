@@ -7,7 +7,7 @@ import at.shockbytes.remote.network.model.*
 import at.shockbytes.remote.network.security.AndroidSecurityManager
 import at.shockbytes.remote.util.RemiUtils
 import at.shockbytes.remote.util.RemiUtils.Irrelevant
-import at.shockbytes.remote.util.RemiUtils.eventName
+import at.shockbytes.remote.util.RemiUtils.Companion.eventName
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
