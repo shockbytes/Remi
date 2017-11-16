@@ -12,7 +12,7 @@
         android:id="@+id/dialogfragment_debug_options_btn_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Debug login" />
+        android:text="@string/debug_login" />
 
     <Button
         style="?android:borderlessButtonStyle"
@@ -21,7 +21,7 @@
         android:id="@+id/dialogfragment_debug_options_btn_fake_devices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fake devices" />
+        android:text="@string/debug_fake_devices" />
 
     <Button
         android:id="@+id/dialogfragment_debug_options_btn_key_recreation"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
         android:padding="4dp"
-        android:text="Re-generate keys" />
+        android:text="@string/debug_regenerate_keys" />
 
     <Button
         android:id="@+id/dialogfragment_debug_options_btn_unauthorized_connection"
@@ -39,12 +39,12 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
         android:padding="4dp"
-        android:text="Force unauthorized connection" />
+        android:text="@string/debug_force_unauthorized_connection" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_version"
+        android:text="@string/app_version_full"
         android:fontFamily="sans-serif-light"
         android:textSize="12sp"
         android:gravity="center"/>

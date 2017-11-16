@@ -6,8 +6,8 @@ import at.shockbytes.remote.network.message.MessageSerializer
 import at.shockbytes.remote.network.model.*
 import at.shockbytes.remote.network.security.AndroidSecurityManager
 import at.shockbytes.remote.util.RemiUtils
-import at.shockbytes.remote.util.RemiUtils.Irrelevant
 import at.shockbytes.remote.util.RemiUtils.Companion.eventName
+import at.shockbytes.remote.util.RemiUtils.Irrelevant
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -39,7 +39,7 @@ class SocketIoRemiClient(private val msgSerializer: MessageSerializer,
     override val isSSLEnabled: Boolean
         get() = IS_SSL_ENABLED
 
-    private lateinit var socket: Socket
+    private var socket: Socket? = null
     private var connectionConfig: ConnectionConfig
 
     private val connectedSubject: PublishSubject<Int>
@@ -65,7 +65,7 @@ class SocketIoRemiClient(private val msgSerializer: MessageSerializer,
         return Observable.defer(Callable<ObservableSource<Int>> {
             try {
                 setupSocket(app)
-                socket.connect()
+                socket?.connect()
             } catch (e: URISyntaxException) {
                 e.printStackTrace()
                 return@Callable Observable.error(e)
@@ -76,7 +76,7 @@ class SocketIoRemiClient(private val msgSerializer: MessageSerializer,
 
     override fun disconnect(): Observable<Any> {
         return Observable.defer(Callable<ObservableSource<Any>> {
-            socket.disconnect()
+            socket?.disconnect()
             Observable.empty()
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
@@ -88,61 +88,61 @@ class SocketIoRemiClient(private val msgSerializer: MessageSerializer,
     }
 
     override fun close() {
-        socket.close()
+        socket?.close()
     }
 
     override fun requestApps(): Observable<List<String>> {
         return Observable.defer {
-            socket.emit(RemiClient.ClientEvent.REQ_APPS.name.toLowerCase())
+            socket?.emit(RemiClient.ClientEvent.REQ_APPS.name.toLowerCase())
             requestAppsSubject
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun removeApp(app: String): Observable<RemiUtils.Irrelevant> {
         return Observable.defer {
-            socket.emit(RemiClient.ClientEvent.REMOVE_APP.name.toLowerCase(), app)
+            socket?.emit(RemiClient.ClientEvent.REMOVE_APP.name.toLowerCase(), app)
             Observable.just(RemiUtils.Irrelevant.INSTANCE)
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun sendAppExecutionRequest(app: String): Observable<RemiUtils.Irrelevant> {
         return Observable.defer {
-            socket.emit(RemiClient.ClientEvent.START_APP.name.toLowerCase(), app)
+            socket?.emit(RemiClient.ClientEvent.START_APP.name.toLowerCase(), app)
             Observable.just(RemiUtils.Irrelevant.INSTANCE)
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun sendAddAppRequest(pathToApp: String): Observable<RemiUtils.Irrelevant> {
         return Observable.defer {
-            socket.emit(RemiClient.ClientEvent.ADD_APP.name.toLowerCase(), pathToApp)
+            socket?.emit(RemiClient.ClientEvent.ADD_APP.name.toLowerCase(), pathToApp)
             Observable.just(RemiUtils.Irrelevant.INSTANCE)
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun sendAppOpenRequest(pathToApp: String): Observable<RemiUtils.Irrelevant> {
         return Observable.defer {
-            socket.emit(RemiClient.ClientEvent.OPEN_APP_ON_DESKTOP.name.toLowerCase(), pathToApp)
+            socket?.emit(RemiClient.ClientEvent.OPEN_APP_ON_DESKTOP.name.toLowerCase(), pathToApp)
             Observable.just(RemiUtils.Irrelevant.INSTANCE)
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun sendLeftClick(): Observable<RemiUtils.Irrelevant> {
         return Observable.defer {
-            socket.emit(RemiClient.ClientEvent.MOUSE_CLICK_LEFT.name.toLowerCase())
+            socket?.emit(RemiClient.ClientEvent.MOUSE_CLICK_LEFT.name.toLowerCase())
             Observable.just(RemiUtils.Irrelevant.INSTANCE)
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun sendRightClick(): Observable<RemiUtils.Irrelevant> {
         return Observable.defer {
-            socket.emit(RemiClient.ClientEvent.MOUSE_CLICK_RIGHT.name.toLowerCase())
+            socket?.emit(RemiClient.ClientEvent.MOUSE_CLICK_RIGHT.name.toLowerCase())
             Observable.just(RemiUtils.Irrelevant.INSTANCE)
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun sendMouseMove(deltaX: Int, deltaY: Int): Observable<RemiUtils.Irrelevant> {
         return Observable.defer {
-            socket.emit(RemiClient.ClientEvent.MOUSE_MOVE.name.toLowerCase(),
+            socket?.emit(RemiClient.ClientEvent.MOUSE_MOVE.name.toLowerCase(),
                     msgSerializer.mouseMoveMessage(deltaX, deltaY))
             Observable.just(RemiUtils.Irrelevant.INSTANCE)
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
@@ -150,35 +150,35 @@ class SocketIoRemiClient(private val msgSerializer: MessageSerializer,
 
     override fun sendScroll(amount: Int): Observable<RemiUtils.Irrelevant> {
         return Observable.defer {
-            socket.emit(eventName(RemiClient.ClientEvent.SCROLL), amount)
+            socket?.emit(eventName(RemiClient.ClientEvent.SCROLL), amount)
             Observable.just(RemiUtils.Irrelevant.INSTANCE)
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun requestBaseDirectories(): Observable<List<RemiFile>> {
         return Observable.defer {
-            socket.emit(eventName(RemiClient.ClientEvent.REQ_BASE_DIR))
+            socket?.emit(eventName(RemiClient.ClientEvent.REQ_BASE_DIR))
             requestFilesSubject
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun requestDirectory(dir: String): Observable<List<RemiFile>> {
         return Observable.defer {
-            socket.emit(eventName(RemiClient.ClientEvent.REQ_DIR), dir)
+            socket?.emit(eventName(RemiClient.ClientEvent.REQ_DIR), dir)
             requestFilesSubject
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun transferFile(filepath: String): Observable<FileTransferResponse> {
         return Observable.defer {
-            socket.emit(eventName(RemiClient.ClientEvent.REQ_FILE_TRANSFER), filepath)
+            socket?.emit(eventName(RemiClient.ClientEvent.REQ_FILE_TRANSFER), filepath)
             requestFileTransferSubject
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun writeText(keyCode: Int, isCapsLock: Boolean): Observable<RemiUtils.Irrelevant> {
         return Observable.defer {
-            socket.emit(eventName(RemiClient.ClientEvent.WRITE_TEXT),
+            socket?.emit(eventName(RemiClient.ClientEvent.WRITE_TEXT),
                     msgSerializer.writeTextMessage(keyCode, isCapsLock))
             Observable.just(RemiUtils.Irrelevant.INSTANCE)
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
@@ -194,14 +194,14 @@ class SocketIoRemiClient(private val msgSerializer: MessageSerializer,
 
     override fun sendSlidesFullscreenCommand(product: RemiClient.SlidesProduct): Observable<RemiUtils.Irrelevant> {
         return Observable.defer {
-            socket.emit(eventName(RemiClient.ClientEvent.REQ_SLIDES_FULLSCREEN), product.ordinal)
+            socket?.emit(eventName(RemiClient.ClientEvent.REQ_SLIDES_FULLSCREEN), product.ordinal)
             Observable.just(RemiUtils.Irrelevant.INSTANCE)
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
     override fun requestSlides(filepath: String): Observable<SlidesResponse> {
         return Observable.defer {
-            socket.emit(eventName(RemiClient.ClientEvent.REQ_SLIDES), filepath)
+            socket?.emit(eventName(RemiClient.ClientEvent.REQ_SLIDES), filepath)
             requestSlidesSubject
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
@@ -223,25 +223,25 @@ class SocketIoRemiClient(private val msgSerializer: MessageSerializer,
         socket = IO.socket(serverUrl, opts)
 
         socket
-                .on(Socket.EVENT_CONNECT) { Log.d("Remi", "Connected to Desktop App!") }
-                .on(Socket.EVENT_DISCONNECT) { disconnectedSubject.onNext(Irrelevant.INSTANCE) }
-                .on(eventName(RemiClient.ServerEvent.WELCOME)) { args ->
+                ?.on(Socket.EVENT_CONNECT) { Log.d("Remi", "Connected to Desktop App!") }
+                ?.on(Socket.EVENT_DISCONNECT) { disconnectedSubject.onNext(Irrelevant.INSTANCE) }
+                ?.on(eventName(RemiClient.ServerEvent.WELCOME)) { args ->
                     connectionConfig = msgDeserializer.welcomeMessage(args[0] as String)
                     connectedSubject.onNext(RemiClient.CONNECTION_RESULT_OK)
                 }
-                .on(eventName(RemiClient.ServerEvent.ALREADY_CONNECTED)) {
+                ?.on(eventName(RemiClient.ServerEvent.ALREADY_CONNECTED)) {
                     connectedSubject.onNext(RemiClient.CONNECTION_RESULT_ERROR_ALREADY_CONNECTED)
                 }
-                .on(eventName(RemiClient.ServerEvent.RESP_APPS)) { args ->
+                ?.on(eventName(RemiClient.ServerEvent.RESP_APPS)) { args ->
                     requestAppsSubject.onNext(msgDeserializer.requestAppsMessage(args[0] as String))
                 }
-                .on(eventName(RemiClient.ServerEvent.RESP_DIR)) { args ->
+                ?.on(eventName(RemiClient.ServerEvent.RESP_DIR)) { args ->
                     requestFilesSubject.onNext(msgDeserializer.requestFilesMessage(args[0] as String))
                 }
-                .on(eventName(RemiClient.ServerEvent.RESP_FILE_TRANSFER)) { args ->
+                ?.on(eventName(RemiClient.ServerEvent.RESP_FILE_TRANSFER)) { args ->
                     requestFileTransferSubject.onNext(msgDeserializer.fileTransferMessage(args[0] as String))
                 }
-                .on(eventName(RemiClient.ServerEvent.RESP_SLIDES)) { args ->
+                ?.on(eventName(RemiClient.ServerEvent.RESP_SLIDES)) { args ->
                     requestSlidesSubject.onNext(msgDeserializer.requestSlides(args[0] as String))
                 }
     }

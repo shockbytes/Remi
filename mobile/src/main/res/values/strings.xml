@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Remi</string>
     <string name="app_version" translatable="false">2.0</string>
+    <string name="app_version_full" translatable="false">App Version 2.0</string>
+
 
     <string name="tab_mouse">Mouse</string>
     <string name="tab_files">Files</string>
@@ -153,5 +155,10 @@
     <string name="dialogfragment_authorized_desktops_title">Authorized desktops</string>
     <string name="show">Show</string>
     <string name="show_download_folder">Show Download Folder</string>
+    <string name="slide_request_cancelled">Slide request cancelled!</string>
+    <string name="debug_login" translatable="false">Debug login</string>
+    <string name="debug_fake_devices" translatable="false">Fake devices</string>
+    <string name="debug_regenerate_keys" translatable="false">Re-generate keys</string>
+    <string name="debug_force_unauthorized_connection" translatable="false">Force unauthorized connection</string>
 
 </resources>

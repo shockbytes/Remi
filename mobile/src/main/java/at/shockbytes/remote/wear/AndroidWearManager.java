@@ -99,7 +99,7 @@ public class AndroidWearManager implements WearableManager,
         Wearable.MessageApi.addListener(apiClient, this);
         Wearable.CapabilityApi.addLocalCapability(apiClient, context.getString(R.string.capability));
         synchronize();
-        connectionListener.onWearableConnected(null);
+        connectionListener.onWearableConnected(""); // TODO Find right name of connected wearable
     }
 
     @Override

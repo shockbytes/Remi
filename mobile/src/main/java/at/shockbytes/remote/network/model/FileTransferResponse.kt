@@ -16,9 +16,6 @@ data class FileTransferResponse (val filename: String = "",
         OKAY, NO_ACCESS, TOO_BIG, ENCODING_ERROR, PARSE_ERROR
     }
 
-    val isEmpty: Boolean
-        get() = content?.isEmpty() ?: false
-
     fun getTransferCodeAsEnum() : TransferCode {
         return TransferCode.values()[transferCode]
     }
