@@ -27,7 +27,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/wear_fragment_slides_btn_start"
             android:layout_below="@+id/wear_fragment_slides_chronometer"
             android:orientation="horizontal"
             android:padding="4dp"
