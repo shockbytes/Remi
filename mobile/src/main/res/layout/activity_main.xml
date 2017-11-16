@@ -69,7 +69,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:clickable="true"
         app:layout_anchor="@+id/main_content"
         app:layout_anchorGravity="bottom|right|end"
         app:srcCompat="@drawable/ic_keyboard" />

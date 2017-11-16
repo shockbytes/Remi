@@ -128,5 +128,8 @@
     <string name="prefs_title_authorized_desktop">Authorisierte Desktops</string>
     <string name="dialogfragment_authorized_desktops_title">Authorisierte Desktops</string>
     <string name="reset_keys_message">Willst du wirklich alle Schlüssel zurücksetzen und alle bekannten Verbindungen löschen? Diese Aktion unterbricht die aktuelle Verbindung!\n\n<b>Normalerweise solltest du das nicht machen!</b></string>
+    <string name="show">Öffnen</string>
+    <string name="show_download_folder">Downloadordner öffnen</string>
+    <string name="slide_request_cancelled">Slideanfrage abgebrochen!</string>
 
 </resources>

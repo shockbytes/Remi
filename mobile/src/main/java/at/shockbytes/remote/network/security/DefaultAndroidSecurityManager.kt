@@ -170,7 +170,6 @@ class DefaultAndroidSecurityManager(private val context: Context,
         return trustStore.aliases().toList()
     }
 
-
     override fun initializeKeyExchange(app: DesktopApp): Observable<Boolean> {
         connectToDesktop(RemiUtils.createUrlFromIp(app.ip, keyExchangePort, false))
         return keyExchangeSubject
@@ -311,8 +310,7 @@ class DefaultAndroidSecurityManager(private val context: Context,
 
     @Throws(Exception::class)
     private fun getCertificate(): java.security.cert.Certificate? {
-        val cert = keyStore.getCertificate(Companion.ALIAS)
-        return cert
+        return keyStore.getCertificate(Companion.ALIAS)
     }
 
     private fun deleteKeyStores() {

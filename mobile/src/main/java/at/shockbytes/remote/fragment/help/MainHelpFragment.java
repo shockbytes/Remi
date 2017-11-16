@@ -32,6 +32,7 @@ public class MainHelpFragment extends BaseFragment {
 
     @Override
     protected void setupViews() {
+        // No need to setup views
     }
 
     @OnClick(R.id.fragment_help_main_btn_apps)

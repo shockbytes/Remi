@@ -169,7 +169,9 @@ class LoginFragment : BaseFragment(), BaseAdapter.OnItemClickListener<DesktopApp
 
     private fun createKeysIfNecessary() {
         if (!securityManager.hasKeys()) {
-            securityManager.generateKeys().subscribe({ Toast.makeText(context, "Keys created and stored!", Toast.LENGTH_LONG).show() }) { throwable ->
+            securityManager.generateKeys().subscribe(
+                    { Toast.makeText(context, "Keys created and stored!", Toast.LENGTH_LONG).show() }
+            ){ throwable ->
                 throwable.printStackTrace()
                 Toast.makeText(context, throwable.localizedMessage, Toast.LENGTH_LONG).show()
             }
