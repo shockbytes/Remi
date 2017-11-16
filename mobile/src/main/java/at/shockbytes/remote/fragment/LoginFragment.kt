@@ -13,9 +13,7 @@ import android.widget.Toast
 import at.shockbytes.remote.R
 import at.shockbytes.remote.adapter.DesktopAppsAdapter
 import at.shockbytes.remote.core.RemiApp
-import at.shockbytes.remote.debug.DebugOptions
 import at.shockbytes.remote.fragment.dialog.AcceptDesktopConnectionDialogFragment
-import at.shockbytes.remote.fragment.dialog.DebugOptionsDialogFragment
 import at.shockbytes.remote.network.RemiClient
 import at.shockbytes.remote.network.discovery.ServiceFinder
 import at.shockbytes.remote.network.model.DesktopApp
@@ -23,7 +21,6 @@ import at.shockbytes.remote.network.security.AndroidSecurityManager
 import at.shockbytes.util.adapter.BaseAdapter
 import butterknife.BindView
 import butterknife.OnClick
-import butterknife.OnLongClick
 import java.util.*
 import javax.inject.Inject
 
@@ -78,6 +75,7 @@ class LoginFragment : BaseFragment(), BaseAdapter.OnItemClickListener<DesktopApp
         }
     }
 
+    /*
     @OnLongClick(R.id.fragment_login_imgview_icon)
     fun onClickDebugEntryIcon(): Boolean {
 
@@ -104,7 +102,7 @@ class LoginFragment : BaseFragment(), BaseAdapter.OnItemClickListener<DesktopApp
         }
         fragment.show(fragmentManager, "debug-options-fragment")
         return true
-    }
+    } */
 
     @OnClick(R.id.fragment_login_btn_lookup)
     fun onClickBtnLookup() {
